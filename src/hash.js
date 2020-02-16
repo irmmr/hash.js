@@ -48,55 +48,65 @@
         'event_error' : 'hash.js Event : event type is incorrect. (%s)'
     };
 
-    var Bool = (el) => {
-        var topAttr = el;
+    var emptyObj = Object.freeze({});
 
-        if ( typeof topAttr === 'boolean' ) {
-            return el;
-        } else {
-            var topString = topAttr.toLowerCase();
-            
-            switch (topString) {
-                case "true" : return true; break;
-                case "false" : return false ; break;
-                default : return false ; break;
-            }
-        }
-    };
+    function isDef(h) {
+        return typeof h !== undefined && h !== null
+    }
 
-    var Attr = (el, attribute) => {
-        if ( el.hasAttribute(attribute) ) {
-            return el.getAttribute(attribute);
-        } else {
-            return "";
-        }
-    };
+    function isUnDef(h) {
+        return typeof h === undefined || h === null
+    }
 
+    function isString(h) {
+        return isDef(h) && typeof h === 'string'
+    }
 
+    function isBool(h) {
+        return isDef(h) && typeof h === 'boolean'
+    }
 
-    //class for elements
+    function getBool(h) {
+
+        return (
+            isDef(h) ? isBool(h) ? h : isString(h) ? h.toLowerCase() == 'true' ? true : false : false : false
+        )
+
+    }
+
+    function getAttr(h, attr) {
+        return h.hasAttribute(attr) ? h.getAttribute(attr) : ""
+    }
+
+    function isObj(h) {
+        return h !== null && typeof h === 'object'
+    }
+
+    function isFunc(h) {
+        return isDef(h) && typeof h === 'function'
+    }
+
+    function replaceAll(h, a, b) {
+        return h.replace(new RegExp(a, 'g'), b)
+    }
+
     class HashJsLink extends HTMLElement {
         constructor() {
             super();
 
-            var link = Attr(this, 'link');
+            var link = getAttr(this, 'link'),
+                topScroll = false;
 
-            var scrollTop = false;
-            //Scroll top
+            
             if ( this.hasAttribute('h-top') ) {
-                scrollTop = Bool(this.getAttribute('h-top'));
+                topScroll = getBool( getAttr(this, 'h-top') );
             }
-
-            //Set cursor pointer for h-link
-            var hsStyle = document.createElement('style');
-            hsStyle.textContent = "h-link{cursor:pointer}";
-            document.getElementsByTagName("head")[0].appendChild(hsStyle);
 
             this.onclick = function() {
                 if ( this.hasAttribute('link') ) {
                     window.location.hash = link;
                 }
-                if ( scrollTop ) {
+                if ( topScroll ) {
                     document.body.scrollTop = 0;
                     document.documentElement.scrollTop = 0;
                 }
@@ -105,170 +115,10 @@
         }
     }
 
-    class HashJsApp extends HTMLElement {
-        constructor() {
-            super();
-
-            var app = Attr(this, 'app');
-            var log = Attr(this, 'log');
-            var ifLoad = Attr(this, 'if-load');
-            var ifChange = Attr(this, 'if-change');
-            var ifMethod = Attr(this, 'if');
-
-            //Change log to boolean
-            log = Bool(log);
-
-            //Check app id
-            if ( this.hasAttribute('id') ) {
-                var MyId = this.getAttribute('id');
-            } else {
-                this.setAttribute('id', 'hashJsAppLoadMentId');
-                var MyId = 'hashJsAppLoadMentId';
-                console.warn( messages["app_own_id"].replace('%s', MyId) );
-            }
-
-            if ( app !== "" ) {
-                var _app = this.getElementsByTagName('h-main');
-                for (var i=0 ; i<_app.length ; i++) {
-                    var _noewE = this.getElementsByTagName('h-main')[i];
-                    
-                    if (_noewE.hasAttribute('id')) {
-                        if ( _noewE.getAttribute('id') == app ) {
-                            console.info( messages['app_run'].replace('%s', app) );
-                            console.info( messages['app_run_time'].replace('%s', Date.now()) );
-                            
-                            if ( log ) {
-
-                                var Headers = [];
-                                var _headers = this.getElementsByTagName('h-header');
-                                for (var p=0 ; p<_headers.length ; p++) {
-                                    Headers[p] = this.getElementsByTagName('h-header')[p].innerHTML;
-                                }
-
-                                var Footers = [];
-                                var _footers = this.getElementsByTagName('h-footer');
-                                for (var e=0 ; e<_footers.length ; e++) {
-                                    Footers[e] = this.getElementsByTagName('h-footer')[e].innerHTML;
-                                }
-
-                                var Main = [];
-                                var _main = this.getElementsByTagName('h-main');
-                                for (var x=0 ; x<_main.length ; x++) {
-                                    Main[x] = this.getElementsByTagName('h-main')[x].innerHTML;
-                                }
-
-                                var Return = {
-                                    header : Headers,
-                                    app : Main,
-                                    footer : Footers,
-                                };
-                                console.log("App returned first: ", Return);
-                            }
-
-                        }
-                    }
-
-                }
-            }
-
-            if ( ifLoad !== "" ) {
-                var scriptType = document.createElement('script');
-                scriptType.textContent = ifLoad;
-                document.body.appendChild(scriptType);
-            }
-
-            function if_func() {
-                if ( app !== "" && ifMethod !== "" ) {
-                    var pLx = document.createElement('script');
-                    pLx.textContent = `
-                    if (${ifMethod}) {
-                        document.getElementById('${MyId}').style.display = "block";
-                    } else {
-                        document.getElementById('${MyId}').style.display = "none";
-                    }`;
-                    document.body.appendChild(pLx);
-                }
-            }
-
-            //Load if 
-            if_func();
-
-            window.addEventListener('hashchange', function() {
-
-                if ( ifChange !== "" ) {
-                    var scriptTypeO = document.createElement('script');
-                    scriptTypeO.textContent = ifChange;
-                    document.body.appendChild(scriptTypeO);
-                }
-                
-                //Load if
-                if_func();
-
-            });
-
-            //Set cursor pointer for h-app
-            var hsStyle = document.createElement('style');
-            hsStyle.textContent = "h-app{margin:0;display:block}";
-            document.getElementsByTagName("head")[0].appendChild(hsStyle);
-
-        }
-    }
-
-    class HashJsHeader extends HTMLElement {
-        constructor() {
-            super();
-
-            //Set cursor pointer for h-app
-            var hsStyle = document.createElement('style');
-            hsStyle.textContent = "h-header{margin:0;display:block}";
-            document.getElementsByTagName("head")[0].appendChild(hsStyle);
-
-        }
-    }
-
-    class HashJsFooter extends HTMLElement {
-        constructor() {
-            super();
-
-            //Set cursor pointer for h-app
-            var hsStyle = document.createElement('style');
-            hsStyle.textContent = "h-footer{margin:0;display:block}";
-            document.getElementsByTagName("head")[0].appendChild(hsStyle);
-
-        }
-    }
-
-    class HashJsMain extends HTMLElement {
-        constructor() {
-            super();
-
-            //Set cursor pointer for h-app
-            var hsStyle = document.createElement('style');
-            hsStyle.textContent = "h-main{margin:0;display:block}";
-            document.getElementsByTagName("head")[0].appendChild(hsStyle);
-
-        }
-    }
-
-    var LoadElements = () => {
+    function loadElements() {
         customElements.define('h-link', HashJsLink);
-        customElements.define('h-app', HashJsApp);
-        customElements.define('h-header', HashJsHeader);
-        customElements.define('h-footer', HashJsFooter);
-        customElements.define('h-main', HashJsMain);
-    };
-
-    var NoneFunc = () => {
-        //empty
     }
 
-    var DoInside = (method) => {
-        console.error(messages['func_error'].replace('%s', method));
-    };
-
-    var ReplaceAll = (text, a, b) => {
-        return text.replace(new RegExp(a, 'g'), b);
-    };
 
     var MeduRouter = (router) => {
         var router_any = router.split("/");
@@ -308,15 +158,9 @@
         }
     };
 
-    var lunchFunction = (func, ar=null) => {
-        if ( typeof func !== 'undefined' ) {
-            if ( typeof func === 'function' ) {
-                ar !== null ? func(ar) : func();
-            } else {
-                DoInside(func);
-            }
-        }
-    };
+    function lunchFunc(func, argc = null) {
+        return isFunc(func) ? argc !== null ? func(argc) : func() : null;
+    }
 
     var MeduHash = ( El , Co , WH , ERR , MTH ) => {
 
@@ -1049,7 +893,7 @@
     }
 
     if (LoadHash) {
-        window.addEventListener('load', LoadElements);
+        window.addEventListener('load', loadElements);
     } else {
         console.error( messages['load_error'] );
     }
