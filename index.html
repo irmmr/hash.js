@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="fa-IR" dir="ltr" hs-lang="fa">
+
+<head>
+	<meta charset="utf-8">
+	<style>
+		body {
+			width: 60%;
+			background-color: white;
+		}
+	</style>
+	<link rel="stylesheet" href="hash.toolitop.css">
+	<link rel="stylesheet" href="animate.css">
+	<link rel="stylesheet" href="codemirror/lib/codemirror.css">
+	<link rel="stylesheet" href="file:///F:/xampp/htdocs/editor/assets/font-awesome/css/all.min.css">
+	<link rel="stylesheet" href="file:///F:/xampp/htdocs/editor/assets/font/font.iransans.css">
+	<link rel="stylesheet" href="file:///F:/xampp/htdocs/editor/assets/bootstrap/css/bootstrap.min.css">
+	
+	<style>
+		.m3e .spinner {
+  margin: 100px auto;
+  width: 50px;
+  height: 40px;
+  text-align: center;
+  font-size: 10px;
+}
+
+.m3e-hidden {
+	display: none !important;
+}
+
+.m3e .spinner > div {
+  background-color: #0d6efd;
+  height: 100%;
+  width: 6px;
+  margin: 2px;
+  display: inline-block;
+  
+  -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;
+  animation: sk-stretchdelay 1.2s infinite ease-in-out;
+}
+
+.m3e .spinner .rect2 {
+  -webkit-animation-delay: -1.1s;
+  animation-delay: -1.1s;
+}
+
+.m3e .spinner .rect3 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+.m3e .spinner .rect4 {
+  -webkit-animation-delay: -0.9s;
+  animation-delay: -0.9s;
+}
+
+.m3e .spinner .rect5 {
+  -webkit-animation-delay: -0.8s;
+  animation-delay: -0.8s;
+}
+
+@-webkit-keyframes sk-stretchdelay {
+  0%, 40%, 100% { -webkit-transform: scaleY(0.4) }  
+  20% { -webkit-transform: scaleY(1.0) }
+}
+
+@keyframes sk-stretchdelay {
+  0%, 40%, 100% { 
+    transform: scaleY(0.4);
+    -webkit-transform: scaleY(0.4);
+  }  20% { 
+    transform: scaleY(1.0);
+    -webkit-transform: scaleY(1.0);
+  }
+}
+	</style>
+	<script>
+		function overLoadHs(ar=[]) {
+			ar = typeof ar !== 'undefined' ? Array.isArray(ar) ? ar : [] : [];
+			var arLen = ar.length;
+			ar.forEach(item => {
+				var i = 'hs_overlay_xrey_' + item;
+				if (document.getElementById(i) !== null) {
+					var el = document.getElementById(i);
+					if (el.nodeName.toLowerCase() == 'a' && el.hasAttribute('is') && el.getAttribute('is') == 'hs-link') {
+						el.setAttribute('hs-link', 'true');
+						//el.setAttribute('hs-link-night', 'true');
+						el.setAttribute('hs-link-html', 'Client–server systems are today most frequently implemented by (and often identified with) the request–response model: a client sends a request to the server .');
+						el.setAttribute('hs-link-img', 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Bois_du_Cazier_2.jpg/480px-Bois_du_Cazier_2.jpg');
+					}
+				}
+			});
+		}
+
+	</script>
+
+</head>
+
+<body>
+	<div id="loader"></div>
+
+	<!-- <div
+	id="hs_translate"
+	hs-saved="ذخیره شد !"
+	hs-notice="در مورد دارک برای اولینبار نیاز به رفرش نیست"
+	hs-refresh="رفرش کنید" hs-text="تنظیمات با موفقیت ذخیره شدند ."
+	hs-without-page="<div dir=rtl>صفحه ای برای %s وجود ندارد !</div>"></div> -->
+
+	<h-app app="app" id="me">
+		<h-main id="app"></h-main>
+	</h-app>
+
+
+
+	<style>
+		.m3e {
+			text-align: right;
+		}
+		.m3e-editor {
+			font-family: monospace !important;
+			direction: ltr;
+			border-left: 4px rgb(29, 100, 253) solid;
+			text-align: left !important;
+			display: none;
+		}
+		.m3e-error {
+			font-family: "IRANSans-web", sans-serif;
+			font-size: 14px;
+			font-weight: 300;
+			direction: rtl;
+		}
+		.m3e b {
+			font-weight: 500;
+		}
+		.m3e small {
+			font-weight: 300;
+			font-size: 12px;
+		}
+		.m3e .m3e-error small {
+			line-height: 35px;
+		}
+		.m3e-error i {
+			font-size: 35px;
+		}
+		.m3e button {
+			font-family: "IRANSans-web", sans-serif;
+			direction: rtl;
+			font-weight: 300;
+			font-size: 14px;
+		}
+		.m3e .m3e-btn {
+			display: none;
+		}
+		.m3e .m3e-title {
+			font-family: "IRANSans-web", sans-serif;
+			font-size: 15px;
+			font-weight: 700;
+			direction: rtl;
+			display: none;
+		}
+	</style>
+	<div m3e-id="deliver" m3e-code=".m3e%20.spinner%20%7B%0A%20%20margin%3A%20100px%20auto%3B%0A%20%20width%3A%2050px%3B%0A%20%20height%3A%2040px%3B%0A%20%20text-align%3A%20center%3B%0A%20%20font-size%3A%2010px%3B%0A%7D%0A%0A.m3e%20.spinner%20%3E%20div%20%7B%0A%20%20background-color%3A%20%230d6efd%3B%0A%20%20height%3A%20100%25%3B%0A%20%20width%3A%206px%3B%0A%20%20margin%3A%202px%3B%0A%20%20display%3A%20inline-block%3B%0A%20%20-webkit-animation%3A%20sk-stretchdelay%201.2s%20infinite%20ease-in-out%3B%0A%20%20animation%3A%20sk-stretchdelay%201.2s%20infinite%20ease-in-out%3B%0A%7D" m3e-title="استایل" m3e-btn="%u0627%u0645%u062A%u062D%u0627%u0646%20%u06A9%u0646%u06CC%u062F:a" m3e-mode="text/css"></div>
+
+	<div m3e-id="deliverB" m3e-code="%24%20git%20status%0AOn%20branch%20master%0A%0ANo%20commits%20yet%0A%0AUntracked%20files%3A%0A%20%20%28use%20%22git%20add%20%3Cfile%3E...%22%20to%20include%20in%20what%20will%20be%20committed%29%0A%20%20%20%20%20%20%20%20text.txt%0A%0Anothing%20added%20to%20commit%20but%20untracked%20files%20present%20%28use%20%22git%20add%22%20to%20track%29%0A%0A" m3e-mode="text/x-sh"></div>
+	<div m3e-id="deliverB" m3e-code="%24%20git%20status%0AOn%20branch%20master%0A%0ANo%20commits%20yet%0A%0Anothing%20to%20commit%20%28create/copy%20files%20and%20use%20%22git%20add%22%20to%20track%29%0A" m3e-mode="text/x-sh"></div>
+	<div m3e-id="deliverB" m3e-code="%24%20git%20init%0AInitialized%20empty%20Git%20repository%20in%20F%3A/rozberg/.git/" m3e-mode="text/x-sh"></div>
+
+	<a is="hs-link" id="hs_overlay_xrey_server" hs-link="true" href="#python">python</a> is requred!
+
+
+	<script>
+		overLoadHs([
+			'server'
+		]);
+	</script>
+
+	<script src="https://unpkg.com/@popperjs/core@2"></script>
+	<script src="file:///F:/xampp/htdocs/editor/assets/bootstrap/js/bootstrap.min.js"></script>
+	<script src="codemirror/lib/codemirror.js"></script>
+	<script src="codemirror/addon/runmode/runmode.js"></script>
+	<script src="codemirror/mode/xml/xml.js"></script>
+	<script src="codemirror/mode/javascript/javascript.js"></script>
+	<script src="codemirror/mode/shell/shell.js"></script>
+	<script src="codemirror/mode/css/css.js"></script>
+	<script src="hash.min.js?ver=1.0.0"></script>
+    <script src="hash.data.min.js?ver=1.0.0"></script>
+	<script src="hash.load.min.js?ver=1.0.0"></script>
+	<script src="hash.toolitop.js?ver=1.0.0"></script>
+	<script src="m3e.js"></script>
+	<script src="script.js"></script>
+
+	<script>
+		var code = new m3e({
+			padding : 4,
+			shadow : false,
+			class : [
+				'vb',
+				'vue'
+			],
+			style : 'display:block'
+		});
+
+		var ht = new Hash.toolitop();
+		ht.settingLoad();
+		ht.loadMode({
+			mode : 'light',
+		});
+		ht.loadStatus();
+	</script>
+
+
+</body>
+
+</html>
