@@ -2,15 +2,8 @@
     'use strict';
 
     var info = {
-        'version' : '1.0.0',
-        'author' : 'irmmr',
-        'description' : 'Hash.js is a simple js library . By this library you can manage page hash . Hash.js has different parts for add , get , change and extract .',
-        'git_url' : 'https://github.com/irmmr/hash.js',
-        'lang' : 'English',
-        'help' : 'Please go on github page . address : %s',
-        'message' : '** Hash.js library | v %v **\nSimple & Useful\nBy: %s\nAbout: %r\nGithub: %p',
-        'remove_error' : 'hash.js Info : After see all information, please remove hash.info function from your source.'
-    };
+        version : '1.2'
+    }
 
     var messages = {
         'load_error' : 'hash.js : can\'t load z.js',
@@ -48,7 +41,8 @@
         'event_error' : 'hash.js Event : event type is incorrect. (%s)'
     };
 
-    var emptyObj = Object.freeze({});
+    var emptyObj = Object.freeze({}),
+        emptyFunc = function() {};
 
     function isDef(h) {
         return typeof h !== undefined && h !== null
@@ -90,510 +84,171 @@
         return h.replace(new RegExp(a, 'g'), b)
     }
 
-    class HashJsLink extends HTMLElement {
-        constructor() {
-            super();
-
-            var link = getAttr(this, 'link'),
-                topScroll = false;
-
-            
-            if ( this.hasAttribute('h-top') ) {
-                topScroll = getBool( getAttr(this, 'h-top') );
-            }
-
-            this.onclick = function() {
-                if ( this.hasAttribute('link') ) {
-                    window.location.hash = link;
-                }
-                if ( topScroll ) {
-                    document.body.scrollTop = 0;
-                    document.documentElement.scrollTop = 0;
-                }
-            }
-
-        }
-    }
-
-    function loadElements() {
-        customElements.define('h-link', HashJsLink);
-    }
-
-
-    var MeduRouter = (router) => {
-        var router_any = router.split("/");
-        var wv = window.location.hash.slice(1).split("/");
-
-        var glade = '';
-        router_any.forEach((element,index) => {
-            if ( element == '{any}' )
-            glade += index
-        });
-        glade = glade.split('');
-
-        var es = '';
-        var inb = '';
-        if ( router_any.length == wv.length ) {
-            wv.forEach((item,index) => {
-                if ( router_any[index] == item || router_any[index] == '{any}' ) {
-                    if ( router_any[index] == '{any}' ) {
-                        inb += item + ',';
-                        es += 1;
-                    } else {
-                        es += 1;
-                    }
-                }
-            });
-        }
-
-        if ( es.length == wv.length ) {
-            return {
-                status : true,
-                info : inb
-            };
-        } else {
-            return {
-                status : false
-            };
-        }
-    };
-
     function lunchFunc(func, argc = null) {
         return isFunc(func) ? argc !== null ? func(argc) : func() : null;
     }
 
-    var MeduHash = ( El , Co , WH , ERR , MTH ) => {
+    function isEmpty(h) {
+        return h == ''
+    }
 
-        if ( window.location.hash == '' && MTH.defualt !== null ) {
-            window.location.hash = MTH.defualt;
-        }
 
-        MTH.router = typeof MTH.router !== 'undefined' ? Array.isArray(MTH.router) ? MTH.router : [] : [];
+    var hashMain, hashInfo, HashEl, hashEvent;
 
-        var vi = '';
-        MTH.router.forEach(item => {
-            vi += MeduRouter(item).status ? 1 : '';
-        });
+    hashEvent = function(e, func = function() {}) {
 
-        if ( vi == '' ) {
-            if ( !window.location.hash.includes('/') ) {
-                if ( typeof Co[WH] !== 'undefined' ) {
-                    document.getElementById(El).innerHTML = MTH.components[WH].main;
-                    document.title = MTH.components[WH].title;
-                    lunchFunction(MTH.components[WH].do);
-                } else {
-                    if ( vi == '' ) {
-                        document.getElementById(El).innerHTML = ERR.render;
-                        document.title = ERR.title;
-                        lunchFunction(ERR.do);
-                    }
-                }
-            } else {
-                let WS = window.location.hash.slice(1).split("/");
-                let LN = WS.length;
-
-                if ( typeof Co[WS[0]] !== 'undefined' ) {
-
-                    switch(WS.length) {
-                        case 2 : 
-        
-                        Co[WS[0]].loop = typeof Co[WS[0]].loop !== 'undefined' ? Co[WS[0]].loop : {};
-                        
-                        if ( typeof Co[WS[0]] !== 'undefined' &&
-                         typeof Co[WS[0]].loop[WS[1]] !== 'undefined' &&
-                          typeof Co[WS[0]].loop[WS[1]].main !== 'undefined'&&
-                          typeof Co[WS[0]].loop[WS[1]].title !== 'undefined' ) {
-                            document.getElementById(El).innerHTML = Co[WS[0]].loop[WS[1]].main;
-                            document.title = Co[WS[0]].loop[WS[1]].title;
-                            lunchFunction(Co[WS[0]].loop[WS[1]].do);
-                        } else {
-                            if ( vi == '' ) {
-                                document.getElementById(El).innerHTML = ERR.render;
-                                document.title = ERR.title;
-                                lunchFunction(ERR.do);
-                            }
-                        }
-        
-                        ;break;
-        
-                        case 3 : 
-        
-                        Co[WS[0]].loop = typeof Co[WS[0]].loop !== 'undefined' ? Co[WS[0]].loop : {};
-                        Co[WS[0]].loop[WS[1]] = typeof Co[WS[0]].loop[WS[1]] !== 'undefined' ? Co[WS[0]].loop[WS[1]] : {};
-                        Co[WS[0]].loop[WS[1]].loop = typeof Co[WS[0]].loop[WS[1]].loop !== 'undefined' ? Co[WS[0]].loop[WS[1]].loop : {};
-        
-                        if ( typeof Co[WS[0]] !== 'undefined' &&
-                          typeof Co[WS[0]].loop[WS[1]].loop[WS[2]] !== 'undefined' &&
-                           typeof Co[WS[0]].loop[WS[1]].loop[WS[2]].main !== 'undefined' &&
-                           typeof Co[WS[0]].loop[WS[1]].loop[WS[2]].title !== 'undefined' ) {
-                            document.getElementById(El).innerHTML = Co[WS[0]].loop[WS[1]].loop[WS[2]].main;
-                            document.title = Co[WS[0]].loop[WS[1]].loop[WS[2]].title;
-                            lunchFunction(Co[WS[0]].loop[WS[1]].loop[WS[2]].do);
-                        } else {
-                            if ( vi == '' ) {
-                                document.getElementById(El).innerHTML = ERR.render;
-                                document.title = ERR.title;
-                                lunchFunction(ERR.do);
-                            }
-                        }
-        
-                        ;break;
-        
-                        case 4 : 
-        
-                        Co[WS[0]].loop = typeof Co[WS[0]].loop !== 'undefined' ? Co[WS[0]].loop : {};
-                        Co[WS[0]].loop[WS[1]] = typeof Co[WS[0]].loop[WS[1]] !== 'undefined' ? Co[WS[0]].loop[WS[1]] : {};
-                        Co[WS[0]].loop[WS[1]].loop = typeof Co[WS[0]].loop[WS[1]].loop !== 'undefined' ? Co[WS[0]].loop[WS[1]].loop : {};
-                        Co[WS[0]].loop[WS[1]].loop[WS[2]] = typeof Co[WS[0]].loop[WS[1]].loop[WS[2]] !== 'undefined' ? Co[WS[0]].loop[WS[1]].loop[WS[2]] : {};
-                        Co[WS[0]].loop[WS[1]].loop[WS[2]].loop = typeof Co[WS[0]].loop[WS[1]].loop[WS[2]].loop !== 'undefined' ? Co[WS[0]].loop[WS[1]].loop[WS[2]].loop : {};
-        
-                        if ( typeof Co[WS[0]] !== 'undefined' &&
-                           typeof Co[WS[0]].loop[WS[1]].loop[WS[2]].loop[WS[3]] !== 'undefined' &&
-                            typeof Co[WS[0]].loop[WS[1]].loop[WS[2]].loop[WS[3]].main !== 'undefined' &&
-                            typeof Co[WS[0]].loop[WS[1]].loop[WS[2]].loop[WS[3]].title !== 'undefined' ) {
-                            document.getElementById(El).innerHTML = Co[WS[0]].loop[WS[1]].loop[WS[2]].loop[WS[3]].main;
-                            document.title = Co[WS[0]].loop[WS[1]].loop[WS[2]].loop[WS[3]].title;
-                            lunchFunction(Co[WS[0]].loop[WS[1]].loop[WS[2]].loop[WS[3]].do);
-                        } else {
-                            if ( vi == '' ) {
-                                document.getElementById(El).innerHTML = ERR.render;
-                                document.title = ERR.title;
-                                lunchFunction(ERR.do);
-                            }
-                        }
-        
-                        ;break;
-        
-                        default : 
-                        if ( vi == '' ) {
-                            document.getElementById(El).innerHTML = ERR.render;
-                            document.title = ERR.title;
-                            lunchFunction(ERR.do);
-                        }
-                        ;break;
-        
-                    }
-                } else {
-                    if ( vi == '' ) {
-                        document.getElementById(El).innerHTML = ERR.render;
-                        document.title = ERR.title;
-                        lunchFunction(ERR.do);
-                    }
-                }
-    
-            }
-        }
-
-    };
-
-    var MeduSpa = (Rout,Rend,El,title,Do,Re) => {
-        var TheRouter = Rout;
-        Rout = MeduRouter(Rout);
-        if ( Rout.status ) {
-            var reInfo = [];
-            var reLegend = {};
-            if ( Rend !== '' ) {
-                if ( typeof Rout.info !== 'undefined' ) {
-                    Rout.info = Rout.info.split(",");
-                    Rout.info.forEach((item,index) => {
-                        index++;
-                        title = ReplaceAll(title, '{HS:'+index+'}', item);
-                        Rend = ReplaceAll(Rend, '{HS:'+index+'}', item);
-                    });
-                    reInfo = Rout.info;
-                    reLegend['info'] = Rout.info;
-                }
-                document.getElementById(El).innerHTML = Rend;
-                document.title = title;
-                //Do that
-                reLegend['el'] = El;
-                reLegend['router'] = TheRouter;
-                reLegend['hash'] = window.location.hash.slice(1);
-                lunchFunction(Do, reLegend);
-                //Return info
-                return Re ? Rout.info : [];
-            }
-        }
-    };
-
-    var HashMain, HashInfo, HashLog, HashSPA, HashEl, HashEvent;
-
-    HashEvent = function( event, AppMethod ) {
-
-        event = typeof event === 'string' ? event.toLowerCase() : '';
-        AppMethod = typeof AppMethod === 'function' ? AppMethod : function() {};
-
-        if ( event !== '' ) {
+        if ( isDef(e) && isString(e) ) {
+            var event = e.toLowerCase(),
+                func = isDef(func) && isFunc(func) ? func : emptyFunc;
 
             switch(event) {
+
                 case 'change' : 
-                    window.addEventListener('hashchange', AppMethod);
-                    return true;
+                    window.addEventListener('hashchange', func);
                 break;
-                default :
-                    console.warn( messages['event_error'].replace('%s', event) );
+
+                default :  
+                    // Nothing to do
                 break;
+
             }
 
-        } else {
-            console.warn( messages['event_error_empty'] );
         }
 
-        return false;
-    };
+    }
 
-    HashInfo = function ( AppMethod={} ) {
+    hashInfo = function(h = {}) {
 
-        this.status = true;
-        this.version = info['version'];
-        this.author = info['author'];
-        this.about = info['description'];
-        this.git = info['git_url'];
-        this.lang = info['lang'];
-        this.help = info['help'].replace('%s',info['git_url']);
-
-        this.log = function () {
-            console.info( info['message'].replace('%v',info['version']).replace('%s',info['author']).replace('%r',info['description']).replace('%p',info['git_url']) );
-            console.info( info['remove_error'] );
-            return true;
-        };
+        this.version = isDef(info.version) ? info.version : '?';
 
         this.addons = {
-            'data' : typeof Hash.data !== 'undefined',
-            'load' : typeof Hash.load !== 'undefined',
-            'toolitop' : typeof Hash.toolitop !== 'undefined',
+            data : typeof Hash.data !== 'undefined',
+            load : typeof Hash.load !== 'undefined',
+            wikitip : typeof Hash.wikitip !== 'undefined',
+            spa : typeof Hash.spa !== 'undefined',
         }
 
-    };
+    }
 
-    HashLog = function ( AppMethod={} ) {
 
-        var getDate = new Date();
-        var nowDate = getDate.getFullYear()+'/'+getDate.getMonth()+'/'+getDate.getDay();
-        var nowTime = getDate.getHours()+':'+getDate.getMinutes()+':'+getDate.getSeconds()+':'+getDate.getMilliseconds();
-        this.runDate = nowDate;
-        this.runTime = nowTime;
+    hashMain = function(h = {}) {
 
-        this.start = () => {
-            console.info( messages['hash_log_info'] );
-            console.info( messages['hash_log_start'].replace('%r' , nowDate).replace('%p' , nowTime) );
-    
-            if ( !window.location.hash.includes("/") ) {
-                console.log( messages['hash_first'].replace('%s', window.location.hash.slice(1)).replace('%r', Date.now()) );
-            } else {
-                let H = window.location.hash.slice(1).split('/');
-                console.log( messages['hash_first'].replace('%s', window.location.hash.slice(1)).replace('%r', Date.now()), H);
-            }
-    
-            window.addEventListener("hashchange", function() {
-                var hashGet = window.location.hash.slice(1);
-                if ( !hashGet.includes("/") ) {
-                    console.log( messages['change_hash'].replace('%s', hashGet).replace('%r', Date.now()) );
-                } else {
-                    var H = hashGet.split('/');
-                    console.log( messages['change_hash'].replace('%s', hashGet).replace('%r', Date.now()), H);
-                }
-            });
-
-            return true;
-        };
-
-    };
-
-    HashMain = function ( AppMethod={} ) {
-
-        AppMethod['log'] = typeof AppMethod['log'] !== 'undefined' ? AppMethod['log'] : true;
-        var AppLog = typeof AppMethod['log'] !== 'boolean' ? true : AppMethod['log'];
-
+        /* simple hash and href */
         this.hash = window.location.hash;
         this.href = window.location.href;
 
-        this.test = function () {
-            AppLog ? console.info( messages['test_message'] ) : alert( messages['test_message'] );
-            return true;
-        };
+        /* remove obj */
+        this.remove = function(n = {}) {
 
-        this.auto = function ( method={} ) {
-            method = typeof method !== 'undefined' ? method : {};
-            const startAuto = window.location.hash !== "" ? true : false;
+            if ( isDef(n) && isObj(n) ) {
 
-            method['save'] = typeof method['save'] !== 'undefined' ? method['save'] : {};
-            method['save']['active'] = typeof method['save']['active'] !== 'undefined' ? method['save']['active'] == true || method['save']['active'] == false ? method['save']['active'] : false : false;
-            method['save']['days'] = typeof method['save']['days'] !== 'number' ? 10 : method['save']['days'];
-            method['save']['name'] = typeof method['save']['days'] !== 'undefined' ? method['save']['name'] : "hash";
+                /* get all words must be remove */
+                var words = 'words' in n ? Array.isArray(n.words) ? n.words : [n.words] : [];
 
-            if ( method['save']['active'] && startAuto ) {
-                window.onhashchange = function () {
-                    var d = new Date();
-                    d.setTime(d.getTime() + (method['save']['days'] * 24 * 60 * 60 * 1000));
-                    var expires = "expires="+d.toUTCString();
-                    document.cookie = "hashJs_" + method['save']['name'] + "=" + window.location.hash.slice(1) + ";" + expires + ";path=/";
+                /* remove equal words */
+                words = Array.from(new Set(words));
+
+                /* filter and delete empty words */
+                words = words.filter(val => val !== '');
+
+                /* remove words */
+                for (var i=0 ; i<words.length ; i++) {
+
+                    var wh = window.location.hash;
+                    window.location.hash = replaceAll(wh, words[i], '');
+                    window.location.hash = replaceAll(wh, escape(words[i]), '');
+
                 }
+                
             }
 
-            method['meta'] = typeof method['meta'] !== 'undefined' ? method['meta'] : {};
-            method['meta']['active'] = typeof method['meta']['active'] !== 'undefined' ? method['meta']['active'] == true || method['meta']['active'] == false ? method['meta']['active'] : false : false;
-            method['meta']['space'] = typeof method['meta']['space'] !== 'undefined' ? method['meta']['space'] : '-';
-            method['meta']['escape'] = typeof method['meta']['escape'] !== 'undefined' ? method['meta']['escape'] == true || method['meta']['escape'] == false ? method['meta']['escape'] : false : false;
+        }
 
-            if ( method['meta']['active'] && startAuto ) {
+        this.ref = function(h = '') {
 
-                if ( method['meta']['escape'] ) {
-                    window.location.hash = escape(window.location.hash.slice(1));
-                }
+            if (!isEmpty(h) && isString(h)) {
 
-                while ( window.location.hash.includes("%20") || window.location.hash.includes(" ") || window.location.hash.includes("%2520") ) {
-                    window.location.hash = ReplaceAll(window.location.hash, " ", method['meta']['space']);
-                    window.location.hash = ReplaceAll(window.location.hash, "%20", method['meta']['space']);
-                    window.location.hash = ReplaceAll(window.location.hash, "%2520", method['meta']['space']);
-                }
+                /* get window reff */
+                var reff = document.referrer;
 
-            }
-
-        };
-
-
-        this.remove = function ( method = {} ) {
-
-            if ( typeof method !== 'undefined' && method !== {} ) {
-
-                method.log = typeof method.log === 'boolean' ? method.log : true;
-
-                //Get words and clear all of them
-                if ( typeof method['words'] !== 'undefined' ) {
-                    method['words'] = Array.isArray(method['words']) ? Array.from(new Set(method['words'])) : [ method['words'] ];
-                } else {
-                    method['words'] = [];
-                }
-                method['words'] = method['words'].filter(value => value !== "");
-
-                var statusWords = {
-                    ok : [],
-                    no : []
-                }
-
-                for ( var j = 0 ; j<method['words'].length ; j++ ) {
-
-                    if ( window.location.hash.includes(method['words'][j]) || window.location.hash.includes(escape(method['words'][j])) ) {
-
-                        window.location.hash = ReplaceAll(window.location.hash, method['words'][j], '');
-                        window.location.hash = ReplaceAll(window.location.hash, escape(method['words'][j]), '');
-                        statusWords.ok.push(method['words'][j]);
-
-                    } else {
-                        AppLog && method.log ? console.warn( messages['error_remove'].replace('%s' , method['words'][j]) ) : null;
-                        statusWords.no.push(method['words'][j]);
-                    }
-
-                }
-
-                return statusWords;
-
-            } else {
-                AppLog && method.log ? console.error( messages['remove_empty'] ) : null;
-
-                return false;
-            }
-
-        };
-
-        this.ref = function ( url='' ) {
-
-            if ( url !== '' ) {
-
-                if ( document.referrer !== '' ) {
-                    return document.referrer == url;
+                if (!isEmpty(reff)) {
+                    return reff == h;
                 } else {
                     return false;
                 }
 
             } else {
-
                 return document.referrer;
-
             }
 
-        };
+        }
 
-        this.have = function ( value='' ) {
+        this.have = function (h = '') {
 
-            if ( window.location.hash !== '' ) {
+            /* get window hash */
+            var wh = window.location.hash;
 
-                if ( value == '' ) {
+            /* chekc hash */
+            if (!isEmpty(wh)) {
+
+                if (isEmpty(h)) {
                     return true;
                 } else {
-                    return window.location.hash.includes(value) ? true : false;
+                    return wh.includes(h);
                 }
 
             } else {
                 return false;
             }
 
-        };
+        }
 
-        this.clear = function ( method={} ) {
+        this.clear = function(h = {}) {
 
-            method['all'] = typeof method['all'] !== 'boolean' ? true : method['all'];
+            if (isDef(h) && isObj(h)) {
 
-            if ( method['all'] ) {
+                /* sharp boolean */
+                var sharp = 'sharp' in h ? isBool(h.sharp) ? h.sharp : false : false;
 
+                /* get window hash */
+                var wh = window.location.hash;
+
+                /* remove hash */
                 window.location.hash = '';
-                var noHashURL = window.location.href.replace(/#.*$/, '');
-                window.history.replaceState('', document.title, noHashURL);
 
-            } else {
+                /* clear sharp */
+                if (sharp) {
 
-                if ( window.location.hash !== '' )
-                    window.location.hash = '';
-            }
-
-            return true;
-        };
-
-        this.get = function ( without=true , element={} ) {
-
-            if ( element == {} ) {
-
-                return without ? window.location.hash.slice(1) : window.location.hash;
-
-            } else {
-
-                if ( typeof element['saved'] !== 'undefined' && element['saved'] !== "" && element['saved'] !== " " ) {
-                    var saved_hash = "";
-                    var name = "hashJs_" + element['saved'] + "=";
-                    var ca = document.cookie.split(';');
-                    for(var i = 0; i < ca.length; i++) {
-                        var c = ca[i];
-                        while (c.charAt(0) == ' ') {
-                            c = c.substring(1);
-                        }
-                        if (c.indexOf(name) == 0) {
-                            var saved_hash = c.substring(name.length, c.length);
-                        }
-                    }
-                    if ( saved_hash !== "" ) {
-                        return saved_hash;
-                    } else {
-                        AppLog ? console.warn( messages['hash_saved_find'].replace("%s" , element['saved']) ) : null;
-                        return "";
-                    }
-                } else {
-
-                    element['element'] = typeof element['element'] !== 'undefined' ? element['element'] : '';
-
-                    if ( window.location.hash.includes(element['element']) ) {
-                        var count_element = element['element'].length;
-                        return without ? window.location.hash.slice(1+count_element) : window.location.hash.slice(count_element);
-                    } else {
-                        AppLog ? console.warn( messages['error_element'].replace( '%s' , element['element'] ) ) : null;
-                        return '';
-                    }
+                    var clearHash = wh.replace(/#.*$/, '');
+                    window.history.replaceState('', document.title, clearHash);
 
                 }
 
             }
 
-        };
+        }
+
+        this.get = function(without = true, h = {}) {
+
+            if (isDef(without) && isBool(without) && isDef(h) && isObj(h)) {
+
+                /* get window hash */
+                var wh = without ? window.location.hash.slice(1) : window.location.hash;
+
+                /* get hash */
+                if (h == emptyObj) {
+
+                    return wh;
+
+                } else {
+
+                    return wh;
+
+                }
+
+            }
+
+        }
 
         this.set = function ( method={} ) {
 
@@ -713,83 +368,21 @@
         };
 		
 		this.lock = function() {
-			
-			const hash = window.location.hash;
+            
+            /* get window hash */
+            const wh = window.location.hash;
+            
+            /* change it when replaced */
 			window.onhashchange = function() {
-				window.location.hash = hash;
+				window.location.hash = wh;
 			}
 			
-		};
+		}
 
 
-    };
-
-    HashSPA = function ( method={} ) {
-
-        method.log = typeof method.log !== 'boolean' ? true : method.log;
-        var Log = method.log;
-
-        //El part
-        method['el'] = typeof method['el'] !== 'undefined' ? method['el'] : "";
-        var viEl = false;
-        if ( method['el'].startsWith('#') && typeof method['el'] == 'string' ) {
-            viEl = true;
-            method['el'] = method['el'].replace('#','');
-        } else {
-            viEl = false;
-            Log ? console.error( messages['spa_el_error'].replace('%s',method['el']) ) : null;
-        }
-
-        method.components = typeof method.components !== 'undefined' ? method.components : {};
-        method.defualt = typeof method.defualt !== 'undefined' ? method.defualt : null;
-
-        method.errors = typeof method.errors !== 'undefined' ? method.errors : {};
-        method.errors.not_found = typeof method.errors.not_found !== 'undefined' ? method.errors.not_found : {render : '',title : ''};
-        method.errors.not_found.render = typeof method.errors.not_found.render !== 'undefined' ? method.errors.not_found.render : '';
-        method.errors.not_found.title = typeof method.errors.not_found.title !== 'undefined' ? method.errors.not_found.title : '';
-
-        
-
-        MeduHash(method['el'],method.components,window.location.hash.slice(1),method.errors.not_found,method);
-
-        window.onhashchange = function() {
-            MeduHash(method['el'],method.components,window.location.hash.slice(1),method.errors.not_found,method);
-        };
-
-        this.router = ( method={} ) => {
-
-            method.render = typeof method.render !== 'undefined' ? method.render : '';
-
-            method['el'] = typeof method['el'] !== 'undefined' ? method['el'] : "";
-            var viEl = false;
-            if ( method['el'].startsWith('#') && typeof method['el'] == 'string' ) {
-                viEl = true;
-                method['el'] = method['el'].replace('#','');
-            } else {
-                viEl = false;
-                Log ? console.error( messages['spa_el_error'].replace('%s',method['el']) ) : null;
-            }
-
-            method.Router = typeof method.Router !== 'undefined' ? method.Router : '';
-            method.title = typeof method.title !== 'undefined' ? method.title : '';
-            method.do = typeof method.do !== 'undefined' ? typeof method.do === 'function' ? method.do : DoInside.call(this, method.do) : NoneFunc;
-            method.return = typeof method.return === 'boolean' ? method.return : false;
-
-            if ( method.Router.includes('{any}') ) {
-                MeduSpa(method.Router,method.render,method['el'],method.title,method.do,method.return);
-                window.addEventListener("hashchange", function() {
-                    MeduSpa(method.Router,method.render,method['el'],method.title,method.do,method.return);
-                });
-            } else {
-                Log ? console.error( messages['spa_router'] ) : null;
-            }
-
-        };
-
-    };
-
+    }
     
-    HashEl = function(method={}) {
+    HashEl = function(h = {}) {
 
         this.replace = (method={}) => {
 
@@ -870,11 +463,10 @@
         lib : HashMain,
         info : HashInfo,
         log : HashLog,
-        SPA : HashSPA,
         El : HashEl,
         event : HashEvent,
         ready : true
-    };
+    }
 
 
     var LoadHash = false;
@@ -890,12 +482,6 @@
     if (typeof exports === 'object') {
         module.exports = Hash();
         LoadHash = true;
-    }
-
-    if (LoadHash) {
-        window.addEventListener('load', loadElements);
-    } else {
-        console.error( messages['load_error'] );
     }
 
 })(window);
