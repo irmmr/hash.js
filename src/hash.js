@@ -90,10 +90,9 @@
         this.version = isDef(info.version) ? info.version : '?';
 
         this.addons = {
-            data : typeof Hash.data !== 'undefined',
             load : typeof Hash.load !== 'undefined',
-            wikitip : typeof Hash.wikitip !== 'undefined',
             spa : typeof Hash.spa !== 'undefined',
+            server : typeof Hash.server !== 'undefined'
         }
 
     }
@@ -187,8 +186,7 @@
                 /* clear sharp */
                 if (sharp) {
 
-                    var clearHash = wh.replace(/#.*$/, '');
-                    window.history.replaceState('', document.title, clearHash);
+                    history.pushState(null, null, window.location.href.split('#')[0]);
 
                 }
 

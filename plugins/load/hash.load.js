@@ -1,98 +1,177 @@
 (function(window) {
+    'use strict';
 
-    /* Console messages in an object */
-    var loadMessage = {
-        'load_error': 'hash.js Load : can\'t load HashJs. please befor run Hash event, run Hash.js library.',
-        'load_do_1': 'hash.js Load : for "do", you should add a function. "%s" is %r',
-        'load_do_2': 'hash.js Load : "do" argc is required!'
+    var emptyObj = Object.freeze({}),
+        emptyFunc = function() {};
+
+    function isDef(h) {
+        return typeof h !== undefined && h !== null
     }
 
-    /* A function for  */
-    var doNot = (st = "") => {
-        if (st !== "") {
-            console.warn( loadMessage['load_do_1'].replace('%s', st).replace('%r', typeof st) );
-        } else {
-            console.warn( loadMessage['load_do_2'] );
-        }
-
-        return function() {}
+    function isUnDef(h) {
+        return typeof h === undefined || h === null
     }
 
-    Load = function(n = {}) {
+    function isString(h) {
+        return isDef(h) && typeof h === 'string'
+    }
 
-        this.page = function(method = {}) {
+    function isBool(h) {
+        return isDef(h) && typeof h === 'boolean'
+    }
 
-            method.do = typeof method.do !== 'undefined' ? typeof method.do === 'function' ? method.do : doNot(method.do) : doNot();
-            var IntervalLoad = setInterval(checkPageReady, 10);
-            var ComplateTime = 0;
-            var startLoading = Date.now();
+    function getBool(h) {
 
+        return (
+            isDef(h) ? isBool(h) ? h : isString(h) ? h.toLowerCase() == 'true' ? true : false : false : false
+        )
+
+    }
+
+    function getAttr(h, attr) {
+        return h.hasAttribute(attr) ? h.getAttribute(attr) : ""
+    }
+
+    function isObj(h) {
+        return h !== null && typeof h === 'object'
+    }
+
+    function isFunc(h) {
+        return isDef(h) && typeof h === 'function'
+    }
+
+    function replaceAll(h, a, b) {
+        return h.replace(new RegExp(a, 'g'), b)
+    }
+
+    function lunchFunc(func, argc = null) {
+        return isFunc(func) ? argc !== null ? func(argc) : func() : null;
+    }
+
+    function isEmpty(h) {
+        return h == ''
+    }
+
+    function isNull(h) {
+        return h == null
+    }
+
+    function selectId(h) {
+        return document.getElementById(h)
+    }
+
+
+    var hashLoad = function(n = {}) {
+
+        this.page = function(h = {}) {
+
+            /* do when loaded */
+            var doLoad = 'do' in h ? isFunc(h.do) ? h.do : emptyFunc : emptyFunc;
+
+            /* loading vars */
+            var loadInterval = setInterval(checkPageReady, 10),
+                checkTime = 0,
+                startDate = Date.now();
+
+            /* loading function */
             function checkPageReady() {
-                ComplateTime ++;
+                checkTime ++;
 
-                if ( typeof document.getElementsByTagName('body')[0] !== 'undefined' ) {
-                    window.clearInterval(IntervalLoad);
-                    var LoadTime = window.performance.timing.domContentLoadedEventEnd-window.performance.timing.navigationStart;
+                if (typeof document.getElementsByTagName('body')[0] !== 'undefined') {
+
+                    /* clearn interval when loaded */
+                    window.clearInterval(loadInterval);
+
+                    /* get page load time */
+                    var loadTime = window.performance.timing.domContentLoadedEventEnd-window.performance.timing.navigationStart;
+
+                    /* return to do */
                     var returned = {
-                        loadTime : LoadTime,
-                        checkLen : ComplateTime,
-                        startLoad : startLoading,
+                        loadTime : loadTime,
+                        checkLen : checkTime,
+                        startLoad : startDate,
                         endLoad : Date.now(),
                         load : true
                     }
-                    method.do.call(this, returned);
+
+                    /* run user function */
+                    doLoad.call(this, returned);
                 }
             }
 
         }
 
-        this.component = function(method = {}) {
+        this.component = function(h = {}) {
 
-            method.app = typeof method.app !== 'undefined' ? typeof document.getElementById(method.app) !== 'undefined' ? method.app : "" : "";
-            method.do = typeof method.do !== 'undefined' ? typeof method.do === 'function' ? method.do : doNot(method.do) : doNot();
-            method.load = typeof method.load !== 'undefined' ? typeof method.load === 'function' ? method.load : doNot(method.load) : doNot();
-            method.error = typeof method.error !== 'undefined' ? method.error : "<!-- Error -->"
+            if ('app' in h) {
 
-            var theVal = method.app !== "" ? document.getElementById(method.app).innerHTML : "";
+                if (isDef( selectId(h.app) )) {
 
-            window.addEventListener('hashchange', function() {
-                if ( method.app !== "" ) {
-                    var checkTime = 0;
-                    var startLoading = Date.now();
+                    /* set all vars */
+                    var app = h.app,
+                        doLoaded = 'do' in h ? isFunc(h.do) ? h.do : emptyFunc : emptyFunc,
+                        doLoad = 'load' in h ? isFunc(h.load) ? h.load : emptyFunc : emptyFunc,
+                        errorSy = 'error' in h ? isString(h.error) ? h.error : '<!--h:error-->' : '<!--h:error-->',
+                        application = selectId(app),
+                        appVal = application.innerHTML;
+                    
+                    /* check when hash changed */
+                    window.addEventListener('hashchange', function() {
 
-                    method.load.call(this, {
-                        hash : window.location.hash.slice(1),
-                        startLoad : startLoading
+                        /* cons app */
+                        var checkTime = 0,
+                            startTime = Date.now();
+
+                        /* do first load actions */
+                        doLoad.call(this, {
+                            hash : window.location.hash.slice(1),
+                            startTime : startTime
+                        });
+
+                        /* set load interval */
+                        var loadInterval = setInterval(checkPageReadyCom, 10);
+
+                        /* load function */
+                        function checkPageReadyCom() {
+                            checkTime ++;
+
+                            var newVal = application.innerHTML;
+                            if (
+                                newVal !== appVal || 
+                                newVal.includes(errorSy)
+                            ) {
+                                /* clear when loaded */
+                                window.clearInterval(loadInterval);
+
+                                /* do action when loaded */
+                                doLoaded.call(this, {
+                                    hash : window.location.hash.slice(1),
+                                    startTime : startTime,
+                                    endTime : Date.now(),
+                                    loadTime : Date.now() - startTime,
+                                    checkLen : checkTime,
+                                    load : true
+                                });
+
+                                /* set new value to old val */
+                                appVal = newVal;
+                            }
+                        }
+
                     });
 
-                    var IntervalLoad = setInterval(checkPageReadyNew, 10);
-                    function checkPageReadyNew() {
-                        checkTime ++;
-
-                        if ( document.getElementById(method.app).innerHTML !== theVal || 
-                        document.getElementById(method.app).innerHTML.includes(method.error) ) {
-                            window.clearInterval(IntervalLoad);
-                            method.do.call(this, {
-                                hash : window.location.hash.slice(1),
-                                startLoad : startLoading,
-                                endLoad : Date.now(),
-                                loadTime : Date.now() - startLoading,
-                                checkLen : checkTime,
-                                load : true
-                            });
-                            theVal = document.getElementById(method.app).innerHTML;
-                        }
-                    }
                 }
-            });
+                
+
+            }
+            
 
         }
 
     }
 
 
-
-    var HashLoad = Load;
+    var HashLoad = hashLoad;
 
 
     var LoadHashNew = false;
@@ -111,8 +190,6 @@
             LoadHashNew = true;
         }
 
-    } else {
-        console.error(loadMessage['load_error']);
     }
 
 })(window)
