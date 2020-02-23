@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>Write & send message</title>
+	<style>
+		body {
+			margin: 10px;
+			background-color: white;
+		}
+		.code-m {
+			background-color: rgba(214, 214, 214, 0.1);
+			border-radius: 3px;
+			max-width: 100%;
+			display: inline-block;
+			margin-top: 10px;
+			width: 800px;
+			margin-bottom: 10px;
+			text-align: left;
+			direction: ltr;
+			font-size: 15px;
+			line-height: 27px;
+			color: rgb(56, 56, 56) !important;
+			padding: 8px !important;
+			font-family: monospace !important;
+			border: 1px #ccc solid;
+		}
+		.code-m .s {
+			color: rgba(0, 100, 231, 0.562);
+		}
+		.code-m .va {
+			color: rgb(130, 5, 255);
+		}
+		.code-m .vs {
+			color: rgb(21, 78, 248);
+		}
+		.code-m .ne {
+			color: rgba(25, 165, 20, 0.849);
+		}
+		.code-m .r {
+			color: red;
+		}
+		.code-m .val {
+			color: blue;
+			font-weight: 700;
+		}
+		.code-m .g {
+			color: rgb(190, 54, 4);
+		}
+
+		input[type=text], select, textarea {
+			border-radius: 3px;
+			padding: 20px;
+			font-size: 14px;
+			text-align: left;
+			margin: 5px;
+			direction: ltr;
+			color: rgb(92, 92, 92);
+			min-width: 250px;
+			letter-spacing: 3px;
+			border: 0;
+			background: white;
+			box-shadow: 0 0 25px rgba(0,0,0,0.1);
+		}
+		.sm {
+			opacity: 0.7;letter-spacing: 2px;margin-bottom: 10px;
+		}
+
+		.code-m .tf {
+			color: blue;
+			font-weight: 700;
+		}
+
+		.code-m .com {
+			color: #333 !important;
+			opacity: 0.3;
+		}
+
+		.code-m .com * {
+			color: #333 !important;
+		}
+
+		button {
+			border-radius: 3px;
+			padding: 10px;
+			font-size: 14px;
+			text-align: center;
+			margin: 5px;
+			direction: ltr;
+			color: rgb(92, 92, 92);
+			width: 100px;
+			letter-spacing: 2px;
+			border: 0;
+			color: white;
+			background: #0b36f3;
+			box-shadow: 0 0 25px rgba(0,0,0,0.1);
+			cursor: pointer;
+		}
+
+	</style>
+
+
+</head>
+
+<body>
+
+	<center>
+		<small>Name:</small><br />
+		<input type="text" id="name" placeholder="Example: ahmad">
+		<br />
+		<small>Message:</small><br />
+		<textarea id="message" placeholder="Example: hello"></textarea>
+		<br />
+
+		<button onclick="sendMessage()">Create</button>
+		<br />
+		<small id="showLink"></small>
+		<br />
+		<a href='#' id="show" style="display: none;"><button>View message</button></a>
+	</center>
+
+	<script>
+		function sendMessage() {
+			var name = document.getElementById('name'),
+				mess = document.getElementById('message'),
+				show = document.getElementById('show');
+
+			if (name.value !== '' && mess.value !== '') {
+				
+				var link = `show.html#name/${btoa(escape(name.value))}/message/${btoa(escape(mess.value))}/d/${Date.now()}`;
+				
+				document.getElementById('showLink').innerHTML = link;
+				show.setAttribute('href', link);
+				show.style.display = 'block';
+
+			} else {
+				show.style.display = 'none';
+				alert('Please enter name and message!');
+			}
+		}
+	</script>
+
+</body>
+
+</html>
