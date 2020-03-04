@@ -66,7 +66,13 @@
         this.page = function(h = {}) {
 
             /* do when loaded */
-            var doLoad = 'do' in h ? isFunc(h.do) ? h.do : emptyFunc : emptyFunc;
+            var doLoad = 'do' in h ? isFunc(h.do) ? h.do : emptyFunc : emptyFunc,
+                doLoaded = 'load' in h ? isFunc(h.load) ? h.load : emptyFunc : emptyFunc;
+
+            /* load function */
+            doLoaded.call(this, {
+                startTime : Date.now()
+            });
 
             /* loading vars */
             var loadInterval = setInterval(checkPageReady, 10),

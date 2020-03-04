@@ -3,35 +3,20 @@
 
 <head>
 	<meta charset="utf-8">
+	<title>Hash.js | javascript library</title>
+
 	<style>
-		body {
-			width: 60%;
-			background-color: white;
-		}
+		*,::after,::before{box-sizing:border-box}body{overflow-x:hidden;margin:0;background-color:#f9f9f9;color:#fff;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;text-align:center}*{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}h1{font-size:170px;padding:0;margin:0;letter-spacing:5px;color:#333}h5{color:#333;font-size:17px;padding:0;margin:0;font-weight:300;letter-spacing:5px;margin-top:10px}button{padding:20px;text-align:center;color:#333;font-size:17px;background-color:#fff;border:0;font-weight:700;border-radius:3px;letter-spacing:1px;cursor:pointer;transition:.5s all;margin:6px;box-shadow:0 0 15px rgba(39,39,39,.137)}button.active,button:hover{background-color:#293eff;color:#fff}button.dl{background-color:#06f168;color:#fff}button.dl:hover{background-color:#018835;color:#fff}button.active:hover{background-color:#0003bd}.space-1{margin-top:20px;margin-bottom:20px}.space-2{margin-top:50px;margin-bottom:50px}.space-3{margin-top:100px;margin-bottom:100px}.content{width:1000px;display:block;text-align:center;direction:ltr;color:#333;background-color:#fff;box-shadow:0 0 15px rgba(39,39,39,.137);border-radius:3px 3px 0 0;margin-left:auto;margin-right:auto;padding:15px;max-width:100%}.content .txt{text-align:justify;direction:ltr;width:100%;padding:6px;font-size:15px;line-height:26px;font-weight:500;letter-spacing:1px;color:#333}.content .txt b{font-weight:700}#loading{width:100%;position:fixed;z-index:999;top:0;text-align:center;display:none;height: 100%;background: rgba(255, 255, 255, 0.4);}#loading img{max-width:100%}#loading #loading_role{width:0;height:0;background-color:#3400ee;color: white;font-size: 12px;text-align:left;transition:.5s all}@keyframes aniMe{0%{width:0}100%{width:100%}}input[type=text],textarea{padding:15px;border:1px #ccc solid;border-radius:3px;text-align:center;color:#333;letter-spacing:2px;font-size:17px;margin-top:5px;margin-bottom:15px}label{letter-spacing:1px}
 	</style>
 
-	<script src="hash.wikitip.css"></script>
-	<link rel="stylesheet" href="hash.toolitop.css">
-	
+</head>
 
+<body>
+	<div id="loading"><div id="loading_role"></div></div>
+	<div id="app"></div>
 
-	<!-- PooperJs -->
-	<script src="https://unpkg.com/@popperjs/core@2"></script>
-
-	<!-- Hash.js -->
-	<script src="hash.js"></script>
-
-	<!-- Hash.js plugin : data -->
-	<script src="hash.data.js"></script>
-	
-	<!-- Hash.js plugin : load -->
-	<script src="hash.load.js?ver"></script>
-
-	<!-- Hash.js plugin : wikitip -->
-	<script src="hash.toolitop.js"></script>
-
-	<!-- Demo script -->
-	<script src="script.js"></script>
+	<script src="src/hash.all.js"></script>
+	<script src="my.js"></script>
 
 </body>
 
