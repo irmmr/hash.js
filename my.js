@@ -121,7 +121,8 @@ if (Hash.ready) {
                 }
             },
             block : [
-                'contact/message/name/{any}/mess/{any}/{any}'
+                'contact/message/name/{any}/mess/{any}/{any}',
+                'download/artist/{any}/song/{any}'
             ]
         });
 
@@ -149,6 +150,35 @@ if (Hash.ready) {
                 <div class="txt"><b>Message: </b>${ms} (${ms.length})</div>`);
 
                 el.innerHTML = sent ? sentContent : failedContent;
+            }
+        });
+
+        spa.router({
+            router : 'download/artist/{any}/song/{any}',
+            do : function(e, data) {
+                var el = document.getElementById('app'),
+                    artist = unescape(e[0]),
+                    song = unescape(e[1]),
+                    hash = data.hash.slice(1);
+                el.innerHTML = setContent('Song', `Download <b>${artist}</b> new song called <b>${song}</b>`,
+                [{text : 'Home', link : 'start', top : false}, {text : 'Songs', link : 'music', top : false}],
+                `<div class="txt">You can download this song now!</div>
+                <h-link link="${hash}/128" h-top="true"><button class="active">Download 128</button></h-link>
+                <h-link link="${hash}/320" h-top="true"><button class="active">Download 320</button></h-link>`)
+            }
+        });
+
+        spa.router({
+            router : 'download/artist/{any}/song/{any}/{any}',
+            do : function(e, data) {
+                var el = document.getElementById('app'),
+                    artist = unescape(e[0]),
+                    song = unescape(e[1]),
+                    qua = unescape(e[2]),
+                    hash = data.hash.slice(1);
+                el.innerHTML = setContent(song, `Download ${qua} quality`,
+                [{text : 'Home', link : 'start', top : false}],
+                `Starting download ...`)
             }
         });
 
