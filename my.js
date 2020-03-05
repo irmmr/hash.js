@@ -115,9 +115,9 @@ if (Hash.ready) {
                     main : setContent('404', 'Your page not found in our server',
                     [{text : 'Back to home', link : 'start', top : false}],
                     `<div class="txt"><b>Notice: </b>we can't find this page please try again or use F5. You can tell us if you need this page informations. check the address! you searching for this page</div><!--h:error-->
-                    <label style="font-weight:700">Page</label><br /><input type="text" id="page_u" onmouseover="getNowHash()"><br />
+                    <label style="font-weight:700">Page</label><br /><input type="text" id="page_u" value="{hash:get}"><br />
                     <button class="active" onclick="goPage()">Go there</button>`),
-                    title : `page does not exits`
+                    title : `page "{hash:get}" does not exits`
                 }
             },
             block : [

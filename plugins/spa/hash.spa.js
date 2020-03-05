@@ -4,6 +4,11 @@
     var emptyObj = Object.freeze({}),
         emptyFunc = function() {};
 
+    var appGetLoad = {
+        hash_get : '{hash:get}',
+        href_get : '{href:get}'
+    }
+
     function isDef(h) {
         return typeof h !== undefined && h !== null
     }
@@ -114,6 +119,14 @@
         return 'title' in h ? isString(h.title) ? h.title : '' : ''
     }
 
+    function appendTag(e) {
+        if (isString(e)) {
+            e = replaceAll(e, appGetLoad.hash_get, window.location.hash.slice(1));
+            e = replaceAll(e, appGetLoad.href_get, window.location.href);
+        }
+
+        return e;
+    }
 
 
     function meduRouter(router) {
@@ -255,6 +268,11 @@
 
                     /* app do action (MAIN) */
                     if (isDef(appMain)) {
+
+                        /* replace tags */
+                        appMain = appendTag(appMain);
+
+                        /* set into html */
                         selectId(element).innerHTML = appMain;
                     }
 
@@ -267,6 +285,11 @@
 
                     /* app do action (TITLE) */
                     if (isString(appTitle)) {
+
+                        /* replace tags */
+                        appTitle = appendTag(appTitle);
+
+                        /* set to title */
                         document.title = appTitle;
                     }
 
@@ -300,6 +323,11 @@
 
                         /* manage error main */
                         var nfMain = getMain(nf);
+
+                        /* replace tags */
+                        nfMain = appendTag(nfMain);
+
+                        /* set into html */
                         selectId(element).innerHTML = nfMain;
 
                     }
@@ -308,6 +336,11 @@
 
                         /* manage error title */
                         var nfTitle = getTitle(nf);
+
+                        /* replace tags */
+                        nfTitle = appendTag(nfTitle);
+
+                        /* set into title */
                         document.title = nfTitle;
 
                     }
