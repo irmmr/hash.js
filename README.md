@@ -7,6 +7,13 @@ This plugins are Hash.load, Hash.server, Hash.spa. You can get them in "all file
 
 # Hash lib
 This is main library for manage page hash and change it.
+`
+var main = new Hash.lib();
+// set new hash
+main.set({
+    val : 'hello'
+});
+`
 
 # Hash info
 It's for get library and plugins informations.
