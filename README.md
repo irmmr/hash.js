@@ -18,7 +18,7 @@ This plugins are Hash.load, Hash.server, Hash.spa. You can get them in "all file
 # Elements
 `Hash.el()` I have nothing to say!
 
-# Single page application (spa) - plugin
+# Spa - plugin
 `Hash.spa()` This is not a extensive SPA, this SPA just create a rout and append main html codes to element. You must add an element for SPA and add some routers. This library have Router too and by that you can run your functions and get informations from page hash.
 
 # Loader - plugin
