@@ -9,20 +9,23 @@ For watching demo, you can check `demo` folder.
 This plugins are Hash.load, Hash.server, Hash.spa. You can get them in "all file" or you can use them separately.
 >  load, server, spa
 
-# Hash lib
-This is main library for manage page hash and change it.
+# Main library
+`Hash.lib()` This is main library for manage page hash and change it.
 
-# Hash info
-It's for get library and plugins informations.
+# Library informations
+`Hahs.info()` It's for get library and plugins informations such as plugins status.
 
-# Hash el
-I have nothing to say!
+# Elements
+`Hash.el()` I have nothing to say!
 
-# Hash Spa - plugin
-This is not a extensive SPA, this SPA just create a rout and append main html codes to element. You must add an element for SPA and add some routers. This library have Router too and by that you can run your functions and get informations from page hash.
+# Single page application (spa) - plugin
+`Hash.spa()` This is not a extensive SPA, this SPA just create a rout and append main html codes to element. You must add an element for SPA and add some routers. This library have Router too and by that you can run your functions and get informations from page hash.
 
-# Hash Load - plugin
-This library manage page loading and SPA loading. You can run your functions when page loaded. It's could also be in SPA loading too.
+# Loader - plugin
+`Hash.load()` This library manage page loading and SPA loading. You can run your functions when page loaded. It's could also be in SPA loading too.
 
-# Hash Server - plugin
-It's just ajax with POST and GET methods!
+# Server and ajax - plugin
+`Hash.server()` It's just ajax with POST and GET methods!
+
+# Other
+By `Hash.event` you can add some possibilities like `addEventListener` and by `Hash.ready` you can check library status.
