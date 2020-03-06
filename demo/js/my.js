@@ -1,3 +1,6 @@
+/* 
+* HashJs demo my.js
+*/
 
 if (Hash.ready) {
     

@@ -1,3 +1,8 @@
+/* 
+* HashJs plugin : spa v1.4
+* Copyright (c) 2020 IRMMR
+* MIT License
+*/
 (function(window) {
     'use strict';
 

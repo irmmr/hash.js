@@ -1,3 +1,8 @@
+/* 
+* HashJs plugin : server v1.0
+* Copyright (c) 2020 IRMMR
+* MIT License
+*/
 (function(window) {
     'use strict';
 

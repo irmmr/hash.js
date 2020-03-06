@@ -1,3 +1,8 @@
+/* 
+* HashJs javascript library v1.2
+* Copyright (c) 2020 IRMMR
+* MIT License
+*/
 ( function ( window ) {
     'use strict';
 
