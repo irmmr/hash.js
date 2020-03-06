@@ -10,21 +10,14 @@ if (Hash.ready) {
         var spa = new Hash.spa(),
             lib = new Hash.lib();
 
-            function setContent(title, description, buttons = [], val = '') {
-    
-                var butt = ``;
-                for (var i=0 ; i<buttons.length ; i++) {
-                    butt += `<h-link link="${buttons[i].link}" h-top="${buttons[i].top}"><button>${buttons[i].text}</button></h-link>`;
-                }
-            
-                return `
-                    <h1>${title}</h1>
-                    <h5>${description}</h5>
-                    <div class="space-2"></div>
-                    ${butt}
-                    <div class="space-3"></div>
-                    <div class="content">${val}</div>`;
+        function setContent(title, description, buttons = [], val = '') {
+            var butt = ``;
+            for (var i=0 ; i<buttons.length ; i++) {
+                butt += `<h-link link="${buttons[i].link}" h-top="${buttons[i].top}"><button><img src="icon/${buttons[i].icon}" width="24px" style="float:left;margin-right:10px"> ${buttons[i].text}</button></h-link>`;
             }
+            var icon = `<img src="./../logo/logo.png" width="100px">`;
+            return `<h1>${icon}${title}${icon}</h1><h5>${description}</h5><div class="space-2"></div>${butt}<div class="space-3"></div><div class="content">${val}</div>`;
+        }
         
         spa.app({
             el : 'app',
@@ -32,8 +25,12 @@ if (Hash.ready) {
             component : {
                 'start' : {
                     main : setContent('Hash.js', 'Simple and useful javascript library',
-                        [{text : 'View demo', link : 'demo', top : false}, {text : 'Documents', link : 'documents', top : false },
-                        {text : 'Download', link : 'download', top : false }, {text : 'Contact', link : 'contact', top : false }],
+                        [
+                            {text : 'View demo', link : 'demo', top : false, icon : 'demo.png'},
+                            {text : 'Documents', link : 'documents', top : false, icon : 'document.png'},
+                            {text : 'Download', link : 'download', top : false, icon : 'download.png'},
+                            {text : 'Contact', link : 'contact', top : false, icon : 'phone.png'}
+                        ],
                         `<div class="txt"><b>Welcome: </b> Hash.js is a simple and useful library for javascript. like all js libraries.</div>
                         <div class="txt">You can use that for append a simple spa and router with javascript. it's mostly use for manage and check page <b>hash</b>.</div>
                         <div class="txt">Hash.js main script is contain "Hash.event", "Hash.lib", "Hash.info", "Hash.el".</div>
@@ -48,7 +45,9 @@ if (Hash.ready) {
                 },
                 'start/step/1' : {
                     main : setContent('Step 1', 'For start using hash js',
-                        [{text : 'Back to home', link : 'start', top : false}],
+                        [
+                            {text : 'Back to home', link : 'start', top : false, icon : 'logo.png'}
+                        ],
                         `<div class="txt"><b>Download: </b> For using hash.js, you first should download lastest version of this library. if you intrested to hash.js, you can go to github and download it or use this:</div>
                         <h-link link="download" h-top="true"><button class="dl">Download</button></h-link>
                         <h-link link="start/step/2" h-top="false"><button class="active">Next step</button></h-link>`
@@ -57,7 +56,9 @@ if (Hash.ready) {
                 },
                 'start/step/2' : {
                     main : setContent('Step 2', 'For start using hash js',
-                        [{text : 'Back to home', link : 'start', top : false}],
+                        [
+                            {text : 'Back to home', link : 'start', top : false, icon : 'logo.png'}
+                        ],
                         `<div class="txt"><b>Read documents: </b>  First you must read hash.js documents that's have very simple write type. you can use 'document' page for this step!</div>
                         <h-link link="start/step/1" h-top="false"><button class="active">Prev step</button></h-link>
                         <h-link link="documents" h-top="true"><button class="dl">Documents</button></h-link>
@@ -67,7 +68,9 @@ if (Hash.ready) {
                 },
                 'start/step/3' : {
                     main : setContent('Step 3', 'For start using hash js',
-                        [{text : 'Back to home', link : 'start', top : false}],
+                        [
+                            {text : 'Back to home', link : 'start', top : false, icon : 'logo.png'}
+                        ],
                         `<div class="txt"><b>Create project: </b> Now you can use hash.js in your projects! easy and simple! befor that you must read this notices:</div>
                         <div class="txt"><font color="red">(1) </font>This library is just for simple SPA and for use the main spa projects you must use Vue, Angular, React and other.</div>
                         <div class="txt"><font color="red">(2) </font>You can't use Hash.js in node!</div>
@@ -77,14 +80,18 @@ if (Hash.ready) {
                 },
                 'demo' : {
                     main : setContent('Demo', 'You can see all library demoes here',
-                        [{text : 'Home', link : 'start', top : false}],
+                        [
+                            {text : 'Back to home', link : 'start', top : false, icon : 'logo.png'}
+                        ],
                         `<div class="txt"><b>Welcome: </b> Hash.js is a simple and useful library for javascript. like all js libraries.</div>`
                     ),
                     title : 'View demo | javascript library'
                 },
                 'contact' : {
                     main : setContent('Contact', 'Contact us in 24h',
-                        [{text : 'Home', link : 'start', top : false}],
+                        [
+                            {text : 'Home', link : 'start', top : false, icon : 'logo.png'}
+                        ],
                         `<div class="txt"><b>Hi: </b> if you have any questions, you can tell us and we answered you fastly! for send message enter your informations.</div>
                         <form>
                             <label for="name" style="font-weight:700">What's your name?</label> <br />
@@ -103,8 +110,9 @@ if (Hash.ready) {
                 },
                 'documents' : {
                     main : setContent('Documents', 'Read documents and start with us',
-                    [{text : 'Home', link : 'start', top : false}, {text : 'ver 1.0', link : 'documents/ver/1.0', top : true},
-                    {text : 'ver 2.0', link : 'documents/ver/2.0', top : true}, {text : 'ver 3.0', link : 'documents/ver/3.0', top : true}],
+                    [
+                        {text : 'Home', link : 'start', top : false, icon : 'logo.png'}
+                    ],
                     `<div class="txt"><b>Hi: </b> if you have any questions, you can tell us and we answered you fastly! for send message enter your informations.</div>`
                     ),
                     title : 'Document | Hash.js'
@@ -113,7 +121,9 @@ if (Hash.ready) {
             error : {
                 '404' : {
                     main : setContent('404', 'Your page not found in our server',
-                    [{text : 'Back to home', link : 'start', top : false}],
+                    [
+                        {text : 'Back to home', link : 'start', top : false, icon : 'logo.png'}
+                    ],
                     `<div class="txt"><b>Notice: </b>we can't find this page please try again or use F5. You can tell us if you need this page informations. check the address! you searching for this page</div><!--h:error-->
                     <label style="font-weight:700">Page</label><br /><input type="text" id="page_u" value="{hash:get}"><br />
                     <button class="active" onclick="goPage()">Go there</button>`),
@@ -121,8 +131,7 @@ if (Hash.ready) {
                 }
             },
             block : [
-                'contact/message/name/{any}/mess/{any}/{any}',
-                'download/artist/{any}/song/{any}'
+                'contact/message/name/{any}/mess/{any}/{any}'
             ]
         });
 
@@ -134,51 +143,16 @@ if (Hash.ready) {
                     ms = unescape(data[2]),
                     el = document.getElementById('app');
 
-                var sent = true;
+                // it's just for demo
 
                 var sentContent = setContent('Sent', 'Your message succesfully sent',
-                [{text : 'Home', link : 'start', top : false}, {text : 'Send new', link : 'contact', top : false}],
+                [{text : 'Back to home', link : 'start', top : false, icon : 'logo.png'}, {text : 'Send new', link : 'contact', top : false, icon : 'send.png'}],
                 `<div class="txt"><b>Status: </b><font color=green>message sent! </font>we answer you in next 24h. please check your email.</div>
-                <div class="txt"><b>Name: </b>${nm} (${nm.length})</div>
-                <div class="txt"><b>Subject: </b>${sb} (${sb.length})</div>
-                <div class="txt"><b>Message: </b>${ms} (${ms.length})</div>`),
-                failedContent = setContent('Failed', 'Your message not sent',
-                [{text : 'Home', link : 'start', top : false}, {text : 'Send new', link : 'contact', top : false}],
-                `<div class="txt"><b>Status: </b><font color=red>message not sent! </font>we answer you in next 24h. please check your email.</div>
                 <div class="txt"><b>Name: </b>${nm} (${nm.length})</div>
                 <div class="txt"><b>Subject: </b>${sb} (${sb.length})</div>
                 <div class="txt"><b>Message: </b>${ms} (${ms.length})</div>`);
 
-                el.innerHTML = sent ? sentContent : failedContent;
-            }
-        });
-
-        spa.router({
-            router : 'download/artist/{any}/song/{any}',
-            do : function(e, data) {
-                var el = document.getElementById('app'),
-                    artist = unescape(e[0]),
-                    song = unescape(e[1]),
-                    hash = data.hash.slice(1);
-                el.innerHTML = setContent('Song', `Download <b>${artist}</b> new song called <b>${song}</b>`,
-                [{text : 'Home', link : 'start', top : false}, {text : 'Songs', link : 'music', top : false}],
-                `<div class="txt">You can download this song now!</div>
-                <h-link link="${hash}/128" h-top="true"><button class="active">Download 128</button></h-link>
-                <h-link link="${hash}/320" h-top="true"><button class="active">Download 320</button></h-link>`)
-            }
-        });
-
-        spa.router({
-            router : 'download/artist/{any}/song/{any}/{any}',
-            do : function(e, data) {
-                var el = document.getElementById('app'),
-                    artist = unescape(e[0]),
-                    song = unescape(e[1]),
-                    qua = unescape(e[2]),
-                    hash = data.hash.slice(1);
-                el.innerHTML = setContent(song, `Download ${qua} quality`,
-                [{text : 'Home', link : 'start', top : false}],
-                `Starting download ...`)
+                el.innerHTML = sentContent;
             }
         });
 
@@ -187,6 +161,12 @@ if (Hash.ready) {
 
     // Loading
     if (adn.load) {
+
+        // Append loading
+        var loading_app = document.createElement('div');
+		loading_app.id = "loading";
+		loading_app.innerHTML = `<div id="loading_role"></div>`;
+		document.body.appendChild(loading_app);
 
         var loa = new Hash.load(),
             loading = document.getElementById('loading'),
