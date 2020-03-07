@@ -3,17 +3,20 @@ Hash.js is a simple and useful javascript library! it's just for fun and the tru
 Hash.js have 4 main parts! A main library plus 3 plugin. This plugins used for load, server(ajax), spa.
 
 # Demo
-For watching demo, you can check `demo` folder.
+For watching demo, you can check [demo](/demo) folder.
 
 # Document
 For read all documents and see examples, check [DOC.md](DOC.md) file.
 
 # Plugins
-This plugins are Hash.load, Hash.server, Hash.spa. You can get them in "all file" or you can use them separately.
+This plugins are Hash.load, Hash.server, Hash.spa. You can get them in "all file" or you can use them separately. [see plugins](/plugins)
 >  load, server, spa
 
+# Using library
+For using Hash.js, you must use that [hash.all.min.js](/src/hash.all.min.js) file.
+
 # Main library
-`Hash.lib()` This is main library for manage page hash and change it.
+`Hash.lib()` This is main library for manage page hash and change it. [click here](/src)
 
 # Library informations
 `Hahs.info()` It's for get library and plugins informations such as plugins status.
