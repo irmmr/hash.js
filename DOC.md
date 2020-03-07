@@ -26,7 +26,7 @@ ob.set({
 
 | argument | type | Assumption | description |
 | ------ | ------ | ------ | ------ |
-| without | boolean | true | It is used for hash first sharp status |
+| 0 | boolean | true | It is used for hash first sharp status |
 
 ```javascript
 // create an object from Hash.lib
@@ -40,7 +40,7 @@ alert("Page hash is " + hash);
 
 | argument | type | Assumption | description |
 | ------ | ------ | ------ | ------ |
-| include | string | nothing | It is used for check hash |
+| 0 | string | nothing | It is used for check hash |
 
 ```javascript
 // create an object from Hash.lib
@@ -168,6 +168,24 @@ if (adn.server) {
 
 # Hash.spa
 `app` It makes a spa in page.
+
+| object | type | Assumption | description |
+| ------ | ------ | ------ | ------ |
+| el | string | nothing | You must enter spa element id |
+| def | string (a component) | nothing | It is default component |
+| component | array object | nothing | All of components for use |
+| component => main | string | nothing | Rendering html codes |
+| component => title | string | nothing | Page title |
+| component => do | function | nothing | Page function for run |
+| error | array object | nothing | Page error for spa |
+| error => main | string | nothing | Rendering html codes |
+| error => title | string | nothing | Page title |
+| error => do | function | nothing | Page function for run |
+| block | array | nothing | All routers addresses that must be blocked |
+
+**Page errors**
+*  `404` : This include page 404 error and page not found.
+
 ```javascript
 // create an object from Hash.spa
 var ob = new Hash.spa();
@@ -207,6 +225,12 @@ ob.app({
 >  In `title`, `main` for getting the hash of page or page href, you can use `{hash:get}` or `{href:get}`.
 
 `router` It makes a router in page.
+
+| object | type | Assumption | description |
+| ------ | ------ | ------ | ------ |
+| router | string | nothing | The router address |
+| do | function(data, info) | nothing | The router function that must be run |
+
 ```javascript
 // create an object from Hash.spa
 var ob = new Hash.spa();
@@ -246,6 +270,16 @@ h-link {
 
 # Hash.server
 `ajax` Using for ajax connection.
+
+| object | type | Assumption | description |
+| ------ | ------ | ------ | ------ |
+| url | string | nothing | Page url for connect |
+| type | string | nothing | The ajax method (POST or GET) |
+| data | array object | nothing | The connection data for send |
+| result | object | nothing | Manage connection result |
+| result => success | function(result) | nothing | Connect function when 'success' |
+| result => error | function(code) | nothing | Connect function when 'error' |
+
 ```javascript
 // create an object from Hash.server
 var ob = new Hash.server();
@@ -276,6 +310,12 @@ ob.ajax({
 
 # Hash.load
 `page` Used for page loading.
+
+| object | type | Assumption | description |
+| ------ | ------ | ------ | ------ |
+| load | function(info) | nothing | Function when loading is started |
+| do | function(info) | nothing | Function when loading is ended |
+
 ```javascript
 // create an object from Hash.load
 var ob = new Hash.load();
@@ -300,6 +340,13 @@ ob.page({
 ```
 
 `component` Used for page loading.
+
+| object | type | Assumption | description |
+| ------ | ------ | ------ | ------ |
+| app | string | nothing | Spa app id |
+| load | function(info) | nothing | Function when loading is started |
+| do | function(info) | nothing | Function when loading is ended |
+
 ```javascript
 // create an object from Hash.load
 var ob = new Hash.load();
@@ -337,6 +384,12 @@ if (Hash.ready) {
 
 # Hash.event
 It works like addEventListener!
+
+| argument | type | Assumption | description |
+| ------ | ------ | ------ | ------ |
+| 0 | string | nothing | Event name |
+| 1 | function | nothing | Function when event run |
+
 ```javascript
 Hash.event('change', function() {
     alert('The hash of the page is changed!');
