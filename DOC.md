@@ -123,8 +123,11 @@ if (adn.server) {
 var ob = new Hash.spa();
 // use app() from Hash.spa
 ob.app({
-	el : 'app', // element id
-	def : 'home', // main page component
+    // element id
+	el : 'app',
+	// main page component
+	def : 'home',
+	// spa componenets
 	component : {
 		'home' : {
 			title : 'home (welcome) | spa app', // page title
@@ -132,20 +135,133 @@ ob.app({
 		},
 		'home/start' : {
 			title : 'home start | spa app',
-			main : 'start working with us',
+			main : 'start working with us, this href is {href:get}',
 		 	do : function() { // spa function
 				alert('start now!');
 		 	}
 	  	}
 	},
+	// set error (404)
 	error : {
 		'404' : {
 			main : 'page not found!',
-			title : 'error 404 | spa app',
+			title : 'page "{hash:get}" not found | spa app',
 		}
-	}
+	},
+	// routers for block
+	block : [
+	    'page/{any}'
+	]
 });
 ```
+>  In `title`, `main` for getting the hash of page or page href, you can use `{hash:get}` or `{href:get}`.
+
+`router` It makes a router in page.
+```javascript
+// create an object from Hash.spa
+var ob = new Hash.spa();
+// use router
+ob.router({
+    router : 'page/{any}',
+    do : function(data, info) {
+        
+        // getting data in array for every '{any}'. in this router address we have 1 '{any}' router.
+        var page = data[0];
+        
+        // getting info
+        var hash = info.hash,
+            rout = info.router;
+            
+        // using them
+        alert("Now you are in page " + page);
+        
+    }
+});
+```
+>  For run `router` in this spa, you must add all routers in `block`.
+
+# Hash.server
+`ajax` Using for ajax connection.
+```javascript
+// create an object from Hash.server
+var ob = new Hash.server();
+// use ajax
+ob.ajax({
+    // set ajax url
+    url : 'https://site.com/page/raw',
+    // set ajax type | get or post
+    type : 'post',
+    // set data for send
+    data : {
+        token : '12Hn',
+        message : 234
+    },
+    // make result actions
+    result : {
+        // success
+        success : function(res) {
+            alert("Success! result is " + res);
+        },
+        // error
+        error : function(resCode) {
+            alert("Failed. result code: " + resCode);
+        }
+    }
+});
+```
+
+# Hash.load
+`page` Used for page loading.
+```javascript
+// create an object from Hash.load
+var ob = new Hash.load();
+// use for page
+ob.page({
+    // when loading is started
+    load : function(e) {
+        // document.getElementById('loading').style.display = 'block'
+        console.log("Loading started in " + e.startTime);
+    },
+    // when page loaded
+    do : function(e) {
+        // document.getElementById('loading').style.display = 'none'
+        var lt = e.loadTime, // get load time
+            cl = e.checkLen, // get check time
+            sl = e.startLoad, // get start time
+            el = e.endLoad, // get end time
+            status = e.load; // get loading status
+        console.log(`Page loaded in ${lt} ms. loading started in ${sl} and ended in ${el}. Loading status is ${status} in ${cl} time check.`);
+    }
+});
+```
+
+`component` Used for page loading.
+```javascript
+// create an object from Hash.load
+var ob = new Hash.load();
+// use for spa
+ob.component({
+    // set app id
+    app : 'app',
+    // when loading is started
+    load : function(e) {
+        // document.getElementById('loading').style.display = 'block'
+        console.log(`Loading "${e.hash}" page is started in ${e.startTime}`);
+    },
+    // when page loaded
+    do : function(e) {
+        // document.getElementById('loading').style.display = 'none'
+        var lt = e.loadTime, // get load time
+            cl = e.checkLen, // get check time
+            sl = e.startTime, // get start time
+            el = e.endTime, // get end time
+            status = e.load, // get loading status
+            hash = e.hash;
+        console.log(`Page "${hash}" is loaded in ${lt} ms. loading started in ${sl} and ended in ${el}. Loading status is ${status} in ${cl} time check.`);
+    }
+});
+```
+>  `component` used with `Hash.spa`.
 
 # Hash.ready
 It only returns and check library status.
