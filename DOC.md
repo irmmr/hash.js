@@ -9,6 +9,11 @@ var ob = new Hash.lib(); // Here i use main library
 
 # Hash.lib
 `set` this used for set new hash to page.
+
+| object | type | Assumption | description |
+| ------ | ------ | ------ | ------ |
+| val | string | nothing | It is used for the hash value |
+
 ```javascript
 // create an object from Hash.lib
 var ob = new Hash.lib();
@@ -18,6 +23,11 @@ ob.set({
 });
 ```
 `get` this used for set new hash to page.
+
+| argument | type | Assumption | description |
+| ------ | ------ | ------ | ------ |
+| without | boolean | true | It is used for hash first sharp status |
+
 ```javascript
 // create an object from Hash.lib
 var ob = new Hash.lib();
@@ -27,6 +37,11 @@ var hash = ob.get(true); // with first sharp or not?
 alert("Page hash is " + hash);
 ```
 `have` this checks if page have any hash.
+
+| argument | type | Assumption | description |
+| ------ | ------ | ------ | ------ |
+| include | string | nothing | It is used for check hash |
+
 ```javascript
 // create an object from Hash.lib
 var ob = new Hash.lib();
@@ -41,6 +56,11 @@ if (ob.have('hello')) {
 ```
 
 `remove` This removes some words from the page hash.
+
+| object | type | Assumption | description |
+| ------ | ------ | ------ | ------ |
+| words | array | [] | It is used for enter words (remove from hash) |
+
 ```javascript
 // create an object from Hash.lib
 var ob = new Hash.lib();
@@ -58,6 +78,11 @@ ob.lock();
 ```
 
 `clear` this clears the hash of the page.
+
+| object | type | Assumption | description |
+| ------ | ------ | ------ | ------ |
+| sharp | boolean | true | If true, page hash clear plus first # |
+
 ```javascript
 // create an object from Hash.lib
 var ob = new Hash.lib();
@@ -71,6 +96,14 @@ ob.clear({
 # Hash.el
 
 `replace` This is a universal replacement.
+
+| object | type | Assumption | description |
+| ------ | ------ | ------ | ------ |
+| text | string | nothing | It is main text for replacement |
+| replace | array[object] | nothing | It is an array for replace |
+| replace => from | string | null | From what? |
+| replace => to | string | null | To what? |
+
 ```javascript
 // create an object from Hash.el
 var ob = new Hash.el();
@@ -100,6 +133,13 @@ alert("This library version: " + ver);
 ```
 
 `addons` This used for check plugins status.
+
+| output | type | Assumption | description |
+| ------ | ------ | ------ | ------ |
+| load | boolean | false | If load library is ready! |
+| server | boolean | false | If server library is ready! |
+| spa | boolean | false | If spad library is ready! |
+
 ```javascript
 // create an object from Hash.info
 var ob = new Hash.info(),
@@ -189,6 +229,20 @@ ob.router({
 });
 ```
 >  For run `router` in this spa, you must add all routers in `block`.
+
+`Spa link element` Spa library uses a custom element for links that set hash. `h-link`
+```css
+h-link {
+    cursor: pointer;
+}
+```
+```html
+<h-link link="download" h-top="true">Download file</h-link>
+```
+| attr | type | description |
+| ------ | ------ | ------ |
+| link | string (hash) | Link address : This can be a router or spa address |
+| h-top | boolean (true,false) | Scroll status : If true, the scrollbar goes up when clicked. |
 
 # Hash.server
 `ajax` Using for ajax connection.
@@ -432,7 +486,18 @@ if (adnSpa) {
 
 ```javascript
 var lib = new Hash.lib();
-lib.have() ? lib.clear() : null;
+
+if (lib.have())
+    lib.clear();
+```
+
+`Example 7`
+
+```html
+<!-- in spa library -->
+<h-link link="home" h-top="false">Home</h-link>
+<h-link link="doc" h-top="true">Document</h-link>
+<h-link link="download/2234/file/48884452345">Download</h-link>
 ```
 
 
