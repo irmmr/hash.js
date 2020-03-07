@@ -47,3 +47,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Clear all extra sections and code optimization
 
+## [1.2.1] - 2020-03-07
+### Changed
+- Fix some parts in demo project
+
+### Removed
+- All examples files and codes in demo folder
+

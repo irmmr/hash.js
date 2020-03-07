@@ -34,14 +34,8 @@ if (Hash.ready) {
                             {text : 'Download', link : 'download', top : false, icon : 'download.png'},
                             {text : 'Contact', link : 'contact', top : false, icon : 'phone.png'}
                         ],
-                        `<div class="txt"><b>Welcome: </b> Hash.js is a simple and useful library for javascript. like all js libraries.</div>
-                        <div class="txt">You can use that for append a simple spa and router with javascript. it's mostly use for manage and check page <b>hash</b>.</div>
-                        <div class="txt">Hash.js main script is contain "Hash.event", "Hash.lib", "Hash.info", "Hash.el".</div>
-                        <div class="txt"><b>Hash.event: </b> It's used for add an listener for page hash change.</div>
-                        <div class="txt"><b>Hash.lib: </b> This part contain all functions for manage and controll page hash.</div>
-                        <div class="txt"><b>Hash.el: </b> This part contain some functions for replace and create elements.</div>
-                        <div class="txt"><b>Hash.info: </b> It's show library version and plugins status.</div>
-                        <div class="txt">for more informations you can read douments!</div>
+                        `<div class="txt"><b>Welcome: </b> Hash.js is a simple and useful javascript library! it's just for fun and the truth is that Hash.js is not very powerful. This library don't need Node and Node don't need this library!
+                        Hash.js have 4 main parts! A main library plus 3 plugin. This plugins used for load, server(ajax), spa.</div>
                         <h-link link="start/step/1" h-top="false"><button class="active">Start - step 1</button></h-link>`
                     ),
                     title : 'Hash.js | javascript library'
@@ -51,7 +45,7 @@ if (Hash.ready) {
                         [
                             {text : 'Back to home', link : 'start', top : false, icon : 'logo.png'}
                         ],
-                        `<div class="txt"><b>Download: </b> For using hash.js, you first should download lastest version of this library. if you intrested to hash.js, you can go to github and download it or use this:</div>
+                        `<div class="txt"><b>Download: </b> For using hash.js, you first should download latest version of this library. if you interested to hash.js, you can go to github and download it or use this:</div>
                         <h-link link="download" h-top="true"><button class="dl">Download</button></h-link>
                         <h-link link="start/step/2" h-top="false"><button class="active">Next step</button></h-link>`
                     ),
@@ -62,7 +56,7 @@ if (Hash.ready) {
                         [
                             {text : 'Back to home', link : 'start', top : false, icon : 'logo.png'}
                         ],
-                        `<div class="txt"><b>Read documents: </b>  First you must read hash.js documents that's have very simple write type. you can use 'document' page for this step!</div>
+                        `<div class="txt"><b>Read documents: </b> First you must read hash.js documents that have very simple syntax. you can use 'document' page for this step!</div>
                         <h-link link="start/step/1" h-top="false"><button class="active">Prev step</button></h-link>
                         <h-link link="documents" h-top="true"><button class="dl">Documents</button></h-link>
                         <h-link link="start/step/3" h-top="false"><button class="active">Next step</button></h-link>`
@@ -74,9 +68,7 @@ if (Hash.ready) {
                         [
                             {text : 'Back to home', link : 'start', top : false, icon : 'logo.png'}
                         ],
-                        `<div class="txt"><b>Create project: </b> Now you can use hash.js in your projects! easy and simple! befor that you must read this notices:</div>
-                        <div class="txt"><font color="red">(1) </font>This library is just for simple SPA and for use the main spa projects you must use Vue, Angular, React and other.</div>
-                        <div class="txt"><font color="red">(2) </font>You can't use Hash.js in node!</div>
+                        `<div class="txt"><b>Create project: </b> Now you can use hash.js in your projects! easy and simple!</div>
                         <h-link link="start/step/2" h-top="false"><button class="active">Prev step</button></h-link>`
                     ),
                     title : 'Step 1 for start | javascript library'
@@ -116,7 +108,22 @@ if (Hash.ready) {
                     [
                         {text : 'Home', link : 'start', top : false, icon : 'logo.png'}
                     ],
-                    `<div class="txt"><b>Hi: </b> if you have any questions, you can tell us and we answered you fastly! for send message enter your informations.</div>`
+                    `<div class="txt"><b>DOC.md: </b> For read documents, you must read <b>DOC.md</b> file in Gitlab or Github.</div>`
+                    ),
+                    title : 'Document | Hash.js'
+                },
+                'download' : {
+                    main : setContent('Download', 'Download library for start using',
+                    [
+                        {text : 'Home', link : 'start', top : false, icon : 'logo.png'}
+                    ],
+                    `<div class="txt"><b>Help: </b> for using hash.js, you can clone it from github or gitlab. If you do not want to clone this project, you must download it in zip format.</div>
+                    <b>From GitLab</b> <br />
+                    <input type="text" readonly value="https://gitlab.com/irmmr/hash.js.git">
+                    <a href="https://gitlab.com/irmmr/hash.js" target="_blank"><button class="dl">Download</button></a>
+                    <br /> <b>From GitHub</b> <br />
+                    <input type="text" readonly value="https://github.com/irmmr/hash.js.git">
+                    <a href="https://github.com/irmmr/hash.js" target="_blank"><button class="active">Download</button></a>`
                     ),
                     title : 'Document | Hash.js'
                 }
