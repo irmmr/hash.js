@@ -54,3 +54,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - All examples files and codes in demo folder
 
+## [1.2.2] - 2020-03-08
+### Changed
+- Fix spa h-link in IE
