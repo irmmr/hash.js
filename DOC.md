@@ -55,6 +55,23 @@ if (ob.have('hello')) {
 }
 ```
 
+`ref` This receives page reference.
+
+| argument | type | Assumption | description |
+| ------ | ------ | ------ | ------ |
+| 0 | string | nothing | It is used for check reference |
+
+```javascript
+// create an object from Hash.lib
+var ob = new Hash.lib();
+// use ref() in Hash.lib(). This return a string.
+var ref = ob.ref();
+// or . this return a boolean
+if (ob.ref('https://google.com/raw')) {
+    alert("Ok);
+}
+```
+
 `remove` This removes some words from the page hash.
 
 | object | type | Assumption | description |
