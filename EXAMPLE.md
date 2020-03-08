@@ -143,7 +143,7 @@ if (lib.have())
     lib.clear();
 ```
 
-# Make links in spa
+# Making links in spa
 
 ```html
 <!-- in spa library -->
@@ -154,6 +154,20 @@ if (lib.have())
 <h-link link="download/2234/file/48884452345">Download</h-link>
 ```
 
-# 
+# Using with another type (in console)
+
+```javascript
+// Set hash
+(new Hash.lib()).set({ val : 'hello' });
+// Get hash
+var h = (new Hash.lib()).get();
+// Clear hash
+(new Hash.lib()).clear();
+// ...
+```
+
+```html
+<button onclick="(new Hash.lib()).clear()">Clear page hash</button>
+```
 
 
