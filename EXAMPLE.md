@@ -1,7 +1,7 @@
-# Example use
->  For checking plugins, you can use `Hash.info`
+# Examples
+For better known about `hash.js`, see this examples!
 
-`Example 1`
+# Use version
 
 ```javascript
 var lib = new Hash.lib(),
@@ -17,7 +17,7 @@ if (ver >= 1.2) {
 }
 ```
 
-`Example 2`
+# Page loading
 
 ```html
 <div id="loading" style="display:none">Loading ...</div>
@@ -49,7 +49,7 @@ if (adnLoad) {
 }
 ```
 
-`Example 3`
+# Get file contect with ajax
 
 ```html
 <div id="file"></div>
@@ -80,8 +80,7 @@ if (adnServ) {
 }
 ```
 
-`Example 4`
-
+# Reload with hash and event
 
 ```javascript
 var lib = new Hash.lib();
@@ -100,8 +99,7 @@ checkReload(), Hash.event('change', checkReload);
 
 ```
 
-`Example 5`
-
+# Make a router for transfer user
 
 ```javascript
 var lib = new Hash.lib(),
@@ -136,7 +134,7 @@ if (adnSpa) {
 ```
 
 
-`Example 6`
+# Clear page hash
 
 ```javascript
 var lib = new Hash.lib();
@@ -145,13 +143,17 @@ if (lib.have())
     lib.clear();
 ```
 
-`Example 7`
+# Make links in spa
 
 ```html
 <!-- in spa library -->
-<h-link link="home" h-top="false">Home</h-link>
+<h-link link="home" h-top="false">
+    <button>Home</button>
+</h-link>
 <h-link link="doc" h-top="true">Document</h-link>
 <h-link link="download/2234/file/48884452345">Download</h-link>
 ```
+
+# 
 
 
