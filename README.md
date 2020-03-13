@@ -3,13 +3,13 @@ Hash.js is a simple and useful javascript library! it's just for fun and the tru
 Hash.js have 4 main parts! A main library plus 3 plugin. This plugins used for load, server(ajax), spa.
 
 # Demo
-For watching demo, you can check [demo](/demo) folder.
+To watching demos, check [demo](/demo) folder.
 
 # Document
-For read all documents, check [/doc](doc) folder.
+To read all the documents, check the [doc](/doc) folder.
 
 # Examples
-You can see example sources [EXAMPLE.md](EXAMPLE.md) in file.
+You can see example sources in [EXAMPLE.md](EXAMPLE.md) file.
 
 # Plugins
 This plugins are Hash.load, Hash.server, Hash.spa. You can get them in "all file" or you can use them separately. [see plugins](/plugins)
