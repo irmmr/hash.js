@@ -1,5 +1,5 @@
 /* 
-* HashJs javascript library v1.2
+* HashJs javascript library v1.2.1
 * Copyright (c) 2020 IRMMR
 * MIT License
 */
@@ -7,7 +7,8 @@
     'use strict';
 
     var info = {
-        version : '1.2'
+        hash_version : '1.2.1',
+        pack_version : '1.2.5'
     }
 
     var emptyObj = Object.freeze({}),
@@ -92,7 +93,8 @@
 
     hashInfo = function(h = {}) {
 
-        this.version = isDef(info.version) ? info.version : '?';
+        this.hashVersion = isDef(info.hash_version) ? info.hash_version : '?';
+        this.packVersion = isDef(info.pack_version) ? info.pack_version : '?';
 
         this.addons = {
             load : typeof Hash.load !== 'undefined',
@@ -101,7 +103,6 @@
         }
 
     }
-
 
     hashMain = function(h = {}) {
 
@@ -244,7 +245,28 @@
 
             }
 			
-		}
+        }
+        
+        this.is = function(hash, n = {}) {
+
+            /* check methods */
+            if (isString(hash) && isDef(n) && isObj(n)) {
+
+                /* get window hash */
+                var wh = window.location.hash.slice(1);
+
+                /* check empty hash */
+                if (!isEmpty(hash)) {
+
+                    return wh == hash;
+
+                }
+
+            }
+
+            return false;
+
+        }
 
 
     }

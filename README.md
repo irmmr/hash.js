@@ -6,7 +6,10 @@ Hash.js have 4 main parts! A main library plus 3 plugin. This plugins used for l
 For watching demo, you can check [demo](/demo) folder.
 
 # Document
-For read all documents and see examples, check [DOC.md](DOC.md) file.
+For read all documents, check [/doc](doc) folder.
+
+# Examples
+You can see example sources [EXAMPLE.md](EXAMPLE.md) in file.
 
 # Plugins
 This plugins are Hash.load, Hash.server, Hash.spa. You can get them in "all file" or you can use them separately. [see plugins](/plugins)

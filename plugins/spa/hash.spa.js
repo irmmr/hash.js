@@ -1,5 +1,5 @@
 /* 
-* HashJs plugin : spa v1.4.1
+* HashJs plugin : spa v1.4.3
 * Copyright (c) 2020 IRMMR
 * MIT License
 */
@@ -443,6 +443,57 @@
 
         }
 
+        this.exports = function(h = {}) {
+
+            /* rendering */
+            this.render = function(s = {}) {
+                
+                /* check el */
+                if ('el' in s) {
+
+                    /* get element */
+                    var el = s.el;
+
+                    /* check el id */
+                    if (isString(el) && !isNull( selectId(el) )) {
+
+                        /* check render */
+                        if ('render' in s) {
+
+                            /* get render */
+                            var rend = s.render;
+
+                            /* check render */
+                            if (isString(rend)) {
+
+                                /* set html & rendering */
+                                selectId(el).innerHTML = rend;
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            /* tilte */
+            this.title = function(t, s = {}) {
+
+                /* check title */
+                if (isString(t)) {
+
+                    /* set title */
+                    document.title = t;
+
+                }
+
+            }
+
+        }
+ 
     }
 
 

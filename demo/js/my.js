@@ -11,7 +11,9 @@ if (Hash.ready) {
     if (adn.spa) {
 
         var spa = new Hash.spa(),
-            lib = new Hash.lib();
+            lib = new Hash.lib(),
+            exp = new spa.exports();
+        
 
         function setContent(title, description, buttons = [], val = '') {
             var butt = ``;
@@ -150,8 +152,7 @@ if (Hash.ready) {
             do : function(data) {
                 var nm = unescape(data[0]),
                     sb = unescape(data[1]),
-                    ms = unescape(data[2]),
-                    el = document.getElementById('app');
+                    ms = unescape(data[2]);
 
                 // it's just for demo
 
@@ -162,7 +163,13 @@ if (Hash.ready) {
                 <div class="txt"><b>Subject: </b>${sb} (${sb.length})</div>
                 <div class="txt"><b>Message: </b>${ms} (${ms.length})</div>`);
 
-                el.innerHTML = sentContent;
+                exp.render({
+                    el : 'app',
+                    render : sentContent
+                });
+
+                exp.title(`"${sb}" message sent`);
+
             }
         });
 
