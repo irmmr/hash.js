@@ -6,19 +6,21 @@ This library is mostly used to manage `The page hash`, but you can provide a `ro
 
 # Demo
 To watching demos, check [demo](/demo) folder.
+> First, **download** or **clone** the project and next open [`index file`](/demo/index.html) in your browser.
 
 # Document
-To read all the documents, check the [doc](/doc) folder.
+To read all the documents, check the [doc](/doc) folder. The document of every version only have different parts and new features.
 
 # Examples
-You can see example sources in [EXAMPLE.md](EXAMPLE.md) file.
+You can see example sources in [EXAMPLE.md](EXAMPLE.md) file. All example sources are only a sample for better using for you.
 
 # Plugins
 This plugins are Hash.load, Hash.server, Hash.spa. You can get them in "all file" or you can use them separately. [see plugins](/plugins)
->  load, server, spa
+> To using them you can use `hash.all` or include `plugins/{name}/Hash.{name}.js`
 
-# Using library
-For using Hash.js, you must use that [hash.all.min.js](/src/hash.all.min.js) file.
+# How to use?
+To use `Hash.js`, use [hash.all.min.js](/src/hash.all.min.js) file in your project or add `hash.js` with other plugins.
+> If `Hash.ready`, you are using hash.js.
 
 # Main library
 `Hash.lib()` This is main library for manage page hash and change it. [click here](/src)
