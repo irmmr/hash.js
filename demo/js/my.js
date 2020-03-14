@@ -127,7 +127,31 @@ if (Hash.ready) {
                     <input type="text" readonly value="https://github.com/irmmr/hash.js.git">
                     <a href="https://github.com/irmmr/hash.js" target="_blank"><button class="active">Download</button></a>`
                     ),
-                    title : 'Document | Hash.js'
+                    title : 'Document | Hash.js',
+                    // only for test
+                    do : function() {
+                        console.log(`Please check https://github.com/irmmr/hash.js`);
+                    }
+                },
+                // Or you can use "do" without "main" and "title"
+                'test' : {
+                    do : function() {
+
+                        // Main
+                        exp.render({
+                            el : 'app',
+                            render : setContent('Test', 'Test hash.js library',
+                            [
+                                {text : 'Home', link : 'start', top : false, icon : 'logo.png'}
+                            ],
+                            `<div class="txt">Hash.js is working ...!</div>`
+                            )
+                        });
+
+                        //Title
+                        exp.title('test | Hash.js');
+
+                    }
                 }
             },
             error : {

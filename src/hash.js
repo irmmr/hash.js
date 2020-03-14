@@ -1,5 +1,5 @@
 /* 
-* HashJs javascript library v1.2.1
+* HashJs javascript library v1.2.2
 * Copyright (c) 2020 IRMMR
 * MIT License
 */
@@ -7,8 +7,8 @@
     'use strict';
 
     var info = {
-        hash_version : '1.2.1',
-        pack_version : '1.2.5'
+        hash_version : '1.2.2',
+        pack_version : '1.2.6'
     }
 
     var emptyObj = Object.freeze({}),
@@ -66,6 +66,131 @@
         return h == null
     }
 
+    function objSize(h) {
+        var size = 0, key;
+        if (isDef(h) && isObj(h)) {
+            for(key in h) {
+                if (h.hasOwnProperty(key)) {
+                    size ++;
+                }
+            }
+        }
+
+        return size;
+    }
+
+    function isArr(h) {
+        return isDef(h) && Array.isArray(h)
+    }
+
+    function getString(h) {
+        return isDef(h) ? isString(h) ? h : h.toString() : ''
+    }
+
+    function isQuery(q) {
+        if (isString(q)) {
+
+            var qa = q.split('&'),
+                itsQuery = 0;
+
+            for (var i in qa) {
+
+                var dq = qa[i],
+                    da = dq.split('='),
+                    daLen = da.length;
+
+                if (daLen == 2) {
+
+                    if (isString(da[0]) && isString(da[1])) {
+                        itsQuery ++;
+                    }
+                    
+                } else if (daLen == 1) {
+
+                    if (isString(da[0])) {
+                        itsQuery ++;
+                    }
+
+                }
+
+            }
+
+            return qa.length == itsQuery;
+
+        }
+
+        return false;
+    }
+
+    function getQuery(q) {
+        if (isString(q)) {
+
+            if (isQuery(q)) {
+
+                var qa = q.split('&'),
+                    myObj = {};
+
+                for (var i in qa) {
+
+                    var dq = qa[i],
+                        da = dq.split('='),
+                        daLen = da.length;
+
+                    if (daLen == 2) {
+
+                        var dOne = getString(da[0]),
+                            dTwo = getString(da[1]);
+        
+                        myObj[dOne] = dTwo;
+
+                    } else if (daLen == 1) {
+
+                        var dOne = getString(da[0]),
+                            dTwo = null;
+        
+                        myObj[dOne] = dTwo;
+
+                    }
+
+
+                }
+
+                return myObj;
+            }
+
+        }
+
+        return {};
+    }
+
+    function toQuery(q) {
+        if (isDef(q) && isObj(q)) {
+
+            var allQuery = '',
+                queSize = objSize(q),
+                numData = 0;
+
+            for (var i in q) {
+
+                if (q.hasOwnProperty(i)) {
+
+                    numData ++;
+
+                    var dataMe = q[i],
+                        dataAdd = isString(dataMe) ? dataMe : dataMe.toString(),
+                        dataEncode = encodeURIComponent(dataAdd);
+
+                    allQuery += numData == queSize ? i + '=' + dataEncode : i + '=' + dataEncode + '&';
+
+                }
+
+            }
+
+            return allQuery;
+        }
+
+        return '';
+    }
 
     var hashMain, hashInfo, hashEl, hashEvent;
 
@@ -115,21 +240,79 @@
 
             if ( isDef(n) && isObj(n) ) {
 
-                /* get all words must be remove */
-                var words = 'words' in n ? Array.isArray(n.words) ? n.words : [n.words] : [];
+                /* words part */
+                if ('words' in n) {
 
-                /* remove equal words */
-                words = Array.from(new Set(words));
+                    /* get all words must be remove */
+                    var words = n.words;
 
-                /* filter and delete empty words */
-                words = words.filter(val => val !== '');
+                    /* check app array */
+                    if (isArr(words)) {
 
-                /* remove words */
-                for (var i=0 ; i<words.length ; i++) {
+                        /* remove equal words */
+                        words = Array.from(new Set(words));
 
-                    var wh = window.location.hash;
-                    window.location.hash = replaceAll(wh, words[i], '');
-                    window.location.hash = replaceAll(wh, escape(words[i]), '');
+                        /* filter and delete empty words */
+                        words = words.filter(val => val !== '');
+
+                        /* remove words */
+                        for (var i=0 ; i<words.length ; i++) {
+
+                            var wh = window.location.hash;
+                            window.location.hash = replaceAll(wh, words[i], '');
+                            window.location.hash = replaceAll(wh, escape(words[i]), '');
+
+                        }
+
+                    }
+
+                }
+
+                /* query part */
+                if ('query' in n) {
+
+                    /* get this query */
+                    var que = n.query,
+                        wh = window.location.hash.slice(1);
+
+                    /* if query is array */
+                    if (isArr(que)) {
+
+                        /* check query */
+                        if (isQuery(wh)) {
+
+                            /* get own query */
+                            var theQuery = getQuery(wh),
+                                newQuery = {};
+
+                            /* get query loops */
+                            for (var i in theQuery) {
+
+                                /* check in query */
+                                if (theQuery.hasOwnProperty(i)) {
+
+                                    /* remove loop */
+                                    for (var t in que) {
+
+                                        if (i !== que[t]) {
+
+                                            /* make new query */
+                                            newQuery[i] = theQuery[i];
+
+                                        }
+
+                                    }
+
+                                }
+
+                            }
+
+                            /* set new hash */
+                            window.location.hash = toQuery(newQuery);
+
+                        }
+
+                    }
 
                 }
                 
@@ -156,24 +339,43 @@
 
         }
 
-        this.have = function (n = '') {
+        this.have = function (n = '', s = '') {
 
-            /* get window hash */
-            var wh = window.location.hash;
+            /* check n */
+            if (isString(n)) {
 
-            /* chekc hash */
-            if (!isEmpty(wh)) {
+                /* set def type */
+                var type = isEmpty(s) || !isString(s) ? 'value' : s;
 
-                if (isEmpty(n)) {
-                    return true;
-                } else {
-                    return wh.includes(n);
+                /* get window hash */
+                var wh = window.location.hash;
+
+                /* chekc hash */
+                if (!isEmpty(wh)) {
+
+                    /* remove # */
+                    wh = wh.slice(1);
+
+                    /* check type */
+                    switch(type) {
+
+                        case 'value' :
+                            return wh.includes(n);
+                        break;
+
+                        case 'query' :
+                            if (isQuery(wh)) {
+                                return getQuery(wh).hasOwnProperty(n);
+                            }
+                        break;
+
+                    }
+
                 }
 
-            } else {
-                return false;
             }
 
+            return false;
         }
 
         this.clear = function(n = {}) {
@@ -204,11 +406,82 @@
 
             if (isDef(without) && isBool(without) && isDef(n) && isObj(n)) {
 
-                /* get window hash */
-                var wh = without ? window.location.hash.slice(1) : window.location.hash;
+                /* get location hash */
+                var wh = window.location.hash.slice(1);
 
-                /* get hash */
-                return wh;
+                /* get other types */
+                if ('query' in n) {
+
+                    /* get own query */
+                    var que = n.query;
+
+                    /* if hash is query */
+                    if (isQuery(wh)) {
+
+                        /* get query */
+                        var theQuery = getQuery(wh),
+                            ansQuery = {};
+
+                        /* check the own query */
+                        if (isString(que)) {
+
+                            /* if everything */
+                            if (que == '*') {
+
+                                for (var i in theQuery) {
+
+                                    /* check query */
+                                    if (theQuery.hasOwnProperty(i)) {
+
+                                        /* this query */
+                                        var thisQ = theQuery[i];
+                                        ansQuery[i] = thisQ;
+                                    }
+
+                                }
+
+                            } else {
+
+                                for (var i in theQuery) {
+
+                                    /* check query */
+                                    if (i == que && theQuery.hasOwnProperty(i)) {
+
+                                        /* this query */
+                                        var thisQ = theQuery[i];
+                                        ansQuery[i] = thisQ;
+
+                                    }
+
+                                }
+
+                            }
+
+                        } else if (isArr(que)) {
+
+                            for (var i in que) {
+
+                                /* this query */
+                                var thisQ = que[i];
+
+                                /* check query */
+                                if (theQuery.hasOwnProperty(thisQ)) {
+                                    ansQuery[thisQ] = theQuery[thisQ];
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                    /* get queries */
+                    return ansQuery;
+
+                } else {
+                    /* get window hash */
+                    return without ? window.location.hash.slice(1) : window.location.hash;
+                }
 
             }
 
@@ -221,11 +494,79 @@
 
                 if ('val' in n) {
 
+                    /* get value */
                     var val = n.val;
-                    window.location.hash = val;
+
+                    /* set val (text) */
+                    if (isString(val)) {
+                        window.location.hash = val;
+                    }
+
+                } else if ('query' in n) {
+
+                    /* get query */
+                    var que = n.query,
+                        wh = window.location.hash.slice(1);
+
+                    /* set query */
+                    if (isObj(que)) {
+
+                        /* get query */
+                        var theQue = toQuery(que);
+
+                        /* set hash */
+                        window.location.hash = theQue;
+
+                    }
 
                 }
-                
+
+            }
+
+        }
+
+        this.add = function(n = {}) {
+
+            if (isDef(n) && isObj(n)) {
+
+                if ('val' in n) {
+
+                    /* get value */
+                    var val = n.val;
+
+                    /* set val (text) */
+                    if (isString(val)) {
+                        window.location.hash += val;
+                    }
+
+                } else if ('query' in n) {
+
+                    /* get query */
+                    var que = n.query,
+                        wh = window.location.hash.slice(1);
+
+                    /* is query */
+                    if (isObj(que)) {
+
+                        /* make query */
+                        var theQue = toQuery(que);
+
+                        /* make query */
+                        if (isQuery(wh)) {
+
+                            /* add query */
+                            window.location.hash = isEmpty(theQue) ? wh : wh + '&' + theQue;
+    
+                        } else if (isEmpty(wh)) {
+
+                            /* add query */
+                            window.location.hash = theQue;
+    
+                        }
+
+                    }
+
+                }
 
             }
 

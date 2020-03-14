@@ -75,3 +75,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Removed
 - `version` in Hash.info
+
+## [1.2.6] - 2020-03-14
+### Added
+- Add query to Hash.lib
+- Add add() for adding some values to hashVersion
+- Add query support to have()
+- Add query support to get()
+- Add query support to set()
+- Add query support to add()
+- Add query support to remove()
+
+### Chnaged
+- remove() value function
+
