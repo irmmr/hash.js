@@ -17,6 +17,8 @@ if (ver >= 1.2) {
 }
 ```
 
+>  You must use `hashVersion` and `packVersion` in ver 1.2.5.
+
 # Page loading
 
 ```html
@@ -99,6 +101,21 @@ checkReload(), Hash.event('change', checkReload);
 
 ```
 
+> For `is()` to use, the library version must be **1.2.5** or higher.
+
+```javascript
+var lib = new Hash.lib();
+
+function checkReload() {
+    if (lib.is('reload')) {
+        location.reload(true);
+    }
+}
+
+checkReload(), Hash.event('change', checkReload);
+
+```
+
 # Make a router for transfer user
 
 ```javascript
@@ -133,6 +150,42 @@ if (adnSpa) {
 
 ```
 
+# Make a router and render
+
+```javascript
+var inf = new Hash.info(),
+    adnSpa = inf.addons.spa;
+    
+if (adnSpa) {
+    
+    var sp = new Hash.spa(),
+        exp = new sp.exports();
+    
+    sp.router({
+        router : 'name/{any}/message/{any}',
+        do : function(d) {
+            
+            var name = d[0],
+                mess = d[1];
+                
+            var yourAlert = `You have a new message from <b>${name}</b>`,
+                yourMessage = `Your message is ${mess}`;
+                
+            // set new title
+            exp.title(`Read message from ${name} | Hash.js`);
+            
+            // set new html
+            exp.render({
+               el : 'myApp',
+               render : `${yourAlert} <br /> ${yourMessage}`
+            });
+            
+        }
+    });
+    
+}
+
+```
 
 # Clear page hash
 
