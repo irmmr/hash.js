@@ -1,6 +1,8 @@
 # Hash.js
-Hash.js is a simple and useful javascript library! it's just for fun and the truth is that Hash.js is not very powerful. This library don't need Node and Node don't need this library!
-Hash.js have 4 main parts! A main library plus 3 plugin. This plugins used for load, server(ajax), spa.
+**Hash.js** is a simple and useful javascript library! it's just for fun and the truth is that **Hash.js** is not very powerful. This library don't need Node and Node don't need this library!
+**Hash.js** have 4 main parts! A main library plus 3 plugin. This plugins used for load, server(ajax), spa.
+
+This library is mostly used to manage `The page hash`, but you can provide a `router` and a `spa` with it.
 
 # Demo
 To watching demos, check [demo](/demo) folder.
