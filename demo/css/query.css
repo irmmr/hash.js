@@ -1,0 +1,15 @@
+*,::after,::before{box-sizing:border-box}
+body{overflow-x:hidden;margin:0;background-color:#f9f9f9;color:#fff;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;text-align:center}
+*{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+h1{font-size:170px;padding:0;margin:0;letter-spacing:5px;color:#333}
+h5{color:#333;font-size:17px;padding:0;margin:0;font-weight:300;letter-spacing:5px;margin-top:10px}
+button{padding:20px;text-align:center;color:#333;font-size:17px;background-color:#fff;border:0;font-weight:700;border-radius:3px;letter-spacing:1px;cursor:pointer;transition:.5s all;margin:6px;box-shadow:0 0 15px rgba(39,39,39,.137)}
+button.active,button:hover{background-color:#333;color:white}
+button.dl{background-color:#06f168;color:#fff}
+button.dl:hover{background-color:#018835;color:#fff}
+button.active:hover{background-color:#ddd;color:#333}
+.space-1{margin-top:20px;margin-bottom:20px}.space-2{margin-top:50px;margin-bottom:50px}
+.space-3{margin-top:100px;margin-bottom:100px}
+.content{width:1000px;display:block;text-align:center;direction:ltr;color:#333;background-color:#fff;box-shadow:0 0 15px rgba(39,39,39,.137);border-radius:3px 3px 0 0;margin-left:auto;margin-right:auto;padding:15px;max-width:100%}
+.content .txt{text-align:justify;direction:ltr;width:100%;padding:6px;font-size:15px;line-height:26px;font-weight:500;letter-spacing:1px;color:#333}
+label{letter-spacing:1px}

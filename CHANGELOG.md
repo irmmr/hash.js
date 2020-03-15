@@ -59,15 +59,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix spa h-link in IE
 
 ## [1.2.3] - 2020-03-09 (Not available)
+You can't get access to this version!
 
 ## [1.2.4] - 2020-03-09 (Not available)
+You can't get access to this version!
 
 ## [1.2.5] - 2020-03-13
 ### Added
 - Add exports app to spa
 - Add render html for spa
 - Add title changer for spa
-- Add is() for Hash.lib
+- Add `is()` for Hash.lib
 - Add `hashVersion` and `packVersion` for Hash.info
 
 ## Changed
@@ -79,13 +81,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.2.6] - 2020-03-14
 ### Added
 - Add query to Hash.lib
-- Add add() for adding some values to hashVersion
-- Add query support to have()
-- Add query support to get()
-- Add query support to set()
-- Add query support to add()
-- Add query support to remove()
+- Add `add()` for adding some values to hashVersion
+- Add query support to `have()`
+- Add query support to `get()`
+- Add query support to `set()`
+- Add query support to `add()`
+- Add query support to `remove()`
 
 ### Chnaged
 - remove() value function
 
+## [1.2.7] - 2020-03-14
+### Added
+- New query manager in `is()`
+
+### Fixed
+- add() query manager
+- query manager

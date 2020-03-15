@@ -1,5 +1,5 @@
 /* 
-* HashJs javascript library v1.2.2
+* HashJs javascript library v1.2.3
 * Copyright (c) 2020 IRMMR
 * MIT License
 */
@@ -7,8 +7,8 @@
     'use strict';
 
     var info = {
-        hash_version : '1.2.2',
-        pack_version : '1.2.6'
+        hash_version : '1.2.3',
+        pack_version : '1.2.7'
     }
 
     var emptyObj = Object.freeze({}),
@@ -552,10 +552,12 @@
                         var theQue = toQuery(que);
 
                         /* make query */
-                        if (isQuery(wh)) {
+                        if (!isEmpty(wh) && isQuery(wh)) {
 
                             /* add query */
-                            window.location.hash = isEmpty(theQue) ? wh : wh + '&' + theQue;
+                            if (!isEmpty(theQue)) {
+                                window.location.hash = !wh.endsWith('&') ? wh + '&' + theQue : wh + theQue;
+                            }
     
                         } else if (isEmpty(wh)) {
 
@@ -599,7 +601,28 @@
                 /* check empty hash */
                 if (!isEmpty(hash)) {
 
-                    return wh == hash;
+                    /* query check */
+                    if ('query' in n) {
+
+                        /* get own query */
+                        var que = n.query;
+
+                        /* if is query */
+                        if (isQuery(wh) && isString(que)) {
+
+                            /* get query */
+                            var theQuery = getQuery(wh);
+
+                            /* check query */
+                            if (theQuery.hasOwnProperty(que)) {
+                                return theQuery[que] == hash;
+                            }
+
+                        }
+
+                    } else {
+                        return wh == hash;
+                    }
 
                 }
 
