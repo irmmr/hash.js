@@ -136,13 +136,13 @@ function showNavs() {
                 elm.style.display = 'block';
             } else {
                 lib.remove({
-                    query : nav
+                    query : [nav]
                 });
             }
             
         } else {
             lib.remove({
-                query : nav
+                query : [nav]
             });
         }
     }
