@@ -23,6 +23,24 @@ To read all the documents, check the [doc](/doc) folder. The document of every v
 
 # Examples
 You can see example sources in [EXAMPLE.md](EXAMPLE.md) file. All example sources are only a sample for better using for you.
+```javascript
+/*
+* Simple example for set a query
+* #page=12&type=test
+*/
+var ob = new Hash.lib();
+ob.set({
+  query : {
+    page : 12,
+    type : 'test'
+  }
+});
+// or
+// #hello/babe
+ob.set({
+  val : 'hello/babe'
+});
+```
 
 # Plugins
 This plugins are Hash.load, Hash.server, Hash.spa. You can get them in "all file" or you can use them separately. [see plugins](/plugins)
