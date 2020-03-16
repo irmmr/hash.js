@@ -1,2 +1,71 @@
-<!-- start -->
-<h1>Hello</h1>
+<!doctype html>
+<html lang="en" dir="ltr">
+
+<head>
+	<meta charset="utf-8">
+	<title>Hash.js | A free and open source javascript library</title>
+	<link rel="stylesheet" href="index.css">
+    <link rel="shortcut icon" href="logo/logo.png">
+    <link href="https://fonts.googleapis.com/css?family=Baloo+2:400,500,600,700&display=swap" rel="stylesheet"> 
+</head>
+
+<body>
+
+    <div class="cont m-auto">
+
+        <!-- Top head -->
+        <div class="top-head">
+            <div class="left-t co-gr-7 we-700">
+                <img src="logo/logo.png" width="30">
+                HashJs <small class="we-300">Free & Open source</small>
+            </div>
+            <div class="right-t m-auto co-gr-7 we-700">
+                <div class="lo we-300"><i class="di y"></i> Javascript</div>
+                <div class="lo we-300"><i class="di b"></i> v1.2.7</div>
+                <div class="lo we-300"><i class="di r"></i> without node</div>
+                <a href="https://github.com/irmmr/hash.js" target="_blank"><div class="lo github we-300">View on github</div></a>
+            </div>
+        </div>
+
+        <div class="top-bg">
+            <div class="we-700 to-c">In a library, there are many libraries</div>
+            <div class="we-300 to-t">You can use this library for elements, spa, router, ajax, rendering, loader, hash query and managing page hash.</div>
+        </div>
+
+        <div class="main-app we-300 co-gr-8">
+            <a href="#go/welcome"><div class="handler" id="handler_welcome">Welcome</div></a>
+            Hash.js is a simple and useful javascript library! it's just for fun and the truth is that Hash.js is not very powerful. This library don't need Node and Node don't need this library! Hash.js have 4 main parts! A main library plus 3 plugin. This plugins used for load, server(ajax), spa.
+            <br /> This library is mostly used to manage <code>The page hash</code>, but you can provide a <code>router</code> and a <code>spa</code> with it
+        
+            <a href="#go/document"><div class="handler" id="handler_document">Document</div></a>
+            To read all the documents, check the doc folder in github page. The document of every version only have different parts and new features.
+            <br /><small>You can select doc version by this button: </small> <a href="https://github.com/irmmr/hash.js/tree/master/doc" target="_blank"><button>Doc folder</button></a>
+
+            <a href="#go/demo"><div class="handler" id="handler_demo">Demo</div></a>
+            You can see the online demo in <code>demo</code> folder. <code>index.html</code> for spa and router and <code>query.html</code> for query.
+            
+            <div class="form-q m-auto" align="center">
+                <input type="text" placeholder="Your name..." id="t_name">
+                <input type="text" placeholder="Your message..." id="t_mess"><br />
+                <button onclick="seeQuery()">See demo query.html</button>
+                <br />
+                <small>For watch demo click to this button: </small><br />
+                <a href="https://irmmr.github.io/hash.js/demo/" target="_blank"><button>Online demo</button></a>
+            </div>
+
+            <a href="#go/target"><div class="handler" id="handler_target">Target</div></a>
+            This library is for entertainment purposes only. If you can't use complex libraries, you can make a simple spa and used that. If you want make query with your page hash you can use Hash.js or when you want create a ajax request.
+            The Hash.spa is not a complex spa but it usable in many times.
+
+        </div>
+
+        <br />
+    </div>
+
+    <div class="we-300 co-gr-7 ty">copyright: 2020 - irmmr (License: MIT)</div>
+
+	<script src="src/hash.all.min.js"></script>
+	<script src="index.js"></script>
+</body>
+
+</html>
