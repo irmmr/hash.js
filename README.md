@@ -1,11 +1,13 @@
-<p align="center"><img width="100" src="https://raw.githubusercontent.com/irmmr/hash.js/master/logo/logo.png" alt="Hash Js"></p>
+<p align="center"><a href="https://irmmr.github.io/hash.js/" target="_blank"><img width="100" src="https://raw.githubusercontent.com/irmmr/hash.js/master/logo/logo.png" alt="Hash Js"></a></p>
 
 <p align="center">
   <a href="https://github.com/irmmr/hash.js/blob/master/LICENSE"><img alt="GitHub license" src="https://img.shields.io/github/license/irmmr/hash.js"></a>
-    <img alt="GitHub license" src="https://img.shields.io/static/v1?label=version&message=v1.2.7&color=success">
-  <img alt="GitHub license" src="https://img.shields.io/static/v1?label=npm&message=not%20yet&color=inactive">
-  <a href="https://github.com/irmmr/hash.js/tree/master/doc"><img alt="GitHub license" src="https://img.shields.io/static/v1?label=docs&message=passing&color=blue"></a>
-  
+    <img alt="version" src="https://img.shields.io/static/v1?label=version&message=v1.2.7&color=success">
+  <img alt="node" src="https://img.shields.io/static/v1?label=npm&message=not%20yet&color=inactive">
+  <a href="https://github.com/irmmr/hash.js/tree/master/doc"><img alt="docs" src="https://img.shields.io/static/v1?label=docs&message=passing&color=blue"></a>
+   <a href="https://irmmr.github.io/hash.js/" target="_blank">
+    <img alt="see page" src="https://img.shields.io/static/v1?label=page&message=click%20here&color=yellow">
+  </a>
 </p>
 
 # Hash.js
