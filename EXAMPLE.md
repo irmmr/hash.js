@@ -6,18 +6,11 @@ For better known about `hash.js`, see this examples!
 ```javascript
 var lib = new Hash.lib(),
     inf = new Hash.info(),
-    ver = Number(inf.version);
+    pkv = inf.packVersion,
+    hsv = inf.hashVersion;
 
-if (ver >= 1.2) {
-    lib.set({
-        val : 'start/document' 
-    });
-} else {
-    console.warn(`Please update hash.js!`);
-}
+console.log(`Pack version is ${pkv}`, `Hash version is ${hsv}`);
 ```
-
->  You must use `hashVersion` and `packVersion` in ver 1.2.5.
 
 # Page loading
 
@@ -116,6 +109,65 @@ checkReload(), Hash.event('change', checkReload);
 
 ```
 
+# Show nav with query
+
+```javascript
+var lib = new Hash.lib();
+
+function showNavs() {
+       
+    // query name => #nav=?
+    var nav = 'nav';
+    
+    // check if page have `nav` query
+    if (lib.have(nav, 'query')) {
+        // if query is not null => !#nav
+        if (!lib.is(null, { query : nav })) {
+            
+            //get 'nav' query
+            var nav_val = lib.get(true, {
+                query : nav
+            })[nav];
+            
+            //get element => myElem : elm_$
+            var elm = document.getElementById('elm_' + nav_val);
+            
+            if (elm !== null) {
+                elm.style.display = 'block';
+            } else {
+                lib.remove({
+                    query : nav
+                });
+            }
+            
+        } else {
+            lib.remove({
+                query : nav
+            });
+        }
+    }
+}
+
+showNavs(), Hash.event('change', showNavs);
+```
+
+# Render and change title
+
+```javascript
+var sp = new Hash.spa(),
+    el = document.getElementById('my_element');
+    
+// create new constructor from sp.exports
+var ep = new sp.exports();
+
+ep.render({
+    el : el,
+    render : '<h1>Hello</h1>'
+});
+
+ep.title('Hello :)');
+```
+
 # Make a router for transfer user
 
 ```javascript
@@ -147,7 +199,6 @@ if (adnSpa) {
     });
     
 }
-
 ```
 
 # Make a router and render
@@ -184,7 +235,6 @@ if (adnSpa) {
     });
     
 }
-
 ```
 
 # Clear page hash
@@ -205,6 +255,8 @@ if (lib.have())
 </h-link>
 <h-link link="doc" h-top="true">Document</h-link>
 <h-link link="download/2234/file/48884452345">Download</h-link>
+<!-- or -->
+<a href="#home">Home</a>
 ```
 
 # Using with another type (in console)
