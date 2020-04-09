@@ -1,5 +1,5 @@
 /* 
-* HashJs plugin : spa v1.4.3
+* HashJs plugin : spa v1.5
 * Copyright (c) 2020 IRMMR
 * MIT License
 */

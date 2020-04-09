@@ -1,5 +1,5 @@
 /* 
-* HashJs plugin : load v1.0
+* HashJs plugin : load v1.1
 * Copyright (c) 2020 IRMMR
 * MIT License
 */
