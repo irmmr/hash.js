@@ -27,6 +27,7 @@ if (Hash.ready) {
         spa.app({
             el : 'app',
             def : 'start',
+            app : `<h-router-view></h-router-view>`,
             component : {
                 'start' : {
                     main : setContent('Hash.js', 'Simple and useful javascript library',
@@ -179,7 +180,6 @@ if (Hash.ready) {
                     ms = unescape(data[2]);
 
                 // it's just for demo
-
                 var sentContent = setContent('Sent', 'Your message succesfully sent',
                 [{text : 'Back to home', link : 'start', top : false, icon : 'logo.png'}, {text : 'Send new', link : 'contact', top : false, icon : 'send.png'}],
                 `<div class="txt"><b>Status: </b><font color=green>message sent! </font>we answer you in next 24h. please check your email.</div>
@@ -189,6 +189,7 @@ if (Hash.ready) {
 
                 exp.render({
                     el : 'app',
+                    view : true,
                     render : sentContent
                 });
 

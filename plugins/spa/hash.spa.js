@@ -55,7 +55,7 @@
     }
 
     function lunchFunc(func, argc = null) {
-        return isFunc(func) ? argc !== null ? func(argc) : func() : null;
+        return isFunc(func) ? argc !== null ? func.call(this, argc) : func.call(this) : null;
     }
 
     function isEmpty(h) {
@@ -87,6 +87,15 @@
         return isDef(h) && Array.isArray(h)
     }
 
+    class HashView extends HTMLElement {
+        constructor() {
+            super();
+
+            // nothing now
+
+        }
+    }
+
     class HashJsLink extends HTMLElement {
         constructor() {
             super();
@@ -115,6 +124,7 @@
     function loadElements() {
         if (typeof customElements !== 'undefined') {
             customElements.define('h-link', HashJsLink);
+            customElements.define('h-router-view', HashView);
         }
     }
 
@@ -135,6 +145,9 @@
         return e;
     }
 
+    function noneFilter(el) {
+        return el;
+    }
 
     function meduRouter(router) {
 
@@ -230,7 +243,7 @@
     }
 
 
-    function meduHash(element, component, wh, err, def, block) {
+    function meduHash(element, component, wh, err, def, block, filter) {
 
         /* get now hash */
         var nh = window.location.hash;
@@ -280,7 +293,7 @@
                         appMain = appendTag(appMain);
 
                         /* set into html */
-                        selectId(element).innerHTML = appMain;
+                        element.innerHTML = lunchFunc(filter, appMain);
                     }
 
                 }
@@ -310,8 +323,8 @@
                     /* app do action (DO) */
                     if (isFunc(appDo)) {
                         appDo.call(this, wh, {
-                            main : getMain(com),
-                            title : getTitle(com)
+                            main : lunchFunc(filter, getMain(com)),
+                            title : lunchFunc(filter, getTitle(com))
                         });
                     }
 
@@ -335,7 +348,7 @@
                         nfMain = appendTag(nfMain);
 
                         /* set into html */
-                        selectId(element).innerHTML = nfMain;
+                        element.innerHTML = lunchFunc(filter, nfMain);
 
                     }
 
@@ -389,22 +402,34 @@
                 /* check app id */
                 if (isString(el) && !isNull( selectId(el) )) {
 
+                    /* router el */
+                    var routElement = '<h-router-view></h-router-view>';
+
                     /* get component and errors and def and block */
                     var com = 'component' in h ? isDef(h.component) && isObj(h.component) ? h.component : emptyObj : emptyObj,
                         err = 'error' in h ? isDef(h.error) && isObj(h.error) ? h.error : emptyObj : emptyObj,
                         def = 'def' in h ? isString(h.def) && h.def in com ? h.def : null : null,
+                        app = 'app' in h ? isString(h.app) ? h.app : routElement : routElement,
+                        fil = 'filter' in h ? isFunc(h.filter) ? h.filter : noneFilter : noneFilter,
                         blo = 'block' in h ? isArr(h.block) ? h.block : [] : [];
 
                     /* get window hash */
                     var wh = window.location.hash.slice(1);
 
+                    /* set app component main html */
+                    selectId(el).innerHTML = app;
+
+                    /* get the view element inside in app */
+                    var appEl   = selectId(el).getElementsByTagName('h-router-view')[0],
+                        appView = !isNull(appEl) ? appEl : selectId(el);
+
                     /* run spa in load */
-                    meduHash(el, com, wh, err, def, blo);
+                    meduHash(appView, com, wh, err, def, blo, fil);
 
                     /* run spa in hash change */
                     window.onhashchange = function() {
                         var newWh = window.location.hash.slice(1);
-                        meduHash(el, com, newWh, err, def, blo);
+                        meduHash(appView, com, newWh, err, def, blo, fil);
                     }
 
                 }
@@ -460,14 +485,20 @@
                         /* check render */
                         if ('render' in s) {
 
+                            /* view or not? */
+                            var view = 'view' in s ? isBool(s.view) ? s.view : false : false;
+
                             /* get render */
                             var rend = s.render;
 
                             /* check render */
                             if (isString(rend)) {
 
+                                var appEl   = selectId(el).getElementsByTagName('h-router-view')[0],
+                                appView = !isNull(appEl) && view ? appEl : selectId(el);
+
                                 /* set html & rendering */
-                                selectId(el).innerHTML = rend;
+                                appView.innerHTML = rend;
 
                             }
 

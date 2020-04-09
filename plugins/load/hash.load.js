@@ -80,7 +80,16 @@
             });
 
             /* loading vars */
-            var loadInterval = setInterval(checkPageReady, 10),
+            var loadInterval = setInterval(function() {
+
+                // if stil loading ...
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', checkPageReady);
+                } else {
+                    checkPageReady();
+                }
+
+            }, 10),
                 checkTime = 0,
                 startDate = Date.now();
 
@@ -149,7 +158,8 @@
                             var newVal = application.innerHTML;
                             if (
                                 newVal !== appVal || 
-                                newVal.includes(errorSy)
+                                newVal.includes(errorSy) ||
+                                checkTime > 200
                             ) {
                                 /* clear when loaded */
                                 window.clearInterval(loadInterval);
