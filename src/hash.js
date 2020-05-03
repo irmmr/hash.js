@@ -1,17 +1,17 @@
 /* 
-* HashJs javascript library v1.2.3
+* HashJs javascript library v1.2.4
 * Copyright (c) 2020 IRMMR
 * MIT License
 */
 ( function ( window ) {
     'use strict';
 
-    var info = {
-        hash_version : '1.2.3',
-        pack_version : '1.2.9'
+    let info = {
+        hash_version : '1.2.4',
+        pack_version : '1.3.0'
     }
 
-    var emptyObj = Object.freeze({}),
+    let emptyObj = Object.freeze({}),
         emptyFunc = function() {};
 
     function isDef(h) {
@@ -33,7 +33,7 @@
     function getBool(h) {
 
         return (
-            isDef(h) ? isBool(h) ? h : isString(h) ? h.toLowerCase() == 'true' ? true : false : false : false
+            isDef(h) ? isBool(h) ? h : isString(h) ? h.toLowerCase() === 'true' : false : false
         )
 
     }
@@ -59,7 +59,7 @@
     }
 
     function isEmpty(h) {
-        return h == ''
+        return h === ''
     }
 
     function isNull(h) {
@@ -67,7 +67,7 @@
     }
 
     function objSize(h) {
-        var size = 0, key;
+        let size = 0, key;
         if (isDef(h) && isObj(h)) {
             for(key in h) {
                 if (h.hasOwnProperty(key)) {
@@ -90,32 +90,34 @@
     function isQuery(q) {
         if (isString(q)) {
 
-            var qa = q.split('&'),
+            let qa = q.split('&'),
                 itsQuery = 0;
 
-            for (var i in qa) {
+            for (let i in qa) {
 
-                var dq = qa[i],
-                    da = dq.split('='),
-                    daLen = da.length;
+                if (qa.hasOwnProperty(i)) {
+                    let dq = qa[i],
+                        da = dq.split('='),
+                        daLen = da.length;
 
-                if (daLen == 2) {
+                    if (daLen === 2) {
 
-                    if (isString(da[0]) && isString(da[1])) {
-                        itsQuery ++;
+                        if (isString(da[0]) && isString(da[1])) {
+                            itsQuery ++;
+                        }
+
+                    } else if (daLen === 1) {
+
+                        if (isString(da[0])) {
+                            itsQuery ++;
+                        }
+
                     }
-                    
-                } else if (daLen == 1) {
-
-                    if (isString(da[0])) {
-                        itsQuery ++;
-                    }
-
                 }
 
             }
 
-            return qa.length == itsQuery;
+            return qa.length === itsQuery;
 
         }
 
@@ -127,31 +129,28 @@
 
             if (isQuery(q)) {
 
-                var qa = q.split('&'),
+                let qa = q.split('&'),
                     myObj = {};
 
-                for (var i in qa) {
+                for (let i in qa) {
 
-                    var dq = qa[i],
-                        da = dq.split('='),
-                        daLen = da.length;
+                    if (qa.hasOwnProperty(i)) {
+                        let dq = qa[i],
+                            da = dq.split('='),
+                            daLen = da.length;
 
-                    if (daLen == 2) {
+                        if (daLen === 2) {
 
-                        var dOne = getString(da[0]),
-                            dTwo = getString(da[1]);
-        
-                        myObj[dOne] = dTwo;
+                            let dOne = getString(da[0]);
+                            myObj[dOne] = getString(da[1]);
 
-                    } else if (daLen == 1) {
+                        } else if (daLen === 1) {
 
-                        var dOne = getString(da[0]),
-                            dTwo = null;
-        
-                        myObj[dOne] = dTwo;
+                            let dOne = getString(da[0]);
+                            myObj[dOne] = null;
 
+                        }
                     }
-
 
                 }
 
@@ -166,21 +165,21 @@
     function toQuery(q) {
         if (isDef(q) && isObj(q)) {
 
-            var allQuery = '',
+            let allQuery = '',
                 queSize = objSize(q),
                 numData = 0;
 
-            for (var i in q) {
+            for (let i in q) {
 
                 if (q.hasOwnProperty(i)) {
 
                     numData ++;
 
-                    var dataMe = q[i],
+                    let dataMe = q[i],
                         dataAdd = isString(dataMe) ? dataMe : dataMe.toString(),
                         dataEncode = encodeURIComponent(dataAdd);
 
-                    allQuery += numData == queSize ? i + '=' + dataEncode : i + '=' + dataEncode + '&';
+                    allQuery += numData === queSize ? i + '=' + dataEncode : i + '=' + dataEncode + '&';
 
                 }
 
@@ -192,23 +191,42 @@
         return '';
     }
 
-    var hashMain, hashInfo, hashEl, hashEvent;
+    let hashMain, hashInfo, hashEl, hashEvent;
 
     hashEvent = function(e, func = function() {}) {
 
         if ( isDef(e) && isString(e) ) {
-            var event = e.toLowerCase(),
-                func = isDef(func) && isFunc(func) ? func : emptyFunc;
+            let event   = e.toLowerCase(),
+                func    = isDef(func) && isFunc(func) ? func : emptyFunc,
+                evs     = event.split(',');
 
-            switch(event) {
+            for (let i in evs) {
 
-                case 'change' : 
-                    window.addEventListener('hashchange', func);
-                break;
+                if (evs.hasOwnProperty(i)) {
 
-                default :  
-                    // Nothing to do
-                break;
+                    let currentEv = replaceAll(evs[i], ' ', '');
+
+                    switch(currentEv) {
+
+                        case 'change' :
+                            window.addEventListener('hashchange', func);
+                            break;
+
+                        case 'load' :
+                            window.addEventListener('load', func);
+                            break;
+
+                        case 'ready' :
+                            lunchFunc(func);
+                            break;
+
+                        default :
+                            // Nothing to do
+                            break;
+
+                    }
+
+                }
 
             }
 
@@ -244,7 +262,7 @@
                 if ('words' in n) {
 
                     /* get all words must be remove */
-                    var words = n.words;
+                    let words = n.words;
 
                     /* check app array */
                     if (isArr(words)) {
@@ -256,9 +274,9 @@
                         words = words.filter(val => val !== '');
 
                         /* remove words */
-                        for (var i=0 ; i<words.length ; i++) {
+                        for (let i=0 ; i<words.length ; i++) {
 
-                            var wh = window.location.hash;
+                            let wh = window.location.hash;
                             window.location.hash = replaceAll(wh, words[i], '');
                             window.location.hash = replaceAll(wh, escape(words[i]), '');
 
@@ -272,7 +290,7 @@
                 if ('query' in n) {
 
                     /* get this query */
-                    var que = n.query,
+                    let que = n.query,
                         wh = window.location.hash.slice(1);
 
                     /* if query is array */
@@ -282,17 +300,17 @@
                         if (isQuery(wh)) {
 
                             /* get own query */
-                            var theQuery = getQuery(wh),
+                            let theQuery = getQuery(wh),
                                 newQuery = {};
 
                             /* get query loops */
-                            for (var i in theQuery) {
+                            for (let i in theQuery) {
 
                                 /* check in query */
                                 if (theQuery.hasOwnProperty(i)) {
 
                                     /* remove loop */
-                                    for (var t in que) {
+                                    for (let t in que) {
 
                                         if (i !== que[t]) {
 
@@ -325,10 +343,10 @@
             if (!isEmpty(n) && isString(n)) {
 
                 /* get window reff */
-                var reff = document.referrer;
+                let ref = document.referrer;
 
-                if (!isEmpty(reff)) {
-                    return reff == n;
+                if (!isEmpty(ref)) {
+                    return ref === n;
                 } else {
                     return false;
                 }
@@ -345,12 +363,12 @@
             if (isString(n)) {
 
                 /* set def type */
-                var type = isEmpty(s) || !isString(s) ? 'value' : s;
+                let type = isEmpty(s) || !isString(s) ? 'value' : s;
 
                 /* get window hash */
-                var wh = window.location.hash;
+                let wh = window.location.hash;
 
-                /* chekc hash */
+                /* check hash */
                 if (!isEmpty(wh)) {
 
                     /* remove # */
@@ -361,7 +379,6 @@
 
                         case 'value' :
                             return wh.includes(n);
-                        break;
 
                         case 'query' :
                             if (isQuery(wh)) {
@@ -383,10 +400,10 @@
             if (isDef(n) && isObj(n)) {
 
                 /* sharp boolean */
-                var sharp = 'sharp' in n ? isBool(n.sharp) ? n.sharp : true : true;
+                let sharp = 'sharp' in n ? isBool(n.sharp) ? n.sharp : true : true;
 
                 /* get window hash */
-                var wh = window.location.hash;
+                let wh = window.location.hash;
 
                 /* remove hash */
                 window.location.hash = '';
@@ -407,49 +424,47 @@
             if (isDef(without) && isBool(without) && isDef(n) && isObj(n)) {
 
                 /* get location hash */
-                var wh = window.location.hash.slice(1);
+                let wh = window.location.hash.slice(1);
 
                 /* get other types */
                 if ('query' in n) {
 
                     /* get own query */
-                    var que = n.query;
+                    let que = n.query,
+                        ansQuery = {};
 
                     /* if hash is query */
                     if (isQuery(wh)) {
 
                         /* get query */
-                        var theQuery = getQuery(wh),
-                            ansQuery = {};
+                        let theQuery = getQuery(wh);
 
                         /* check the own query */
                         if (isString(que)) {
 
                             /* if everything */
-                            if (que == '*') {
+                            if (que === '*') {
 
-                                for (var i in theQuery) {
+                                for (let i in theQuery) {
 
                                     /* check query */
                                     if (theQuery.hasOwnProperty(i)) {
 
                                         /* this query */
-                                        var thisQ = theQuery[i];
-                                        ansQuery[i] = thisQ;
+                                        ansQuery[i] = theQuery[i];
                                     }
 
                                 }
 
                             } else {
 
-                                for (var i in theQuery) {
+                                for (let i in theQuery) {
 
                                     /* check query */
-                                    if (i == que && theQuery.hasOwnProperty(i)) {
+                                    if (i === que && theQuery.hasOwnProperty(i)) {
 
                                         /* this query */
-                                        var thisQ = theQuery[i];
-                                        ansQuery[i] = thisQ;
+                                        ansQuery[i] = theQuery[i];
 
                                     }
 
@@ -459,14 +474,16 @@
 
                         } else if (isArr(que)) {
 
-                            for (var i in que) {
+                            for (let i in que) {
 
-                                /* this query */
-                                var thisQ = que[i];
+                                if (que.hasOwnProperty(i)) {
+                                    /* this query */
+                                    let thisQ = que[i];
 
-                                /* check query */
-                                if (theQuery.hasOwnProperty(thisQ)) {
-                                    ansQuery[thisQ] = theQuery[thisQ];
+                                    /* check query */
+                                    if (theQuery.hasOwnProperty(thisQ)) {
+                                        ansQuery[thisQ] = theQuery[thisQ];
+                                    }
                                 }
 
                             }
@@ -495,7 +512,7 @@
                 if ('val' in n) {
 
                     /* get value */
-                    var val = n.val;
+                    let val = n.val;
 
                     /* set val (text) */
                     if (isString(val)) {
@@ -505,17 +522,14 @@
                 } else if ('query' in n) {
 
                     /* get query */
-                    var que = n.query,
+                    let que = n.query,
                         wh = window.location.hash.slice(1);
 
                     /* set query */
                     if (isObj(que)) {
 
                         /* get query */
-                        var theQue = toQuery(que);
-
-                        /* set hash */
-                        window.location.hash = theQue;
+                        window.location.hash = toQuery(que);
 
                     }
 
@@ -532,7 +546,7 @@
                 if ('val' in n) {
 
                     /* get value */
-                    var val = n.val;
+                    let val = n.val;
 
                     /* set val (text) */
                     if (isString(val)) {
@@ -542,14 +556,14 @@
                 } else if ('query' in n) {
 
                     /* get query */
-                    var que = n.query,
+                    let que = n.query,
                         wh = window.location.hash.slice(1);
 
                     /* is query */
                     if (isObj(que)) {
 
                         /* make query */
-                        var theQue = toQuery(que);
+                        let theQue = toQuery(que);
 
                         /* make query */
                         if (!isEmpty(wh) && isQuery(wh)) {
@@ -596,7 +610,7 @@
             if (isString(hash) && isDef(n) && isObj(n)) {
 
                 /* get window hash */
-                var wh = window.location.hash.slice(1);
+                let wh = window.location.hash.slice(1);
 
                 /* check empty hash */
                 if (!isEmpty(hash)) {
@@ -605,23 +619,23 @@
                     if ('query' in n) {
 
                         /* get own query */
-                        var que = n.query;
+                        let que = n.query;
 
                         /* if is query */
                         if (isQuery(wh) && isString(que)) {
 
                             /* get query */
-                            var theQuery = getQuery(wh);
+                            let theQuery = getQuery(wh);
 
                             /* check query */
                             if (theQuery.hasOwnProperty(que)) {
-                                return theQuery[que] == hash;
+                                return theQuery[que] === hash;
                             }
 
                         }
 
                     } else {
-                        return wh == hash;
+                        return wh === hash;
                     }
 
                 }
@@ -642,23 +656,23 @@
             if ('text' in n) {
 
                 /* get text and replace array */
-                var val = isString(n.text) ? n.text : '',
+                let val = isString(n.text) ? n.text : '',
                     rep = 'replace' in n ? Array.isArray(n.replace) ? n.replace : [n.replace] : [];
                 
                 /* clear replace array */
                 rep = Array.from(new Set(rep));
 
                 /* replace */
-                for (var i=0 ; i<rep.length ; i++) {
+                for (let i=0 ; i<rep.length ; i++) {
 
                     /* get loop replace */
-                    var re = rep[i];
+                    let re = rep[i];
 
                     /* check loop */
                     if (isObj(re) && 'from' in re && 'to' in re) {
 
                         /* get to and from */
-                        var toRep = re.to,
+                        let toRep = re.to,
                             fromRep = re.from;
                         
                         /* method */
@@ -697,7 +711,7 @@
     }
 
 
-    var LoadHash = false;
+    let LoadHash = false;
 
     if (typeof define === 'function' && define.amd) {
         define(Hash);
