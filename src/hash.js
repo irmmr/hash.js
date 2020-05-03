@@ -8,7 +8,7 @@
 
     var info = {
         hash_version : '1.2.3',
-        pack_version : '1.2.8'
+        pack_version : '1.2.9'
     }
 
     var emptyObj = Object.freeze({}),

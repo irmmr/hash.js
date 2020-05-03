@@ -1,5 +1,5 @@
 /* 
-* HashJs plugin : server v1.0
+* HashJs plugin : server v1.1
 * Copyright (c) 2020 IRMMR
 * MIT License
 */
@@ -100,62 +100,61 @@
                         var cData = 'data' in h ? isObj(h.data) ? h.data : emptyObj : emptyObj,
                             cResult = 'result' in h ? isObj(h.result) ?  h.result : emptyObj : emptyObj,
                             cSuccess = 'success' in cResult ? isFunc(cResult.success) ? cResult.success : emptyFunc : emptyFunc,
-                            cError = 'error' in cResult ? isFunc(cResult.error) ? cResult.error : emptyFunc : emptyFunc;
+                            cError = 'error' in cResult ? isFunc(cResult.error) ? cResult.error : emptyFunc : emptyFunc,
+                            encodeType = 'encode' in cResult ? isString(Result.encode) ? Result.encode : 'json' : 'json';
 
                         /* create connection */
-                        if (cType == 'get') {
+                        var xhttp = null;
 
-                            /* http request */
-                            var xhttp = null;
+                        /* http request for browser */
+                        if (window.XMLHttpRequest) {
 
-                            /* http request for browser */
-                            if (window.XMLHttpRequest) {
+                            /* normal */
+                            xhttp = new XMLHttpRequest();
 
-                                /* normal */
-                                xhttp = new XMLHttpRequest();
+                        } else if (window.ActiveXObject) {
 
-                            } else if (window.ActiveXObject) {
+                            /* old */
+                            xhttp = new ActiveXObject("Microsoft.XMLHTTP");
 
-                                /* old */
-                                xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                        } else {
 
-                            } else {
+                            /* not exits */
+                            xhttp = false;
 
-                                /* not exits */
-                                xhttp = false;
+                        }
 
-                            }
+                        /* check connect */
+                        if (xhttp) {
 
-                            /* check connect */
-                            if (xhttp) {
+                            /* data result */
+                            xhttp.onreadystatechange = function(){
+                                
+                                /* check data result (GOOD or NOT) */
+                                if (xhttp.readyState === XMLHttpRequest.DONE) {
 
-                                /* data result */
-                                xhttp.onreadystatechange = function(){
-                                    
-                                    /* check data result (GOOD or NOT) */
-                                    if (xhttp.readyState === XMLHttpRequest.DONE) {
+                                    /* request code status */
+                                    var resultCode = xhttp.status;
 
-                                        /* request code status */
-                                        var resultCode = xhttp.status;
+                                    /* success or not */
+                                    if (resultCode === 200) {
 
-                                        /* success or not */
-                                        if (resultCode === 200) {
+                                        /* do action when data recived (SUCCESS) */
+                                        cSuccess.call(this, xhttp.responseText);
 
-                                            /* do action when data recived (SUCCESS) */
-                                            cSuccess.call(this, xhttp.responseText);
+                                    } else {
 
-                                        } else {
-
-                                            /* do action when data recived (ERROR) */
-                                            cError.call(this, resultCode);
-
-                                        }
+                                        /* do action when data recived (ERROR) */
+                                        cError.call(this, resultCode);
 
                                     }
 
-                                };
+                                }
 
-                                /* send data by request */
+                            };
+
+                            /* send data by request */
+                            if (encodeType == 'form') {
                                 var sendData = '',
                                     dataSize = objSize(cData),
                                     putData = 0;
@@ -175,42 +174,52 @@
                                     }
 
                                 }
-                                
+                            } else if (encodeType == 'json') {
+                                var sendData = JSON.stringify(cData);
+                            }
+                            
 
-                                /* open connection for GET */
-                                if (cType == 'get') {
+                            /* open connection for GET */
+                            if (cType == 'get') {
 
-                                    /* add ? if have data */
-                                    if (isEmpty(sendData)) {
-                                        xhttp.open('GET', cUrl);
-                                    } else {
-                                        xhttp.open('GET', cUrl + '?' + sendData);
-                                    }
-
-                                    /* data send */
-                                    xhttp.send();
-
-                                } 
-
-                                /* open connection for POST */
-                                if (cType == 'post') {
-
-                                    /* open data */
+                                /* add ? if have data */
+                                if (isEmpty(sendData)) {
                                     xhttp.open('GET', cUrl);
-                                    xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-                                    /* send if have data */
-                                    if (isEmpty(sendData)) {
-                                        xhttp.send();
-                                    } else {
-                                        xhttp.send(sendData);
-                                    }
-                                   
-
+                                } else {
+                                    xhttp.open('GET', cUrl + '?' + sendData);
                                 }
-                                
+
+                                /* encode */
+                                xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+                                /* data send */
+                                xhttp.send();
+
+                            } 
+
+                            /* open connection for POST */
+                            else if (cType == 'post') {
+
+                                /* open data */
+                                xhttp.open('POST', cUrl);
+
+                                /* data encode */
+                                if (encodeType == 'form') {
+                                    xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                                } else {
+                                    xhttp.setRequestHeader('Content-Type', 'application/json');
+                                }
+
+                                /* send if have data */
+                                if (isEmpty(sendData)) {
+                                    xhttp.send();
+                                } else {
+                                    xhttp.send(sendData);
+                                }
+                            
 
                             }
+                            
 
                         }
     
