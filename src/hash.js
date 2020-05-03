@@ -197,8 +197,9 @@
 
         if ( isDef(e) && isString(e) ) {
             let event   = e.toLowerCase(),
-                func    = isDef(func) && isFunc(func) ? func : emptyFunc,
                 evs     = event.split(',');
+
+            func    = isDef(func) && isFunc(func) ? func : emptyFunc
 
             for (let i in evs) {
 
