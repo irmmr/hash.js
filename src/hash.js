@@ -1,14 +1,14 @@
 /* 
-* HashJs javascript library v1.2.4
+* HashJs javascript library v1.3 (V1.2.4 rewrite)
 * Copyright (c) 2020 IRMMR
 * MIT License
 */
-( function ( window ) {
+(function(window) {
     'use strict';
 
     let info = {
-        hash_version : '1.2.4',
-        pack_version : '1.3.0'
+        hash_version : '1.3',
+        pack_version : '1.4'
     }
 
     let emptyObj = Object.freeze({}),
@@ -31,11 +31,9 @@
     }
 
     function getBool(h) {
-
         return (
             isDef(h) ? isBool(h) ? h : isString(h) ? h.toLowerCase() === 'true' : false : false
         )
-
     }
 
     function getAttr(h, attr) {
@@ -68,14 +66,15 @@
 
     function objSize(h) {
         let size = 0, key;
-        if (isDef(h) && isObj(h)) {
-            for(key in h) {
-                if (h.hasOwnProperty(key)) {
-                    size ++;
-                }
-            }
+        if (!isDef(h) || !isObj(h)) {
+            return size;
         }
-
+        for (key in h) {
+            if (!h.hasOwnProperty(key)) {
+                continue;
+            }
+            size ++;
+        }
         return size;
     }
 
@@ -88,621 +87,437 @@
     }
 
     function isQuery(q) {
-        if (isString(q)) {
-
-            let qa = q.split('&'),
-                itsQuery = 0;
-
-            for (let i in qa) {
-
-                if (qa.hasOwnProperty(i)) {
-                    let dq = qa[i],
-                        da = dq.split('='),
-                        daLen = da.length;
-
-                    if (daLen === 2) {
-
-                        if (isString(da[0]) && isString(da[1])) {
-                            itsQuery ++;
-                        }
-
-                    } else if (daLen === 1) {
-
-                        if (isString(da[0])) {
-                            itsQuery ++;
-                        }
-
-                    }
-                }
-
-            }
-
-            return qa.length === itsQuery;
-
+        if (!isString(q)) {
+            return false;
         }
-
-        return false;
+        let qa = q.split('&'),
+            itsQuery = 0;
+        for (let i in qa) {
+            if (!qa.hasOwnProperty(i)) {
+                continue;
+            }
+            let dq = qa[i],
+                da = dq.split('='),
+                daLen = da.length;
+            if (daLen === 2) {
+                if (isString(da[0]) && isString(da[1])) {
+                    itsQuery ++;
+                }
+            } else if (daLen === 1) {
+                if (isString(da[0])) {
+                    itsQuery ++;
+                }
+            }
+        }
+        return qa.length === itsQuery;
     }
 
     function getQuery(q) {
-        if (isString(q)) {
-
-            if (isQuery(q)) {
-
-                let qa = q.split('&'),
-                    myObj = {};
-
-                for (let i in qa) {
-
-                    if (qa.hasOwnProperty(i)) {
-                        let dq = qa[i],
-                            da = dq.split('='),
-                            daLen = da.length;
-
-                        if (daLen === 2) {
-
-                            let dOne = getString(da[0]);
-                            myObj[dOne] = getString(da[1]);
-
-                        } else if (daLen === 1) {
-
-                            let dOne = getString(da[0]);
-                            myObj[dOne] = null;
-
-                        }
-                    }
-
-                }
-
-                return myObj;
-            }
-
+        if (!isString(q) || !isQuery(q)) {
+            return {};
         }
-
-        return {};
+        let qa = q.split('&'),
+            myObj = {};
+        for (let i in qa) {
+            if (!qa.hasOwnProperty(i)) {
+                continue;
+            }
+            let dq = qa[i],
+                da = dq.split('='),
+                daLen = da.length;
+            if (daLen === 2) {
+                let dOne = getString(da[0]);
+                myObj[dOne] = getString(da[1]);
+            } else if (daLen === 1) {
+                let dOne = getString(da[0]);
+                myObj[dOne] = null;
+            }
+        }
+        return myObj;
     }
-
+    
     function toQuery(q) {
-        if (isDef(q) && isObj(q)) {
-
-            let allQuery = '',
-                queSize = objSize(q),
-                numData = 0;
-
-            for (let i in q) {
-
-                if (q.hasOwnProperty(i)) {
-
-                    numData ++;
-
-                    let dataMe = q[i],
-                        dataAdd = isString(dataMe) ? dataMe : dataMe.toString(),
-                        dataEncode = encodeURIComponent(dataAdd);
-
-                    allQuery += numData === queSize ? i + '=' + dataEncode : i + '=' + dataEncode + '&';
-
-                }
-
-            }
-
-            return allQuery;
+        if (!isDef(q) || !isObj(q)) {
+            return '';
         }
-
-        return '';
+        let allQuery = '',
+            queSize = objSize(q),
+            numData = 0;
+        for (let i in q) {
+            if (!q.hasOwnProperty(i)) {
+                continue;
+            }
+            numData ++;
+            let dataMe = q[i],
+                dataAdd = isString(dataMe) ? dataMe : dataMe.toString(),
+                dataEncode = encodeURIComponent(dataAdd);
+            allQuery += numData === queSize ? i + '=' + dataEncode : i + '=' + dataEncode + '&';
+        }
+        return allQuery;
     }
-
+    
+    // library main variables
     let hashMain, hashInfo, hashEl, hashEvent;
-
+    
+    /**
+     * Hash Event component
+     */
     hashEvent = function(e, func = function() {}) {
-
-        if ( isDef(e) && isString(e) ) {
-            let event   = e.toLowerCase(),
-                evs     = event.split(',');
-
-            func    = isDef(func) && isFunc(func) ? func : emptyFunc
-
-            for (let i in evs) {
-
-                if (evs.hasOwnProperty(i)) {
-
-                    let currentEv = replaceAll(evs[i], ' ', '');
-
-                    switch(currentEv) {
-
-                        case 'change' :
-                            window.addEventListener('hashchange', func);
-                            break;
-
-                        case 'load' :
-                            window.addEventListener('load', func);
-                            break;
-
-                        case 'ready' :
-                            lunchFunc(func);
-                            break;
-
-                        default :
-                            // Nothing to do
-                            break;
-
-                    }
-
-                }
-
-            }
-
+        if (!isDef(e) || !isString(e)) {
+            return;
         }
-
+        let event   = e.toLowerCase(),
+            evs     = event.split(',');
+        func        = isDef(func) && isFunc(func) ? func : emptyFunc;
+        for (let i in evs) {
+            if (!evs.hasOwnProperty(i)) {
+                continue;
+            }
+            let currentEv = replaceAll(evs[i], ' ', '');
+            switch(currentEv) {
+                case 'change' :
+                    window.addEventListener('hashchange', func);
+                    break;
+                case 'load' :
+                    window.addEventListener('load', func);
+                    break;
+                case 'ready' :
+                    lunchFunc(func);
+                    break;
+                default :
+                    // Nothing to do
+                    break;
+            }
+        }
     }
 
+    /**
+     * Hash Info component
+     */
     hashInfo = function(h = {}) {
-
         this.hashVersion = isDef(info.hash_version) ? info.hash_version : '?';
         this.packVersion = isDef(info.pack_version) ? info.pack_version : '?';
-
         this.addons = {
             load : typeof Hash.load !== 'undefined',
             spa : typeof Hash.spa !== 'undefined',
             server : typeof Hash.server !== 'undefined'
         }
-
     }
-
+    
+    /**
+     * Hash Main component
+     */
     hashMain = function(h = {}) {
-
-        /* simple hash and href */
         this.hash = window.location.hash;
         this.href = window.location.href;
 
-        /* remove obj */
+        /**
+         * Remove a hash value or hash query
+         * @param {*} n 
+         * @returns boolean
+         */
         this.remove = function(n = {}) {
-
-            if ( isDef(n) && isObj(n) ) {
-
-                /* words part */
-                if ('words' in n) {
-
-                    /* get all words must be remove */
-                    let words = n.words;
-
-                    /* check app array */
-                    if (isArr(words)) {
-
-                        /* remove equal words */
-                        words = Array.from(new Set(words));
-
-                        /* filter and delete empty words */
-                        words = words.filter(val => val !== '');
-
-                        /* remove words */
-                        for (let i=0 ; i<words.length ; i++) {
-
-                            let wh = window.location.hash;
-                            window.location.hash = replaceAll(wh, words[i], '');
-                            window.location.hash = replaceAll(wh, escape(words[i]), '');
-
-                        }
-
-                    }
-
-                }
-
-                /* query part */
-                if ('query' in n) {
-
-                    /* get this query */
-                    let que = n.query,
-                        wh = window.location.hash.slice(1);
-
-                    /* if query is array */
-                    if (isArr(que)) {
-
-                        /* check query */
-                        if (isQuery(wh)) {
-
-                            /* get own query */
-                            let theQuery = getQuery(wh),
-                                newQuery = {};
-
-                            /* get query loops */
-                            for (let i in theQuery) {
-
-                                /* check in query */
-                                if (theQuery.hasOwnProperty(i)) {
-
-                                    /* remove loop */
-                                    for (let t in que) {
-
-                                        if (i !== que[t]) {
-
-                                            /* make new query */
-                                            newQuery[i] = theQuery[i];
-
-                                        }
-
-                                    }
-
-                                }
-
-                            }
-
-                            /* set new hash */
-                            window.location.hash = toQuery(newQuery);
-
-                        }
-
-                    }
-
-                }
-                
+            if (!isDef(n) || !isObj(n)) {
+                return false;
             }
-
-        }
-
-        this.ref = function(n = '') {
-
-            if (!isEmpty(n) && isString(n)) {
-
-                /* get window reff */
-                let ref = document.referrer;
-
-                if (!isEmpty(ref)) {
-                    return ref === n;
-                } else {
+            if ('words' in n) {
+                let words = n.words;
+                if (!isArr(words)) {
                     return false;
                 }
+                words = Array.from(new Set(words));
+                words = words.filter(val => val !== '');
+                for (let i=0 ; i<words.length ; i++) {
+                    let wh = window.location.hash;
+                    window.location.hash = replaceAll(wh, words[i], '');
+                    window.location.hash = replaceAll(wh, escape(words[i]), '');
+                }
+                return true;
+            }
+            if ('query' in n) {
+                let que = n.query,
+                    wh = window.location.hash.slice(1);
+                if (!isArr(que) || !isQuery(wh)) {
+                    return false;
+                }
+                let theQuery = getQuery(wh),
+                    newQuery = {};
+                for (let i in theQuery) {
+                    if (!theQuery.hasOwnProperty(i)) {
+                        continue;
+                    }
+                    for (let t in que) {
+                        if (!que.hasOwnProperty(t)) {
+                            continue;
+                        }
+                        if (i !== que[t]) {
+                            newQuery[i] = theQuery[i];
+                        }
+                    }
+                }
+                window.location.hash = toQuery(newQuery);
+                return true;
+            }
+            return false;
+        }
 
+        /**
+         * Get document referrer or reference
+         * @param {*} n 
+         * @returns boolean|string
+         */
+        this.ref = function(n = '') {
+            if (!isEmpty(n) && isString(n)) {
+                let ref = document.referrer;
+                return !isEmpty(ref) ? ref === n : false;
             } else {
                 return document.referrer;
             }
-
         }
 
+        /**
+         * Check or searching for a value or query in hash
+         * @param {*} n 
+         * @param {*} s 
+         * @returns boolean
+         */
         this.have = function (n = '', s = '') {
-
-            /* check n */
-            if (isString(n)) {
-
-                /* set def type */
-                let type = isEmpty(s) || !isString(s) ? 'value' : s;
-
-                /* get window hash */
-                let wh = window.location.hash;
-
-                /* check hash */
-                if (!isEmpty(wh)) {
-
-                    /* remove # */
-                    wh = wh.slice(1);
-
-                    /* check type */
-                    switch(type) {
-
-                        case 'value' :
-                            return wh.includes(n);
-
-                        case 'query' :
-                            if (isQuery(wh)) {
-                                return getQuery(wh).hasOwnProperty(n);
-                            }
-                        break;
-
-                    }
-
-                }
-
+            if (!isString(n)) {
+                return false;
             }
-
+            let type = isEmpty(s) || !isString(s) ? 'value' : s,
+                wh = window.location.hash;
+            if (isEmpty(wh)) {
+                return false;
+            }
+            wh = wh.slice(1);
+            switch(type) {
+                case 'value' :
+                    return wh.includes(n);
+                case 'query' :
+                    if (isQuery(wh)) {
+                        return getQuery(wh).hasOwnProperty(n);
+                    }
+                break;
+            }
             return false;
         }
 
+        /**
+         * Clear the page hash
+         * @param {*} n 
+         * @returns boolean
+         */
         this.clear = function(n = {}) {
-
-            if (isDef(n) && isObj(n)) {
-
-                /* sharp boolean */
-                let sharp = 'sharp' in n ? isBool(n.sharp) ? n.sharp : true : true;
-
-                /* get window hash */
-                let wh = window.location.hash;
-
-                /* remove hash */
-                window.location.hash = '';
-
-                /* clear sharp */
-                if (sharp) {
-
-                    history.pushState(null, null, window.location.href.split('#')[0]);
-
-                }
-
+            if (!isDef(n) || !isObj(n)) {
+                return false;
             }
-
+            let sharp = 'sharp' in n ? isBool(n.sharp) ? n.sharp : true : true;
+            window.location.hash = '';
+            if (sharp) {
+                history.pushState(null, null, window.location.href.split('#')[0]);
+            }
+            return true;
         }
 
+        /**
+         * Getting the page hash based on query and string
+         * @param {*} without 
+         * @param {*} n 
+         * @returns object|string|null
+         */
         this.get = function(without = true, n = {}) {
-
-            if (isDef(without) && isBool(without) && isDef(n) && isObj(n)) {
-
-                /* get location hash */
-                let wh = window.location.hash.slice(1);
-
-                /* get other types */
-                if ('query' in n) {
-
-                    /* get own query */
-                    let que = n.query,
-                        ansQuery = {};
-
-                    /* if hash is query */
-                    if (isQuery(wh)) {
-
-                        /* get query */
-                        let theQuery = getQuery(wh);
-
-                        /* check the own query */
-                        if (isString(que)) {
-
-                            /* if everything */
-                            if (que === '*') {
-
-                                for (let i in theQuery) {
-
-                                    /* check query */
-                                    if (theQuery.hasOwnProperty(i)) {
-
-                                        /* this query */
-                                        ansQuery[i] = theQuery[i];
-                                    }
-
-                                }
-
-                            } else {
-
-                                for (let i in theQuery) {
-
-                                    /* check query */
-                                    if (i === que && theQuery.hasOwnProperty(i)) {
-
-                                        /* this query */
-                                        ansQuery[i] = theQuery[i];
-
-                                    }
-
-                                }
-
-                            }
-
-                        } else if (isArr(que)) {
-
-                            for (let i in que) {
-
-                                if (que.hasOwnProperty(i)) {
-                                    /* this query */
-                                    let thisQ = que[i];
-
-                                    /* check query */
-                                    if (theQuery.hasOwnProperty(thisQ)) {
-                                        ansQuery[thisQ] = theQuery[thisQ];
-                                    }
-                                }
-
-                            }
-
-                        }
-
-                    }
-
-                    /* get queries */
-                    return ansQuery;
-
-                } else {
-                    /* get window hash */
-                    return without ? window.location.hash.slice(1) : window.location.hash;
-                }
-
+            if (!isDef(without) || !isBool(without) || !isDef(n) || !isObj(n)) {
+                return false;
             }
-
-            return '';
+            let wh = window.location.hash.slice(1);
+            if ('query' in n) {
+                let que = n.query,
+                    ansQuery = {};
+                if (!isQuery(wh)) {
+                    return {};
+                }
+                let theQuery = getQuery(wh);
+                if (isString(que)) {
+                    if (que === '*') {
+                        for (let i in theQuery) {
+                            if (!theQuery.hasOwnProperty(i)) {
+                                continue;
+                            }
+                            ansQuery[i] = theQuery[i];
+                        }
+                    } else {
+                        for (let i in theQuery) {
+                            if (i === que && theQuery.hasOwnProperty(i)) {
+                                ansQuery[i] = theQuery[i];
+                            }
+                        }
+            
+                    }
+                } else if (isArr(que)) {
+                    for (let i in que) {
+                        if (!que.hasOwnProperty(i)) {
+                            continue;
+                        }
+                        let thisQ = que[i];
+                        if (theQuery.hasOwnProperty(thisQ)) {
+                            ansQuery[thisQ] = theQuery[thisQ];
+                        }
+                    }
+                }
+                return ansQuery;
+            } else if (isArr(que)) {
+                return without ? window.location.hash.slice(1) : window.location.hash;
+            }
+            return null;
         }
 
+        /**
+         * Set the page hash
+         * @param {*} n 
+         * @returns boolean
+         */
         this.set = function(n = {}) {
-
-            if (isDef(n) && isObj(n)) {
-
-                if ('val' in n) {
-
-                    /* get value */
-                    let val = n.val;
-
-                    /* set val (text) */
-                    if (isString(val)) {
-                        window.location.hash = val;
-                    }
-
-                } else if ('query' in n) {
-
-                    /* get query */
-                    let que = n.query,
-                        wh = window.location.hash.slice(1);
-
-                    /* set query */
-                    if (isObj(que)) {
-
-                        /* get query */
-                        window.location.hash = toQuery(que);
-
-                    }
-
-                }
-
+            if (!isDef(n) || !isObj(n)) {
+                return false;
             }
-
+            if ('val' in n) {
+                let val = n.val;
+                if (isString(val)) {
+                    window.location.hash = val;
+                    return true;
+                }
+            } else if ('query' in n) {
+                let que = n.query;
+                if (isObj(que)) {
+                    window.location.hash = toQuery(que);
+                    return true;
+                }
+            }
+            return false;
         }
 
+        /**
+         * Add a value or query to page hash
+         * @param {*} n 
+         * @returns boolean
+         */
         this.add = function(n = {}) {
-
-            if (isDef(n) && isObj(n)) {
-
-                if ('val' in n) {
-
-                    /* get value */
-                    let val = n.val;
-
-                    /* set val (text) */
-                    if (isString(val)) {
-                        window.location.hash += val;
-                    }
-
-                } else if ('query' in n) {
-
-                    /* get query */
-                    let que = n.query,
-                        wh = window.location.hash.slice(1);
-
-                    /* is query */
-                    if (isObj(que)) {
-
-                        /* make query */
-                        let theQue = toQuery(que);
-
-                        /* make query */
-                        if (!isEmpty(wh) && isQuery(wh)) {
-
-                            /* add query */
-                            if (!isEmpty(theQue)) {
-                                window.location.hash = !wh.endsWith('&') ? wh + '&' + theQue : wh + theQue;
-                            }
-    
-                        } else if (isEmpty(wh)) {
-
-                            /* add query */
-                            window.location.hash = theQue;
-    
-                        }
-
-                    }
-
+            if (!isDef(n) || !isObj(n)) {
+                return false;
+            }
+            if ('val' in n) {
+                let val = n.val;
+                if (isString(val)) {
+                    window.location.hash += val;
+                    return true;
                 }
-
+            } else if ('query' in n) {
+                let que = n.query,
+                    wh = window.location.hash.slice(1);
+                if (!isObj(que)) {
+                    return false;
+                }
+                let theQue = toQuery(que);
+                if (!isEmpty(wh) && isQuery(wh)) {
+                    if (!isEmpty(theQue)) {
+                        window.location.hash = !wh.endsWith('&') ? wh + '&' + theQue : wh + theQue;
+                        return true;
+                    }
+                } else if (isEmpty(wh)) {
+                    window.location.hash = theQue;
+                    return true;
+                }
             }
-
-        }
-		
-		this.lock = function(n = {}) {
-            
-            if (isDef(n) && isObj(n)) {
-
-                /* get window hash */
-                const wh = window.location.hash;
-            
-                /* change it when replaced */
-			    window.onhashchange = function() {
-				    window.location.hash = wh;
-			    }
-
-            }
-			
+            return false;
         }
         
-        this.is = function(hash, n = {}) {
-
-            /* check methods */
-            if (isString(hash) && isDef(n) && isObj(n)) {
-
-                /* get window hash */
-                let wh = window.location.hash.slice(1);
-
-                /* check empty hash */
-                if (!isEmpty(hash)) {
-
-                    /* query check */
-                    if ('query' in n) {
-
-                        /* get own query */
-                        let que = n.query;
-
-                        /* if is query */
-                        if (isQuery(wh) && isString(que)) {
-
-                            /* get query */
-                            let theQuery = getQuery(wh);
-
-                            /* check query */
-                            if (theQuery.hasOwnProperty(que)) {
-                                return theQuery[que] === hash;
-                            }
-
-                        }
-
-                    } else {
-                        return wh === hash;
-                    }
-
-                }
-
+        /**
+         * Lock the page hash
+         * @param {*} n 
+         * @returns boolean
+         */
+		this.lock = function(n = {}) {
+            if (!isDef(n) || !isObj(n)) {
+                return false;
             }
-
-            return false;
-
+            const wh = window.location.hash;
+			window.onhashchange = function() {
+				window.location.hash = wh;
+			}
+			return true;
         }
-
+        
+        /**
+         * Checking for hash value or query that equals or not
+         * @param {*} hash 
+         * @param {*} n 
+         * @returns boolean
+         */
+        this.is = function(hash, n = {}) {
+            if (!isString(hash) || !isDef(n) || !isObj(n)) {
+                return false;
+            }
+            let wh = window.location.hash.slice(1);
+            if (isEmpty(hash)) {
+                return false;
+            }
+            if ('query' in n) {
+                let que = n.query;
+                if (!isQuery(wh) || !isString(que)) {
+                    return false;
+                }
+                let theQuery = getQuery(wh);
+                if (theQuery.hasOwnProperty(que)) {
+                    return theQuery[que] === hash;
+                }
+            }
+            return wh === hash;
+        }
 
     }
     
+    /**
+     * Hash Element component
+     */
     hashEl = function(h = {}) {
 
+        /**
+         * Replace string by all targets goal
+         * @param {*} n 
+         * @returns boolean
+         */
         this.replace = function(n = {}) {
-
-            if ('text' in n) {
-
-                /* get text and replace array */
-                let val = isString(n.text) ? n.text : '',
-                    rep = 'replace' in n ? Array.isArray(n.replace) ? n.replace : [n.replace] : [];
-                
-                /* clear replace array */
-                rep = Array.from(new Set(rep));
-
-                /* replace */
-                for (let i=0 ; i<rep.length ; i++) {
-
-                    /* get loop replace */
-                    let re = rep[i];
-
-                    /* check loop */
-                    if (isObj(re) && 'from' in re && 'to' in re) {
-
-                        /* get to and from */
-                        let toRep = re.to,
-                            fromRep = re.from;
-                        
-                        /* method */
-                        if (!isNull(toRep) && !isNull(fromRep)) {
-
-                            /* search for 'from' in val */
-                            if (val.includes(fromRep)) {
-
-                                val = replaceAll(val, fromRep, toRep);
-
-                            }
-
-                        }
-
-                    }
-
-                }
-                
-                /* return val */
-                return val;
-
+            if (!('text' in n)) {
+                return '';
             }
-
-            return '';
-
+            let val = isString(n.text) ? n.text : '',
+                rep = 'replace' in n ? Array.isArray(n.replace) ? n.replace : [n.replace] : [];
+            rep = Array.from(new Set(rep));
+            for (let i=0 ; i<rep.length ; i++) {
+                let re = rep[i];
+                if (!isObj(re) || !('from' in re) || !('to' in re)) {
+                    continue;
+                }
+                let toRep = re.to,
+                    fromRep = re.from;
+                if (isNull(toRep) || isNull(fromRep) || !val.includes(fromRep)) {
+                    continue;
+                }
+                val = replaceAll(val, fromRep, toRep);
+            }
+            return val;
         }
-
     }
-
+    
+    /**
+     * Hash library main variables.
+     * Hash.lib     - main lib
+     * Hash.info    - lib info
+     * Hash.el      - elements components
+     * Hash.event   - lib event
+     * Hash.ready   - only returns true!
+     */
     const Hash = {
         lib : hashMain,
         info : hashInfo,
@@ -710,10 +525,11 @@
         event : hashEvent,
         ready : true
     }
-
-
+    
+    /**
+     * Load and manage hash library
+     */
     let LoadHash = false;
-
     if (typeof define === 'function' && define.amd) {
         define(Hash);
         LoadHash = true;
@@ -721,10 +537,8 @@
         window.Hash = Hash;
         LoadHash = true;
     }
-
     if (typeof exports === 'object') {
         module.exports = Hash();
         LoadHash = true;
     }
-
 })(window);

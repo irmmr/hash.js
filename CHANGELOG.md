@@ -98,3 +98,13 @@ You can't get access to this version!
 ### Fixed
 - add() query manager
 - query manager
+
+## [1.3] - 2020-10-25
+### Chnaged
+- rewrite hash.js
+
+## Removed
+- all hash.js plugins
+- demo
+- other files
+- package
