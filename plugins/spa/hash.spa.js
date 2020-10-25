@@ -1,5 +1,5 @@
 /* 
-* HashJs plugin : spa v1.5
+* HashJs plugin : spa v1.5.1
 * Copyright (c) 2020 IRMMR
 * MIT License
 */
@@ -123,8 +123,12 @@
 
     function loadElements() {
         if (typeof customElements !== 'undefined') {
-            customElements.define('h-link', HashJsLink);
-            customElements.define('h-router-view', HashView);
+            if (typeof customElements.get('h-link') === 'undefined') {
+                customElements.define('h-link', HashJsLink);
+            }
+            if (typeof customElements.get('h-router-view') === 'undefined') {
+                customElements.define('h-router-view', HashView);
+            }
         }
     }
 

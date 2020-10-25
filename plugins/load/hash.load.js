@@ -97,7 +97,7 @@
             function checkPageReady() {
                 checkTime ++;
 
-                if (typeof document.getElementsByTagName('body')[0] !== 'undefined') {
+                if (typeof document.getElementsByTagName('body')[0] !== 'undefined' && document.readyState === 'complate') {
 
                     /* clearn interval when loaded */
                     window.clearInterval(loadInterval);
