@@ -2,67 +2,82 @@
 
 <p align="center">
   <a href="https://github.com/irmmr/hash.js/blob/master/LICENSE"><img alt="GitHub license" src="https://img.shields.io/github/license/irmmr/hash.js"></a>
-    <img alt="version" src="https://img.shields.io/static/v1?label=version&message=v1.2.7&color=success">
-  <img alt="node" src="https://img.shields.io/static/v1?label=npm&message=not%20yet&color=inactive">
-  <a href="https://github.com/irmmr/hash.js/tree/master/doc"><img alt="docs" src="https://img.shields.io/static/v1?label=docs&message=passing&color=blue"></a>
+    <img alt="version" src="https://img.shields.io/static/v1?label=version&message=v1.4&color=success">
    <a href="https://irmmr.github.io/hash.js/" target="_blank">
     <img alt="see page" src="https://img.shields.io/static/v1?label=page&message=click%20here&color=yellow">
   </a>
 </p>
 
 # Hash.js
-**Hash.js** is a simple and useful javascript library! it's just for fun and the truth is that **Hash.js** is not very powerful.
-**Hash.js** have 4 main parts! A main library plus 3 plugin. This plugins used for load, server(ajax), spa.
+**Hash.js** is a simple javascript library by pure js that manage the page `location.hash`. to `change`, `add`, `set`, `check`, `get` the hash value or query you can use this library. The page hash is a combination of 2 parts, "value" and "query". This value is set as follows: `#value?query`. This principle may be incorrect, but it is defined in this library!
 
-This library is mostly used to manage `The page hash`, but you can provide a `router` and a `spa` with it.
+# Usage
+As mentioned this library used for managing page location hash. What is the page's hash? Page's hash is a value that defined in url and starts with a "#". for example : `https://site.com/#some-value`.
+This library can do these works for you:
+- `change` : Change the page's hash value or query
+- `add` : Add some values or queries to page's hash
+- `evaluate` - Evaluate and check hash values and queries
+- `set` - Set vlues and queries to page's hash
+- `update` - Update hash values and queries
+- `clear` - Clear the page's hash
+- `remove` - Remove some parts of page's hash
+- `manage` - Manage the changes of page's hash
+- ...
 
-# Demo
-To watching demos, check [demo](/demo) folder.
-> First, **download** or **clone** the project and next open [`index file`](/demo/index.html) in your browser.
-
-# Document
-To read all the documents, check the [doc](/doc) folder. The document of every version only have different parts and new features.
-
-# Examples
-You can see example sources in [EXAMPLE.md](EXAMPLE.md) file. All example sources are only a sample for better using for you.
+# Structure
+The functions of this library are summarized in 3 sections. The main part is called `lib` and is used as a constructor that you need create an object from it to use its features. The other section is `info` and just shows the library versions. The last section is `event` that only have two mods and have listeners duty: **load** and **change**
+- `load` : The page's load event listener
+- `change` : The page's hashchange event listener
+> In addition to this types, this library can be used from `window.location.HashModule`.
 ```javascript
-/*
-* Simple example for set a query
-* #page=12&type=test
-*/
-var ob = new Hash.lib();
-ob.set({
-  query : {
-    page : 12,
-    type : 'test'
-  }
+// use Hash.js main library
+const hsh = new Hash.lib();
+// or
+const hsh = window.location.HashModule.lib;
+
+// use Hash.js information
+const inf = Hash.info();
+// or
+const inf = window.location.HashModule.info;
+
+// use Hash.js event
+Hash.event(listener, function () {
+  // do somthing ...
 });
 // or
-// #hello/babe
-ob.set({
-  val : 'hello/babe'
+window.location.HashModule.event(listener, function () {
+  // do somthing ...
 });
 ```
 
-# Plugins
-This plugins are Hash.load, Hash.server, Hash.spa. You can get them in "all file" or you can use them separately. [see plugins](/plugins)
-> To using them you can use `hash.all` or include `plugins/{name}/Hash.{name}.js`
+# Examples
+I will add some examples soon ...
+```javascript
+/*
+* Simple example for set and get page hash
+*/
+const hsh = new Hash.lib();
+hsh.set('hello'); // Page's hash => #hello
+let ha = hsh.get();
+console.log(ha); // hello
+```
+```javascript
+/*
+* Simple example for set and get query
+*/
+const hsh = new Hash.lib();
+hsh.setQuery({
+  a : 'b',
+  c : 'd',
+  e : null
+}); // Page's hash => #?a=b&c=d&e
+let hq = hsh.getQuery();
+console.log(hq); // Object { a: "b", c: "d", e: null }
+```
 
-# How to use?
-To use `Hash.js`, use [hash.all.min.js](/src/hash.all.min.js) file in your project or add `hash.js` with other plugins.
-> If `Hash.ready`, you are using hash.js.
+# How to use ?
+To using `Hahs.js`, you need add `hash.js` as a script to your html codes!
+```html
+<script src="path/to/hash.js"></script>
+```
 
-# Libraries
-- `Hash.lib` : The main library for manage page hash and make query.
-- `Hash.el` : The element library for some abilities in replace and other.
-- `Hash.info` : The info library for getting plugins status and package versions.
-- `Hash.ready` : A simple variable for check library is ready.
-- `Hash.event` : A simple function like **addEventListener**.
-- `Hash.spa` : The spa library for making simple spa and router plus rendering in page.
-- `Hash.server` : The server library that only can create ajax request.
-- `Hash.load` : The loader library for making page loading and components loading.
-
-# Target
-This library is for entertainment purposes only. If you can't use complex libraries, you can make a simple spa and used that. If you want make query with your page `hash` you can use `Hash.js` or when you want create a ajax request. 
-
-The `Hash.spa` is not a complex `spa` but it usable in many times.

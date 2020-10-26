@@ -72,10 +72,10 @@ You can't get access to this version!
 - Add `is()` for Hash.lib
 - Add `hashVersion` and `packVersion` for Hash.info
 
-## Changed
+### Changed
 - Manage `Doc` for all versions
 
-## Removed
+### Removed
 - `version` in Hash.info
 
 ## [1.2.6] - 2020-03-14
@@ -103,8 +103,22 @@ You can't get access to this version!
 ### Chnaged
 - rewrite hash.js
 
-## Removed
+### Removed
 - all hash.js plugins
 - demo
 - other files
 - package
+
+## [1.4] - 2020-10-26
+### Added
+- UpdateQuery prototype
+- division all functions to : all, value, query
+- "test files" to seeing functions status
+
+### Chnaged
+- * rewrite all functions
+- change the name of most functions
+
+## Removed
+- hash element
+- hash library reference prototype

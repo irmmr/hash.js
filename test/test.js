@@ -6,13 +6,11 @@
 
 ;(function (window) {
 
-    /**
-     * Use the main library of hash
-     */
+    // Use the main library of hash
     const hsh = new Hash.lib(),
         inf = Hash.info();
 
-    // simple get and set window hash without Hash.js for test
+    // Simple get and set window hash without Hash.js for test
     const GH = () => {
         return window.location.hash;
     }
@@ -36,7 +34,7 @@
         return true;
     }
 
-    // hash event for check page hash changes
+    // Hash event to check for page hash changes
     Hash.event('load', function () {
         let d = new Date();
         document.getElementById('all_changes').innerHTML += `<div class="c-loop"><b style="color:blue">(LOAD)</b> window location hash loaded in <code>${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}:${d.getMilliseconds()}</code></div>`;
@@ -46,6 +44,7 @@
         document.getElementById('all_changes').innerHTML += `<div class="c-loop"><b style="color:green">(CHANGE)</b> window location hash changed in <code>${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}:${d.getMilliseconds()}</code></div>`;
     });
 
+    // All steps function
     function stepActionsTestHashJS() {
         // step 1
         SH('testForCLear');
@@ -170,6 +169,7 @@
         hsh.clear();
     }
 
+    // set all-step functions to window listener
     window.addEventListener('load', stepActionsTestHashJS);
 
 })(window);
