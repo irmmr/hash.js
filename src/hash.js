@@ -1,5 +1,5 @@
 /* 
- * HashJs javascript library v1.3 (V1.2.4 rewrite)
+ * HashJs javascript library v1.4
  * Copyright (c) 2020 IRMMR
  * MIT License
  */
@@ -7,8 +7,8 @@
     'use strict';
 
     const info = {
-        hash_version : '1.3',
-        pack_version : '1.4'
+        hash_version : '1.4',
+        pack_version : '1.5'
     }
 
     const emptyObj = Object.freeze({}),
