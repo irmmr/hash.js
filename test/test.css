@@ -1,0 +1,162 @@
+/* 
+ * HashJs test style (v1.0) using some bootstrap styles
+ * Copyright (c) 2020 IRMMR
+ * MIT License
+ */
+
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+    margin: 0;
+}
+
+html {
+  font-family: sans-serif;
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+body {
+    background: white;
+    font-family: 'Montserrat';
+    color: #333;
+}
+
+ .main-container {
+    width: 100%;
+    display: block;
+ }
+
+.top-container {
+    width: 100%;
+    padding: 20px;
+    text-align: center !important;
+    border-bottom: 3px #ccc solid;
+    background: #f9f9f9;
+}
+
+.top-container img {
+    width: 150px;
+    max-width: 100%;
+}
+.top-container h3 {
+    font-size: 35px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+}
+
+.bt-container {
+    margin-top: 40px;
+    width: 100%;
+    text-align: center !important;
+    padding: 20px;
+}
+
+.bt-container .l-loop {
+    width: 1500px;
+    max-width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    display: inline-block;
+    margin-right: auto !important;
+    margin-left: auto !important;
+    background: rgba(214, 214, 214, 0.2);
+    color: #333;
+    text-align: left !important;
+    margin-bottom: 10px;
+    border: 1px rgba(214, 214, 214, 0.5) solid;
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.bt-container .l-loop i {
+    font-weight: 700;
+    font-size: 20px;
+    font-style: normal;
+    letter-spacing: 4px;
+    margin-right: 5px;
+}
+
+.bt-container .l-loop .f-l {
+    width: 85%;
+    margin-right: 5%;
+    font-size: 20px;
+    font-weight: 300;
+    display: inline-block;
+}
+
+.bt-container .l-loop .l-l {
+    width: 15%;
+    font-size: 20px;
+    font-weight: 500;
+    display: inline-block;
+    text-align: right !important;
+}
+
+.bt-container .l-loop .l-l.co-g {
+    color: green;
+}
+
+.bt-container .l-loop .l-l.co-r {
+    color: red;
+}
+
+.bt-container .l-loop code {
+    background: #e9e9e9;
+    padding: 4px;
+    border-radius: 3px;
+    font-size: 15px;
+}
+
+.all-changes {
+    width: 1500px;
+    height: 500px;
+    overflow-y: auto;
+    max-width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    display: inline-block;
+    margin-right: auto !important;
+    margin-left: auto !important;
+    background: white;
+    color: #333;
+    text-align: left !important;
+    display: block;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.all-changes .c-loop {
+    width: 100%;
+    padding: 8px;
+    font-size: 18px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-align: left;
+    color: #333;
+    margin-bottom: 7px;
+}
+
+.all-changes .c-loop::before {
+    font-weight: 800;
+    margin-right: 8px;
+    content: "> ";
+}
+
+.all-changes .c-loop code {
+    font-weight: 600;
+    letter-spacing: 0;
+}
