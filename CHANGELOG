@@ -122,3 +122,8 @@ You can't get access to this version!
 ## Removed
 - hash element
 - hash library reference prototype
+
+## [1.4.1] - 2020-11-08
+
+## Fixed
+- Get the queries with URI component

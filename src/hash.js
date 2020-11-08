@@ -1,5 +1,5 @@
 /* 
- * HashJs javascript library v1.4
+ * HashJs javascript library v1.4.1
  * Copyright (c) 2020 IRMMR
  * MIT License
  */
@@ -7,8 +7,8 @@
     'use strict';
 
     const info = {
-        hash_version : '1.4',
-        pack_version : '1.5'
+        hash_version : '1.4.1',
+        pack_version : '1.5.1'
     }
 
     const emptyObj = Object.freeze({}),
@@ -127,7 +127,7 @@
                 daLen = da.length;
             if (daLen === 2) {
                 let dOne = getString(da[0]);
-                myObj[dOne] = getString(da[1]);
+                myObj[dOne] = decodeURIComponent(getString(da[1]));
             } else if (daLen === 1) {
                 let dOne = getString(da[0]);
                 myObj[dOne] = null;
