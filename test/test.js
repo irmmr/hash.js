@@ -52,7 +52,7 @@
         PASS('yjsggf783', GH() == '');
 
         // step 2
-        PASS('fghhdf83', (typeof inf.hashVersion !== 'undefined' && inf.hashVersion !== '?') && (typeof inf.packVersion !== 'undefined' && inf.packVersion !== '?'));
+        PASS('fghhdf83', (typeof inf.version !== 'undefined' && inf.version !== '?'));
 
         // step 3
         SH('aabbccddee');
@@ -145,7 +145,7 @@
             g : 'h',
             c : null,
         });
-        PASS('slkjlfdjji', GH() == '#arc?g=h&c&r=e&p=q&f');
+        PASS('slkjlfdjji', GH() == '#arc?r=e&p=q&f&g=h&c');
 
         // step 18
         SH('ar?r=e&u=i');
