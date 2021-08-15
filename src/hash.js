@@ -226,12 +226,12 @@
             }
             let query    = qa[i],
                 q_parse  = splitOnce(query, '='),
-                q_len    = q_parse.length,
+                q_len    = query.split('=').length,
                 needle   = getString(q_parse[0])
             if (isEmpty(query)) {
                 continue
             }
-            if (q_len === 2) {
+            if (q_len >= 2) {
                 let val        = getString(q_parse[1])
                 output[needle] = decodeURIComponent(val)
             } else {
@@ -294,10 +294,9 @@
             return false
         }
         if (q.includes('?')) {
-            let spt = q.split('?')
-            if (spt.length == 2) {
-                return isQuery(spt[1])
-            }
+            let spt = splitOnce(q, '?'),
+                que = spt[1]
+            return !isEmpty(que) && isQuery(que)
         }
         return true
     }
@@ -316,10 +315,7 @@
             return emp
         }
         if (q.includes('?')) {
-            let spt = q.split('?')
-            if (spt.length == 2) {
-                return spt
-            }
+            return splitOnce(q, '?')
         }
         return emp
     }
