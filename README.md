@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/irmmr/hash.js/blob/master/LICENSE"><img alt="GitHub license" src="https://img.shields.io/github/license/irmmr/hash.js"></a>
-    <img alt="version" src="https://img.shields.io/static/v1?label=version&message=v1.4&color=success">
+    <img alt="version" src="https://img.shields.io/static/v1?label=version&message=v1.5.1&color=success">
    <a href="https://irmmr.github.io/hash.js/" target="_blank">
     <img alt="see page" src="https://img.shields.io/static/v1?label=page&message=click%20here&color=yellow">
   </a>
@@ -52,31 +52,107 @@ window.location.HashModule.event(listener, function () {
 
 # Examples
 I will add some examples soon ...
+> These do not include all features.
 ```javascript
-/*
-* Simple example for set and get page hash
-*/
+// To use, you must use this way. You can use this only once in your script.
 const hsh = new Hash.lib();
-hsh.set('hello'); // Page's hash => #hello
-let ha = hsh.get();
-console.log(ha); // hello
 ```
 ```javascript
-/*
-* Simple example for set and get query
-*/
-const hsh = new Hash.lib();
+// Simple example for set and get page's hash.
+
+// set a simple value
+hsh.set('hello');       // page's hash => #hello
+
+// get location's hash
+let ha = hsh.get();     // returns     => 'hello
+```
+```javascript
+// Simple example for set and get query
+
+// #{value}?{query}
+// set a query
 hsh.setQuery({
   a : 'b',
   c : 'd',
   e : null
-}); // Page's hash => #?a=b&c=d&e
-let hq = hsh.getQuery();
-console.log(hq); // Object { a: "b", c: "d", e: null }
+});                         // page's hash => #?a=b&c=d&e
+
+// get query
+let hq = hsh.getQuery();    // returns     => Object { a: "b", c: "d", e: null }
+let a  = hsh.getQuery('a'); // returns     => 'b'
+```
+```javascript
+// Get the location's hash query and value
+
+// set value and query
+hsh.set('value?a=1&b=2&redirect=/');  // page's hash => #value?a=1&b=2&redirect=/
+
+// set value and query
+hsh.setValue('new-value');            // page's hash => #new-value?a=1&b=2&redirect=/
+hsh.setQuery({
+  page: 1,
+  redirect: '/home'
+})                                    // page's hash => #new-value?page=1&redirect=/home
+
+// update query
+hsh.updateQuery('page', 2)            // page's hash => #new-value?page=2&redirect=/home
+
+// check query and value
+hsh.isQuery('page', 2)               // returns      => true
+hsh.isValue('new-value')             // returns      => true
+
+// add query and value
+hsh.addValue('-now');                // page's hash => #new-value-now?page=2&redirect=/home 
+hsh.addQuery({
+  load: 0
+});                                  // page's hash => #new-value-now?page=2&redirect=/home&load=0 
+
+// or add manually 
+hsh.add('&other=hello');             // page's hash => #new-value-now?page=2&redirect=/home&load=0&other=hello
+
+// quantification
+hsh.is('now-d');                     // returns      => false
+hsh.isValue('new-value-now');        // returns      => true
+hsh.isQuery('redirect', '/home');    // returns      => true
+
+// have method
+hsh.have();                           // returns      => true
+hsh.have('/nova');                    // returns      => false
+  
+hsh.haveValue();                      // returns      => true
+hsh.haveValue('-');                   // returns      => true
+
+hsh.haveQuery();                      // returns      => true
+hsh.haveQuery('redirect');            // returns      => true
+hsh.haveQuery(['redirect', 'page']);  // returns      => true
+
+// remove query and value
+hsh.remove(['&redirect=/home', '-']); // page's hash => #newvaluenow?page=2&load=0&other=hello
+hsh.removeValue(['now', 'new']);      // page's hash => #value?page=2&load=0&other=hello
+hsh.removeQuery(['load', 'other']);   // page's hash => #value?page=2
+
+// clear location's hash
+hsh.clear();                          // page's hash => NOTHING     (Run individually)
+hsh.clearValue();                     // page's hash => #?page=2    (Run individually)
+hsh.clearQuery();                     // page's hash => #value      (Run individually)
+```
+```javascript
+// Lock location's hash
+
+// set a value before
+hsh.set('hello');                    // page's hash => #hello
+
+// lock it
+hsh.lock();
+
+// set new value
+hsh.set('goodbye');                 // page's hash => #hello
+hsh.set('anything');                // page's hash => #hello
+hsh.clear();                        // page's hash => #hello
 ```
 
 # How to use ?
-To using `Hahs.js`, you need add `hash.js` as a script to your html codes!
+To using `Hash.js`, you need add `hash.js` as a script to your html codes!
 ```html
 <script src="path/to/hash.js"></script>
 ```
