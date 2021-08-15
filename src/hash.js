@@ -19,6 +19,10 @@
         version : '1.5.1'
     }
 
+    // main lock variables
+    let locked     = false,
+        force_lock = false
+
     // blank variables for use in return of functions
     const emptyObj = Object.freeze({}),
         emptyFunc = function() {}
@@ -828,17 +832,50 @@
         }
 
         /**
+         * check if hash is locked.
+         * @param {object} n 
+         * @returns boolean
+         */
+        this.isLocked = function (n = {}) {
+            if (!isDef(n) || !isObj(n)) {
+                return false
+            }
+            return locked
+        }
+
+        /**
+         * unlock location's hash.
+         * @param {object} n 
+         * @returns boolean
+         */
+        this.unLock = function (n = {}) {
+            if (!isDef(n) || !isObj(n)) {
+                return false
+            }
+            if (locked && !force_lock) {
+                locked = false
+                return true
+            }
+            return false
+        }
+
+        /**
          * lock the page hash.
          * @param {object} n 
          * @returns boolean
          */
-		this.lock = function(n = {}) {
-            if (!isDef(n) || !isObj(n)) {
+		this.lock = function (n = {}) {
+            if (locked || !isDef(n) || !isObj(n)) {
                 return false
             }
-            const wh = getWinHash()
+            let is_force = 'force' in n ? getBool(n.force) : false
+            locked       = true
+            force_lock   = is_force
+            const wh     = getWinHash()
 			window.onhashchange = function() {
-				setWinHash(wh)
+                if (locked) {
+                    setWinHash(wh)
+                }
 			}
 			return true
         }
