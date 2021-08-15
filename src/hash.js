@@ -1,5 +1,5 @@
 /* 
- * HashJs javascript library v1.5
+ * HashJs javascript library v1.5.1
  * Copyright (c) 2021 irmmr
  * MIT License
  * 
@@ -16,7 +16,7 @@
 
     // main information of library such is versions
     const info = {
-        version : '1.5'
+        version : '1.5.1'
     }
 
     // blank variables for use in return of functions
@@ -166,6 +166,17 @@
     }
 
     /**
+     * split just one time is string.
+     * @param {string} string The input string
+     * @param {string} delim  The delim for split
+     * @returns 
+     */
+    function splitOnce(string, delim) {
+        let components = string.split(delim)
+        return [components.shift(), components.join(delim)]
+    }
+    
+    /**
      * check if the type of variable is array.
      * @param {*} h The input data
      * @returns 
@@ -195,7 +206,7 @@
         if (!q.startsWith('?')) {
             q = '?' + q
         }
-        return (new RegExp(/\?.+=.*/g)).test(q)
+        return (new RegExp(/\?.+(=|).*/g)).test(q)
     }
 
     /**
@@ -214,9 +225,12 @@
                 continue
             }
             let query    = qa[i],
-                q_parse  = query.split('='),
+                q_parse  = splitOnce(query, '='),
                 q_len    = q_parse.length,
                 needle   = getString(q_parse[0])
+            if (isEmpty(query)) {
+                continue
+            }
             if (q_len === 2) {
                 let val        = getString(q_parse[1])
                 output[needle] = decodeURIComponent(val)
@@ -229,10 +243,11 @@
     
     /**
      * convert object to query string.
-     * @param {object} q The query object
+     * @param {object}  q           The query object
+     * @param {boolean} encode_uri  Encode uri component status
      * @returns 
      */
-    function toQuery(q) {
+    function toQuery(q, encode_uri = false) {
         if (!isDef(q) || !isObj(q)) {
             return ''
         }
@@ -248,7 +263,8 @@
             if (isNull(data_val)) {
                 all_query += num_data === que_size ? i : i + '&'
             } else {
-                let data_encode = encodeURIComponent(getString(data_val))
+                let data_str    = getString(data_val),
+                    data_encode = encode_uri ? encodeURIComponent(data_str) : data_str
                 all_query += num_data === que_size ? i + '=' + data_encode : i + '=' + data_encode + '&'
             }
         }
@@ -635,13 +651,12 @@
                 return {}
             }
             let que = getQuery(hsh_que)
-            if (n.length !== 0) {
+            if (n.length === 1) {
+                return que.hasOwnProperty(n[0]) ? que[n[0]] : ''
+            } else if (n.length !== 0) {
                 let ans = {}
                 for (let i in n) {
-                    if (!n.hasOwnProperty(i)) {
-                        continue
-                    }
-                    if (que.hasOwnProperty(n[i])) {
+                    if (n.hasOwnProperty(i) && que.hasOwnProperty(n[i])) {
                         let v  = n[i]
                         ans[v] = que[v]
                     }
