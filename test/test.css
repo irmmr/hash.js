@@ -78,7 +78,6 @@ body {
     text-align: left !important;
     margin-bottom: 10px;
     border: 1px rgba(214, 214, 214, 0.5) solid;
-    display: flex;
     margin-bottom: 20px;
 }
 
@@ -88,10 +87,11 @@ body {
     font-style: normal;
     letter-spacing: 4px;
     margin-right: 5px;
+    display: inline-block;
 }
 
 .bt-container .l-loop .f-l {
-    width: 85%;
+    width: 79%;
     margin-right: 5%;
     font-size: 20px;
     font-weight: 300;
@@ -104,6 +104,17 @@ body {
     font-weight: 500;
     display: inline-block;
     text-align: right !important;
+}
+
+.bt-container .l-loop .l-a {
+    width: 100%;
+    font-size: 18px;
+    font-weight: 400;
+    display: block;
+    text-align: left !important;
+    margin-top: 15px;
+    border-top: 1px #ccc solid;
+    padding: 8px;
 }
 
 .bt-container .l-loop .l-l.co-g {
