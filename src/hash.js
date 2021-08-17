@@ -1,5 +1,5 @@
 /* 
- * HashJs javascript library v1.5.1
+ * HashJs javascript library v1.6
  * Copyright (c) 2021 irmmr
  * MIT License
  * 
@@ -16,7 +16,7 @@
 
     // main information of library such is versions
     const info = {
-        version : '1.5.1'
+        version : '1.6'
     }
 
     // main lock variables
@@ -341,63 +341,63 @@
         window.location.hash = q
     }
     
-    // library main variables
-    let hashMain, hashInfo, hashEvent
-    
-    /**
-     * Hash Event component
-     */
-    hashEvent = function(e, func = function() {}) {
-        if (!isDef(e) || !isString(e)) {
-            return
-        }
-        let event   = e.toLowerCase(),
-            evs     = event.split(',')
-            func    = isDef(func) && isFunc(func) ? func : emptyFunc
-        for (let i in evs) {
-            if (!evs.hasOwnProperty(i)) {
-                continue
-            }
-            let current_ev = replaceAll(evs[i], ' ', '')
-            switch (current_ev) {
-                case 'change' :
-                    window.addEventListener('hashchange', func);
-                    break;
-                case 'load' :
-                    window.addEventListener('load', func);
-                    break;
-                case 'ready' :
-                    lunchFunc(func);
-                    break;
-                default :
-                    // nothing to do
-                    break;
-            }
-        }
-    }
-
-    /**
-     * Hash Info component
-     */
-    hashInfo = function(h = {}) {
-        return {
-            version : isDef(info.version) ? info.version : '?'
-        }
-    }
-    
     /**
      * Hash Main component
      */
-    hashMain = function (h = {}) {
-        this.realHash   = window.location.hash
-        this.cleanHash  = getWinHash()
-        
+    let hashComponents = {
+
+        /**
+         * Hash Event component.
+         * @param {string} e The listeners
+         * @param {*} func   The function/callback
+         * @returns 
+         */
+        event : function(e, func = function() {}) {
+            if (!isDef(e) || !isString(e)) {
+                return
+            }
+            let event   = e.toLowerCase(),
+                evs     = event.split(',')
+                func    = isDef(func) && isFunc(func) ? func : emptyFunc
+            for (let i in evs) {
+                if (!evs.hasOwnProperty(i)) {
+                    continue
+                }
+                let current_ev = replaceAll(evs[i], ' ', '')
+                switch (current_ev) {
+                    case 'change' :
+                        window.addEventListener('hashchange', func);
+                        break;
+                    case 'load' :
+                        window.addEventListener('load', func);
+                        break;
+                    case 'ready' :
+                        lunchFunc(func);
+                        break;
+                    default :
+                        // nothing to do
+                        break;
+                }
+            }
+        },
+
+        /**
+         * Hash Info component.
+         * @param {object} h Config info
+         * @returns 
+         */
+        info : function(h = {}) {
+            return {
+                version : isDef(info.version) ? info.version : '?'
+            }
+        },
+
         /**
          * remove a string from location hash.
          * @param {string|array} n The words/chars list
          * @returns boolean
          */
-        this.remove = function (n = []) {
+        remove : function (n = []) {
             if (isString(n) && !isEmpty(n)) {
                 n = [n]
             }
@@ -422,14 +422,14 @@
                 }
             }
             return true
-        }
+        },
 
         /**
          * remove a value from location hash.
          * @param {string|array} n The words list
          * @returns boolean
          */
-        this.removeValue = function (n = []) {
+        removeValue : function (n = []) {
             if (isString(n) && !isEmpty(n)) {
                 n = [n]
             }
@@ -459,14 +459,14 @@
             }
             setWinHash(vt)
             return true
-        }
+        },
 
         /**
          * remove a query from location hash.
          * @param {string|array} n 
          * @returns boolean
          */
-        this.removeQuery = function (n = []) {
+        removeQuery : function (n = []) {
             if (isString(n) && !isEmpty(n)) {
                 n = [n]
             }
@@ -497,14 +497,14 @@
             vt += '?' + toQuery(cl)
             setWinHash(vt)
             return true
-        }
+        },
 
         /**
          * check for location hash value.
          * @param {string} n 
          * @returns boolean
          */
-        this.haveValue = function (n = '') {
+        haveValue : function (n = '') {
             if (!isString(n)) {
                 return false
             }
@@ -514,14 +514,14 @@
                 return !isEmpty(wg)
             }
             return wg.includes(n)
-        }
+        },
 
         /**
          * checking for query exists on location hash.
          * @param {string|array} n 
          * @retuens boolean
          */
-        this.haveQuery = function (n = []) {
+        haveQuery : function (n = []) {
             if (isString(n)) {
                 n = [n]
             }
@@ -546,14 +546,14 @@
                 }
             }
             return true
-        }
+        },
 
         /**
          * check or searching for a string in hash.
          * @param {string|array} n 
          * @returns boolean
          */
-        this.have = function (n = '') {
+        have : function (n = '') {
             if (!isString(n)) {
                 return false
             }
@@ -565,14 +565,14 @@
                 return true
             }
             return wh.includes(n)
-        }
+        },
 
         /**
          * clear the page hash.
          * @param {boolean} n 
          * @returns boolean
          */
-        this.clear = function (n = true) {
+        clear : function (n = true) {
             if (!isBool(n)) {
                 return false
             }
@@ -581,13 +581,13 @@
                 history.pushState(null, null, window.location.href.split('#')[0])
             }
             return true
-        }
+        },
 
         /**
          * clear hash value from location hash.
          * @returns boolean
          */
-        this.clearValue = function () {
+        clearValue : function () {
             let wh = getWinHash()
             if (!isTrueHash(wh)) {
                 return false
@@ -595,13 +595,13 @@
             let wg = getTrueHash(wh)[1]
             setWinHash('?' + wg)
             return true
-        }
+        },
 
         /**
          * clear hash query from location hash.
          * @returns boolean
          */
-        this.clearQuery = function () {
+        clearQuery : function () {
             let wh = getWinHash()
             if (!isTrueHash(wh)) {
                 return false
@@ -609,33 +609,33 @@
             let wg = getTrueHash(wh)[0]
             setWinHash(wg)
             return true
-        }
+        },
 
         /**
          * an easy way to get location hash.
          * @param {*} n
          * @returns string
          */
-        this.get = function (n = {}) {
+        get : function (n = {}) {
             return getWinHash()
-        }
+        },
 
         /**
          * get location hash value.
          * @param {*} n
          * @returns string
          */
-        this.getValue = function (n = {}) {
+        getValue : function (n = {}) {
             let wh = getWinHash()
             return isEmpty(wh) ? '' : getTrueHash(wh)[0]
-        }
+        },
 
         /**
          * get the location hash query.
          * @param {string|array} n 
          * @returns object
          */
-        this.getQuery = function (n = []) {
+        getQuery : function (n = []) {
             if (isString(n)) {
                 n = [n]
             }
@@ -664,27 +664,27 @@
                 return ans
             }
             return que
-        }
+        },
 
         /**
          * set the page hash.
          * @param {string} n 
          * @returns boolean
          */
-        this.set = function (n = '') {
+        set : function (n = '') {
             if (!isString(n) || isEmpty(n)) {
                 return false
             }
             setWinHash(n)
             return true
-        }
+        },
 
         /**
          * set a value to location hash.
          * @param {string} n 
          * @returns boolean
          */
-        this.setValue = function (n = '') {
+        setValue : function (n = '') {
             if (!isString(n) || isEmpty(n)) {
                 return false
             }
@@ -699,14 +699,14 @@
             }
             setWinHash(n + '?' + hsh_que)
             return true
-        }
+        },
 
         /**
          * set a query to location hash.
          * @param {object} n 
          * @returns boolean
          */
-        this.setQuery = function (n = {}) {
+        setQuery : function (n = {}) {
             if (!isObj(n) || n.length == 0) {
                 return false
             }
@@ -719,14 +719,14 @@
             }
             setWinHash(hash + '?' + aq)
             return true
-        }
+        },
 
         /**
          * add a string to location hash.
          * @param {string} n 
          * @returns boolean
          */
-        this.add = function(n = '') {
+        add : function (n = '') {
             if (!isString(n) || isEmpty(n)) {
                 return false
             }
@@ -737,14 +737,14 @@
             }
             setWinHash(wh + n)
             return true
-        }
+        },
 
         /**
          * add a value to location hash.
          * @param {string} n 
          * @returns boolean
          */
-        this.addValue = function (n = '') {
+        addValue : function (n = '') {
             if (!isString(n) || isEmpty(n)) {
                 return false
             }
@@ -763,14 +763,14 @@
             }
             setWinHash(n)
             return true
-        }
+        },
 
         /**
          * add a query to location hash.
          * @param {*} n 
          * @returns boolean
          */
-        this.addQuery = function (n = {}) {
+        addQuery : function (n = {}) {
             if (!isObj(n) || n.length == 0) {
                 return false
             }
@@ -789,7 +789,7 @@
             vl += '?' + toQuery(n)
             setWinHash(vl)
             return true
-        }
+        },
        
         /**
          * update a query value in location hash.
@@ -797,7 +797,7 @@
          * @param {string|null|number} e 
          * @returns boolean
          */
-        this.updateQuery = function (n, e) {
+        updateQuery : function (n, e) {
             if (!isString(n) || !(isString(e) || isNum(e) || isNull(e))) {
                 return false
             }
@@ -829,26 +829,26 @@
             vl += '?' + toQuery(cl)
             setWinHash(vl)
             return ch !== 0
-        }
+        },
 
         /**
          * check if hash is locked.
          * @param {object} n 
          * @returns boolean
          */
-        this.isLocked = function (n = {}) {
+        isLocked : function (n = {}) {
             if (!isDef(n) || !isObj(n)) {
                 return false
             }
             return locked
-        }
+        },
 
         /**
          * unlock location's hash.
          * @param {object} n 
          * @returns boolean
          */
-        this.unLock = function (n = {}) {
+        unLock : function (n = {}) {
             if (!isDef(n) || !isObj(n)) {
                 return false
             }
@@ -857,14 +857,14 @@
                 return true
             }
             return false
-        }
+        },
 
         /**
          * lock the page hash.
          * @param {object} n 
          * @returns boolean
          */
-		this.lock = function (n = {}) {
+		lock : function (n = {}) {
             if (locked || !isDef(n) || !isObj(n)) {
                 return false
             }
@@ -878,33 +878,33 @@
                 }
 			}
 			return true
-        }
+        },
         
         /**
          * checking with equals in location hash.
          * @param {string} n 
          * @returns boolean
          */
-        this.is = function (n = '') {
+        is : function (n = '') {
             if (!isString(n)) {
                 return false
             }
             return getWinHash() == n
-        }
+        },
 
         /**
          * checking for value string in location hash.
          * @param {string} n 
          * @return boolean
          */
-        this.isValue = function (n = '') {
+        isValue : function (n = '') {
             if (!isString(n)) {
                 return false
             }
             let wh = getWinHash(),
                 hash = getTrueHash(wh)[0]
             return hash == n
-        }
+        },
 
         /**
          * check for query value in location hash.
@@ -912,7 +912,7 @@
          * @param {string|null|number} e 
          * @returns boolean
          */
-        this.isQuery = function (n, e) {
+        isQuery : function (n, e) {
             if (!isString(n) || isEmpty(n) || (!isString(e) && !isNum(e) && !isNull(e))) {
                 return false
             }
@@ -932,29 +932,12 @@
     
     /**
      * Hash library main variables.
-     * Hash.lib     - main lib
+     * Hash.*       - main lib
      * Hash.info    - lib info
      * Hash.event   - lib event
-     * Hash.ready   - only returns true!
      */
-    const Hash = {
-        lib     : hashMain,
-        info    : hashInfo,
-        event   : hashEvent,
-        ready   : true
-    }
-    
-    /**
-     * Load and manage hash library
-     */
-    if ('location' in window && isObj(window.location)) {
-        window.location.HashModule = {
-            lib     : new Hash.lib(),
-            info    : Hash.info(),
-            event   : function (e, f = function() {}) {
-                return Hash.event(e, f)
-            }
-        }
+    const Hash = function (n = {}) {
+        return hashComponents
     }
 
     // return the library handle
