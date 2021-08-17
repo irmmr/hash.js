@@ -31,21 +31,13 @@ The functions of this library are summarized in 3 sections. The main part is cal
 > In addition to this types, this library can be used from `window.location.HashModule`.
 ```javascript
 // use Hash.js main library
-const hsh = new Hash.lib();
-// or
-const hsh = window.location.HashModule.lib;
+const hsh = Hash();
 
 // use Hash.js information
-const inf = Hash.info();
-// or
-const inf = window.location.HashModule.info;
+const inf = Hash().info();
 
 // use Hash.js event
-Hash.event(listener, function () {
-  // do somthing ...
-});
-// or
-window.location.HashModule.event(listener, function () {
+Hash().event(listener, function () {
   // do somthing ...
 });
 ```
@@ -54,8 +46,8 @@ window.location.HashModule.event(listener, function () {
 I will add some examples soon ...
 > These do not include all features.
 ```javascript
-// To use, you must use this way. You can use this only once in your script.
-const hsh = new Hash.lib();
+// To use, you must use this way.
+const hsh = Hash();
 ```
 ```javascript
 // Simple example for set and get page's hash.
