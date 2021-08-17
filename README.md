@@ -2,13 +2,15 @@
 
 <p align="center">
   <a href="https://github.com/irmmr/hash.js/blob/master/LICENSE"><img alt="GitHub license" src="https://img.shields.io/github/license/irmmr/hash.js"></a>
-    <img alt="version" src="https://img.shields.io/static/v1?label=version&message=v1.5.1&color=success">
+    <img alt="version" src="https://img.shields.io/static/v1?label=version&message=v1.6&color=success">
    <a href="https://irmmr.github.io/hash.js/" target="_blank">
     <img alt="see page" src="https://img.shields.io/static/v1?label=page&message=click%20here&color=yellow">
   </a>
 </p>
 
 # Hash.js
+> Please use only version **1.6** or higher.
+
 **Hash.js** is a simple javascript library by pure js that manage the page `location.hash`. to `change`, `add`, `set`, `check`, `get` the hash value or query you can use this library. The page hash is a combination of 2 parts, "value" and "query". This value is set as follows: `#value?query`. This principle may be incorrect, but it is defined in this library!
 
 # Usage
