@@ -7,8 +7,8 @@
 ;(function (window) {
 
     // Use the main library of hash
-    const hsh = new Hash.lib(),
-        inf = Hash.info();
+    const hsh = Hash(),
+        inf = Hash().info();
 
     // Simple get and set window hash without Hash.js for test
     const GH = () => {
