@@ -1,2 +1,9 @@
-/lab/
-/.idea/
+lab
+.idea
+.DS_Store
+node_modules
+*.log
+dist/*.gz
+dist/*.map
+dist/*.js
+.vscode
