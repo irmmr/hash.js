@@ -9,9 +9,21 @@
 </p>
 
 # Hash.js
-> Please use only version **1.6** or higher.
+> Please use only version **1.6.0** or higher.
 
 **Hash.js** is a simple javascript library by pure js that manage the page `location.hash`. to `change`, `add`, `set`, `check`, `get` the hash value or query you can use this library. The page hash is a combination of 2 parts, "value" and "query". This value is set as follows: `#value?query`. This principle may be incorrect, but it is defined in this library!
+
+# Install
+You can install this package with ‍‍`npm` and use it.
+
+```
+npm install @irmmr/hash.js
+```
+
+Or use the built-in version of this library separately.
+```html
+<script src="path/to/dist/hash.js"></script>
+```
 
 # Usage
 As mentioned this library used for managing page location hash. What is the page's hash? Page's hash is a value that defined in url and starts with a "#". for example : `https://site.com/#some-value`.
@@ -32,6 +44,8 @@ The functions of this library are summarized in 3 sections. The main part is cal
 - `change` : The page's hashchange event listener
 > In addition to this types, this library can be used from `window.location.HashModule`.
 ```javascript
+import Hash from '@irmmr/hash.js';
+
 // use Hash.js main library
 const hsh = Hash();
 
