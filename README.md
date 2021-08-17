@@ -2,13 +2,15 @@
 
 <p align="center">
   <a href="https://github.com/irmmr/hash.js/blob/master/LICENSE"><img alt="GitHub license" src="https://img.shields.io/github/license/irmmr/hash.js"></a>
-    <img alt="version" src="https://img.shields.io/static/v1?label=version&message=v1.5.1&color=success">
+    <img alt="version" src="https://img.shields.io/static/v1?label=version&message=v1.6&color=success">
    <a href="https://irmmr.github.io/hash.js/" target="_blank">
     <img alt="see page" src="https://img.shields.io/static/v1?label=page&message=click%20here&color=yellow">
   </a>
 </p>
 
 # Hash.js
+> Please use only version **1.6** or higher.
+
 **Hash.js** is a simple javascript library by pure js that manage the page `location.hash`. to `change`, `add`, `set`, `check`, `get` the hash value or query you can use this library. The page hash is a combination of 2 parts, "value" and "query". This value is set as follows: `#value?query`. This principle may be incorrect, but it is defined in this library!
 
 # Usage
@@ -31,21 +33,13 @@ The functions of this library are summarized in 3 sections. The main part is cal
 > In addition to this types, this library can be used from `window.location.HashModule`.
 ```javascript
 // use Hash.js main library
-const hsh = new Hash.lib();
-// or
-const hsh = window.location.HashModule.lib;
+const hsh = Hash();
 
 // use Hash.js information
-const inf = Hash.info();
-// or
-const inf = window.location.HashModule.info;
+const inf = Hash().info();
 
 // use Hash.js event
-Hash.event(listener, function () {
-  // do somthing ...
-});
-// or
-window.location.HashModule.event(listener, function () {
+Hash().event(listener, function () {
   // do somthing ...
 });
 ```
@@ -54,8 +48,8 @@ window.location.HashModule.event(listener, function () {
 I will add some examples soon ...
 > These do not include all features.
 ```javascript
-// To use, you must use this way. You can use this only once in your script.
-const hsh = new Hash.lib();
+// To use, you must use this way.
+const hsh = Hash();
 ```
 ```javascript
 // Simple example for set and get page's hash.
@@ -93,48 +87,6 @@ hsh.setQuery({
   page: 1,
   redirect: '/home'
 })                                    // page's hash => #new-value?page=1&redirect=/home
-
-// update query
-hsh.updateQuery('page', 2)            // page's hash => #new-value?page=2&redirect=/home
-
-// check query and value
-hsh.isQuery('page', 2)               // returns      => true
-hsh.isValue('new-value')             // returns      => true
-
-// add query and value
-hsh.addValue('-now');                // page's hash => #new-value-now?page=2&redirect=/home 
-hsh.addQuery({
-  load: 0
-});                                  // page's hash => #new-value-now?page=2&redirect=/home&load=0 
-
-// or add manually 
-hsh.add('&other=hello');             // page's hash => #new-value-now?page=2&redirect=/home&load=0&other=hello
-
-// quantification
-hsh.is('now-d');                     // returns      => false
-hsh.isValue('new-value-now');        // returns      => true
-hsh.isQuery('redirect', '/home');    // returns      => true
-
-// have method
-hsh.have();                           // returns      => true
-hsh.have('/nova');                    // returns      => false
-  
-hsh.haveValue();                      // returns      => true
-hsh.haveValue('-');                   // returns      => true
-
-hsh.haveQuery();                      // returns      => true
-hsh.haveQuery('redirect');            // returns      => true
-hsh.haveQuery(['redirect', 'page']);  // returns      => true
-
-// remove query and value
-hsh.remove(['&redirect=/home', '-']); // page's hash => #newvaluenow?page=2&load=0&other=hello
-hsh.removeValue(['now', 'new']);      // page's hash => #value?page=2&load=0&other=hello
-hsh.removeQuery(['load', 'other']);   // page's hash => #value?page=2
-
-// clear location's hash
-hsh.clear();                          // page's hash => NOTHING     (Run individually)
-hsh.clearValue();                     // page's hash => #?page=2    (Run individually)
-hsh.clearQuery();                     // page's hash => #value      (Run individually)
 ```
 ```javascript
 // Lock location's hash

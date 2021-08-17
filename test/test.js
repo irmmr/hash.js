@@ -7,8 +7,8 @@
 ;(function (window) {
 
     // Use the main library of hash
-    const hsh = new Hash.lib(),
-        inf = Hash.info();
+    const hsh = Hash(),
+        inf = Hash().info();
 
     // Simple get and set window hash without Hash.js for test
     const GH = () => {
@@ -48,11 +48,11 @@
     }
 
     // Hash event to check for page hash changes
-    Hash.event('load', function () {
+    Hash().event('load', function () {
         let d = new Date()
         document.getElementById('all_changes').innerHTML += `<div class="c-loop"><b style="color:blue">(LOAD)</b> page's hash loaded in <code>${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}:${d.getMilliseconds()}</code></div>`;
     });
-    Hash.event('change', function () {
+    Hash().event('change', function () {
         let d = new Date()
         document.getElementById('all_changes').innerHTML += `<div class="c-loop"><b style="color:green">(CHANGE)</b> page's hash changed in <code>${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}:${d.getMilliseconds()}</code></div>`;
     });
