@@ -3,7 +3,7 @@ import components from './components'
 
 // set main hash.js function
 const Hash = function (n = {}) {
-    return components
+    return components(n)
 }
 
 export default Hash

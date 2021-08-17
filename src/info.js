@@ -1,6 +1,4 @@
 // Hash main information of library such as versions.
-let hashInfo = { 
+export default {
     version : '1.6.1'
 }
-
-export default hashInfo

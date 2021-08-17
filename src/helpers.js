@@ -1,5 +1,5 @@
 // define main helpers handle
-let hashHelpers = {
+export default {
 
     /**
      * check if the variable is defined.
@@ -144,7 +144,7 @@ let hashHelpers = {
     },
 
     /**
-     * split just one time is string.
+     * split just one time in string.
      * @param {string} string The input string
      * @param {string} delim  The delim for split
      * @returns 
@@ -152,6 +152,17 @@ let hashHelpers = {
     splitOnce: function (string, delim) {
         let components = string.split(delim)
         return [components.shift(), components.join(delim)]
+    },
+
+    /**
+     * split just one time in string from end.
+     * @param {string} string The input string
+     * @param {string} delim  The delim for split
+     * @returns
+     */
+    splitOnceEnd: function (string, delim) {
+        let components = string.split(delim)
+        return [components.slice(0, components.length - 1).join(delim), components.pop()]
     },
     
     /**
@@ -316,5 +327,3 @@ let hashHelpers = {
     }
 
 }
-
-export default hashHelpers
