@@ -1,0 +1,30 @@
+{
+  "name": "@irmmr/hash.js",
+  "version": "1.6.0",
+  "description": "A simple and flexible JavaScript library that manages \"window.location.hash\". With the ability to support queries. (#value?query)",
+  "main": "src/hash.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/irmmr/hash.js.git"
+  },
+  "keywords": [
+    "hashjs",
+    "window.location.hash",
+    "page hash",
+    "hash query",
+    "javascript",
+    "hash.js"
+  ],
+  "author": "Irmmr",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/irmmr/hash.js/issues"
+  },
+  "homepage": "https://github.com/irmmr/hash.js#readme"
+}

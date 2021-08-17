@@ -3,6 +3,7 @@ lab
 .DS_Store
 node_modules
 *.log
+.npm
 dist/*.gz
 dist/*.map
 dist/*.js
