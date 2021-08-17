@@ -85,48 +85,6 @@ hsh.setQuery({
   page: 1,
   redirect: '/home'
 })                                    // page's hash => #new-value?page=1&redirect=/home
-
-// update query
-hsh.updateQuery('page', 2)            // page's hash => #new-value?page=2&redirect=/home
-
-// check query and value
-hsh.isQuery('page', 2)               // returns      => true
-hsh.isValue('new-value')             // returns      => true
-
-// add query and value
-hsh.addValue('-now');                // page's hash => #new-value-now?page=2&redirect=/home 
-hsh.addQuery({
-  load: 0
-});                                  // page's hash => #new-value-now?page=2&redirect=/home&load=0 
-
-// or add manually 
-hsh.add('&other=hello');             // page's hash => #new-value-now?page=2&redirect=/home&load=0&other=hello
-
-// quantification
-hsh.is('now-d');                     // returns      => false
-hsh.isValue('new-value-now');        // returns      => true
-hsh.isQuery('redirect', '/home');    // returns      => true
-
-// have method
-hsh.have();                           // returns      => true
-hsh.have('/nova');                    // returns      => false
-  
-hsh.haveValue();                      // returns      => true
-hsh.haveValue('-');                   // returns      => true
-
-hsh.haveQuery();                      // returns      => true
-hsh.haveQuery('redirect');            // returns      => true
-hsh.haveQuery(['redirect', 'page']);  // returns      => true
-
-// remove query and value
-hsh.remove(['&redirect=/home', '-']); // page's hash => #newvaluenow?page=2&load=0&other=hello
-hsh.removeValue(['now', 'new']);      // page's hash => #value?page=2&load=0&other=hello
-hsh.removeQuery(['load', 'other']);   // page's hash => #value?page=2
-
-// clear location's hash
-hsh.clear();                          // page's hash => NOTHING     (Run individually)
-hsh.clearValue();                     // page's hash => #?page=2    (Run individually)
-hsh.clearQuery();                     // page's hash => #value      (Run individually)
 ```
 ```javascript
 // Lock location's hash
