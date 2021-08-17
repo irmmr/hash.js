@@ -304,7 +304,7 @@
             if (q.includes('?')) {
                 var spt = this.splitOnce(q, '?'),
                     que = spt[1];
-                return !this.isEmpty(que) && this.isQuery(que)
+                return this.isEmpty(que) || this.isQuery(que)
             }
             return true
         },
@@ -411,7 +411,7 @@
             info : function(h) {
 
                 return {
-                    version : helper.isDef(info.version) ? info.version : '?'
+                    version : info.version 
                 }
             },
 
@@ -441,7 +441,7 @@
                     if (helper.getWinHash().includes(vl)) {
                         helper.setWinHash(
                             helper.replaceAll(
-                                helper.getWinHash(),vl, ''
+                                helper.getWinHash(), vl, ''
                             )
                         );
                     }
@@ -523,7 +523,9 @@
                 if (!helper.isEmpty(hsh_val)) {
                     vt += hsh_val;
                 }
-                vt += '?' + helper.toQuery(cl);
+                if (helper.objSize(cl) !== 0) {
+                    vt += '?' + helper.toQuery(cl);
+                }
                 helper.setWinHash(vt);
                 return true
             },
@@ -998,9 +1000,14 @@
 
     // set main Hash.js definer
 
+    // config options
+    var configs = {};
+
     // set main hash.js function
     var Hash = function (n) {
+        if ( n === void 0 ) n = {};
 
+        n = Object.assign(configs, n);
         return components()
     };
 
