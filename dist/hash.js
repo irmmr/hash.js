@@ -1,5 +1,5 @@
 /**
- * HashJs javascript library v1.6
+ * HashJs javascript library v1.6.1
  * Copyright (c) 2021 irmmr
  * MIT License
  *
@@ -14,7 +14,7 @@
 }(this, (function () { 'use strict';
 
     // define main helpers handle
-    var hashHelpers = {
+    var helper = {
 
         /**
          * check if the variable is defined.
@@ -161,7 +161,7 @@
         },
 
         /**
-         * split just one time is string.
+         * split just one time in string.
          * @param {string} string The input string
          * @param {string} delim  The delim for split
          * @returns 
@@ -169,6 +169,17 @@
         splitOnce: function (string, delim) {
             var components = string.split(delim);
             return [components.shift(), components.join(delim)]
+        },
+
+        /**
+         * split just one time in string from end.
+         * @param {string} string The input string
+         * @param {string} delim  The delim for split
+         * @returns
+         */
+        splitOnceEnd: function (string, delim) {
+            var components = string.split(delim);
+            return [components.slice(0, components.length - 1).join(delim), components.pop()]
         },
         
         /**
@@ -337,11 +348,12 @@
     };
 
     // Hash main information of library such as versions.
-    var hashInfo = { 
-        version : '1.6'
+    var info = {
+        version : '1.6.1'
     };
 
     // import all main helpers and info
+
 
     // main lock variables
     var locked     = false,
@@ -351,642 +363,645 @@
     Object.freeze({});
         var emptyFunc  = function() {};
 
-    /**
-     * Hash Main component
-     */
-    var hashComponents = {
+    // Hash Main component
+    function components (conf) {
 
-        /**
-         * Hash Event component.
-         * @param {string} e The listeners
-         * @param {*} func   The function/callback
-         * @returns
-         */
-        event : function(e, func) {
-            if ( func === void 0 ) func = function() {};
+        // return all components
+        return {
 
-            if (!hashHelpers.isDef(e) || !hashHelpers.isString(e)) {
-                return
-            }
-            var event   = e.toLowerCase(),
-                evs     = event.split(',');
-            func    = hashHelpers.isDef(func) && hashHelpers.isFunc(func) ? func : emptyFunc;
-            for (var i in evs) {
-                if (!evs.hasOwnProperty(i)) {
-                    continue
+            /**
+             * Hash Event component.
+             * @param {string} e The listeners
+             * @param {*} func   The function/callback
+             * @returns
+             */
+            event : function(e, func) {
+                if ( func === void 0 ) func = function() {};
+
+                if (!helper.isDef(e) || !helper.isString(e)) {
+                    return
                 }
-                var current_ev = hashHelpers.replaceAll(evs[i], ' ', '');
-                switch (current_ev) {
-                    case 'change' :
-                        window.addEventListener('hashchange', func);
-                        break;
-                    case 'load' :
-                        window.addEventListener('load', func);
-                        break;
-                    case 'ready' :
-                        hashHelpers.lunchFunc(func);
-                        break;
-                }
-            }
-        },
-
-        /**
-         * Hash Info component.
-         * @param {object} h Config info
-         * @returns
-         */
-        info : function(h) {
-
-            return {
-                version : hashHelpers.isDef(hashInfo.version) ? hashInfo.version : '?'
-            }
-        },
-
-        /**
-         * remove a string from location hash.
-         * @param {string|array} n The words/chars list
-         * @returns boolean
-         */
-        remove : function (n) {
-            if ( n === void 0 ) n = [];
-
-            if (hashHelpers.isString(n) && !hashHelpers.isEmpty(n)) {
-                n = [n];
-            }
-            if (!hashHelpers.isArr(n) || n.length === 0) {
-                return false
-            }
-            var wh = hashHelpers.getWinHash();
-            if (hashHelpers.isEmpty(wh)) {
-                return false
-            }
-            for (var i in n) {
-                if (!n.hasOwnProperty(i)) {
-                    continue
-                }
-                var vl = n[i];
-                if (hashHelpers.getWinHash().includes(vl)) {
-                    hashHelpers.setWinHash(
-                        hashHelpers.replaceAll(
-                            hashHelpers.getWinHash(),vl, ''
-                        )
-                    );
-                }
-            }
-            return true
-        },
-
-        /**
-         * remove a value from location hash.
-         * @param {string|array} n The words list
-         * @returns boolean
-         */
-        removeValue : function (n) {
-            if ( n === void 0 ) n = [];
-
-            if (hashHelpers.isString(n) && !hashHelpers.isEmpty(n)) {
-                n = [n];
-            }
-            if (!hashHelpers.isArr(n) || n.length === 0) {
-                return false
-            }
-            var wh      = hashHelpers.getWinHash(),
-                hash    = hashHelpers.getTrueHash(wh),
-                hsh_val = hash[0],
-                hsh_que = hash[1],
-                vt      = '';
-            if (hashHelpers.isEmpty(wh) || hashHelpers.isEmpty(hsh_val)) {
-                return false
-            }
-            for (var i in n) {
-                if (!n.hasOwnProperty(i)) {
-                    continue
-                }
-                var vl = n[i];
-                if (hsh_val.includes(vl)) {
-                    hsh_val = hashHelpers.replaceAll(hsh_val, vl, '');
-                }
-            }
-            vt += hsh_val;
-            if (!hashHelpers.isEmpty(hsh_que)) {
-                vt += '?' + hsh_que;
-            }
-            hashHelpers.setWinHash(vt);
-            return true
-        },
-
-        /**
-         * remove a query from location hash.
-         * @param {string|array} n
-         * @returns boolean
-         */
-        removeQuery : function (n) {
-            if ( n === void 0 ) n = [];
-
-            if (hashHelpers.isString(n) && !hashHelpers.isEmpty(n)) {
-                n = [n];
-            }
-            if (!hashHelpers.isArr(n) || n.length === 0) {
-                return false
-            }
-            var wh      = hashHelpers.getWinHash(),
-                hash    = hashHelpers.getTrueHash(wh),
-                hsh_val = hash[0],
-                hsh_que = hash[1],
-                vt      = '',
-                cl      = {};
-            if (hashHelpers.isEmpty(wh) || hashHelpers.isEmpty(hsh_que)) {
-                return false;
-            }
-            var que = hashHelpers.getQuery(hsh_que);
-            for (var i in que) {
-                if (!que.hasOwnProperty(i)) {
-                    continue
-                }
-                if (!n.includes(i)) {
-                    cl[i] = que[i];
-                }
-            }
-            if (!hashHelpers.isEmpty(hsh_val)) {
-                vt += hsh_val;
-            }
-            vt += '?' + hashHelpers.toQuery(cl);
-            hashHelpers.setWinHash(vt);
-            return true
-        },
-
-        /**
-         * check for location hash value.
-         * @param {string} n
-         * @returns boolean
-         */
-        haveValue : function (n) {
-            if ( n === void 0 ) n = '';
-
-            if (!hashHelpers.isString(n)) {
-                return false
-            }
-            var wh = hashHelpers.getWinHash(),
-                wg = hashHelpers.getTrueHash(wh)[0];
-            if (hashHelpers.isEmpty(n)) {
-                return !hashHelpers.isEmpty(wg)
-            }
-            return wg.includes(n)
-        },
-
-        /**
-         * checking for query exists on location hash.
-         * @param {string|array} n
-         * @retuens boolean
-         */
-        haveQuery : function (n) {
-            if ( n === void 0 ) n = [];
-
-            if (hashHelpers.isString(n)) {
-                n = [n];
-            }
-            if (!hashHelpers.isArr(n)) {
-                return false
-            }
-            var wh = hashHelpers.getWinHash(),
-                wq = hashHelpers.getTrueHash(wh)[1];
-            if (n.length === 0) {
-                return !hashHelpers.isEmpty(wq)
-            }
-            if (!hashHelpers.isQuery(wq)) {
-                return false
-            }
-            var que = hashHelpers.getQuery(wq);
-            for (var i in n) {
-                if (!n.hasOwnProperty(i)) {
-                    continue
-                }
-                if (!que.hasOwnProperty(n[i])) {
-                    return false
-                }
-            }
-            return true
-        },
-
-        /**
-         * check or searching for a string in hash.
-         * @param {string|array} n
-         * @returns boolean
-         */
-        have : function (n) {
-            if ( n === void 0 ) n = '';
-
-            if (!hashHelpers.isString(n)) {
-                return false
-            }
-            var wh = hashHelpers.getWinHash();
-            if (hashHelpers.isEmpty(wh)) {
-                return false
-            }
-            if (hashHelpers.isEmpty(n)) {
-                return true
-            }
-            return wh.includes(n)
-        },
-
-        /**
-         * clear the page hash.
-         * @param {boolean} n
-         * @returns boolean
-         */
-        clear : function (n) {
-            if ( n === void 0 ) n = true;
-
-            if (!hashHelpers.isBool(n)) {
-                return false
-            }
-            window.location.hash = '';
-            if (n) {
-                history.pushState(null, null, window.location.href.split('#')[0]);
-            }
-            return true
-        },
-
-        /**
-         * clear hash value from location hash.
-         * @returns boolean
-         */
-        clearValue : function () {
-            var wh = hashHelpers.getWinHash();
-            if (!hashHelpers.isTrueHash(wh)) {
-                return false
-            }
-            var wg = hashHelpers.getTrueHash(wh)[1];
-            hashHelpers.setWinHash('?' + wg);
-            return true
-        },
-
-        /**
-         * clear hash query from location hash.
-         * @returns boolean
-         */
-        clearQuery : function () {
-            var wh = hashHelpers.getWinHash();
-            if (!hashHelpers.isTrueHash(wh)) {
-                return false
-            }
-            var wg = hashHelpers.getTrueHash(wh)[0];
-            hashHelpers.setWinHash(wg);
-            return true
-        },
-
-        /**
-         * an easy way to get location hash.
-         * @param {*} n
-         * @returns string
-         */
-        get : function (n) {
-
-            return hashHelpers.getWinHash()
-        },
-
-        /**
-         * get location hash value.
-         * @param {*} n
-         * @returns string
-         */
-        getValue : function (n) {
-
-            var wh = hashHelpers.getWinHash();
-            return hashHelpers.isEmpty(wh) ? '' : hashHelpers.getTrueHash(wh)[0]
-        },
-
-        /**
-         * get the location hash query.
-         * @param {string|array} n
-         * @returns object
-         */
-        getQuery : function (n) {
-            if ( n === void 0 ) n = [];
-
-            if (hashHelpers.isString(n)) {
-                n = [n];
-            }
-            if (!hashHelpers.isArr(n)) {
-                return {}
-            }
-            var wh = hashHelpers.getWinHash();
-            if (hashHelpers.isEmpty(wh)) {
-                return {}
-            }
-            var hsh_que = hashHelpers.getTrueHash(wh)[1];
-            if (hashHelpers.isEmpty(hsh_que) || !hashHelpers.isQuery(hsh_que)) {
-                return {}
-            }
-            var que = hashHelpers.getQuery(hsh_que);
-            if (n.length === 1) {
-                return que.hasOwnProperty(n[0]) ? que[n[0]] : ''
-            } else if (n.length !== 0) {
-                var ans = {};
-                for (var i in n) {
-                    if (n.hasOwnProperty(i) && que.hasOwnProperty(n[i])) {
-                        var v  = n[i];
-                        ans[v] = que[v];
+                var event   = e.toLowerCase(),
+                    evs     = event.split(',');
+                func    = helper.isDef(func) && helper.isFunc(func) ? func : emptyFunc;
+                for (var i in evs) {
+                    if (!evs.hasOwnProperty(i)) {
+                        continue
+                    }
+                    var current_ev = helper.replaceAll(evs[i], ' ', '');
+                    switch (current_ev) {
+                        case 'change' :
+                            window.addEventListener('hashchange', func);
+                            break;
+                        case 'load' :
+                            window.addEventListener('load', func);
+                            break;
+                        case 'ready' :
+                            helper.lunchFunc(func);
+                            break;
                     }
                 }
-                return ans
-            }
-            return que
-        },
+            },
 
-        /**
-         * set the page hash.
-         * @param {string} n
-         * @returns boolean
-         */
-        set : function (n) {
-            if ( n === void 0 ) n = '';
+            /**
+             * Hash Info component.
+             * @param {object} h Config info
+             * @returns
+             */
+            info : function(h) {
 
-            if (!hashHelpers.isString(n) || hashHelpers.isEmpty(n)) {
-                return false
-            }
-            hashHelpers.setWinHash(n);
-            return true
-        },
-
-        /**
-         * set a value to location hash.
-         * @param {string} n
-         * @returns boolean
-         */
-        setValue : function (n) {
-            if ( n === void 0 ) n = '';
-
-            if (!hashHelpers.isString(n) || hashHelpers.isEmpty(n)) {
-                return false
-            }
-            if (n.includes('?')) {
-                n = hashHelpers.replaceAll(n, '?', encodeURIComponent('?'));
-            }
-            var wh      = hashHelpers.getWinHash(),
-                hsh_que = hashHelpers.getTrueHash(wh)[1];
-            if (hashHelpers.isEmpty(wh) || hashHelpers.isEmpty(hsh_que)) {
-                hashHelpers.setWinHash(n);
-                return true
-            }
-            hashHelpers.setWinHash(n + '?' + hsh_que);
-            return true
-        },
-
-        /**
-         * set a query to location hash.
-         * @param {object} n
-         * @returns boolean
-         */
-        setQuery : function (n) {
-            if ( n === void 0 ) n = {};
-
-            if (!hashHelpers.isObj(n) || n.length === 0) {
-                return false
-            }
-            var wh   = hashHelpers.getWinHash(),
-                hash = hashHelpers.getTrueHash(wh)[0],
-                aq   = hashHelpers.toQuery(n);
-            if (hashHelpers.isEmpty(wh) || hashHelpers.isEmpty(hash)) {
-                hashHelpers.setWinHash('?' + aq);
-                return true
-            }
-            hashHelpers.setWinHash(hash + '?' + aq);
-            return true
-        },
-
-        /**
-         * add a string to location hash.
-         * @param {string} n
-         * @returns boolean
-         */
-        add : function (n) {
-            if ( n === void 0 ) n = '';
-
-            if (!hashHelpers.isString(n) || hashHelpers.isEmpty(n)) {
-                return false
-            }
-            var wh = hashHelpers.getWinHash();
-            if (hashHelpers.isEmpty(wh)) {
-                hashHelpers.setWinHash(n);
-                return true
-            }
-            hashHelpers.setWinHash(wh + n);
-            return true
-        },
-
-        /**
-         * add a value to location hash.
-         * @param {string} n
-         * @returns boolean
-         */
-        addValue : function (n) {
-            if ( n === void 0 ) n = '';
-
-            if (!hashHelpers.isString(n) || hashHelpers.isEmpty(n)) {
-                return false
-            }
-            if (n.includes('?')) {
-                n = hashHelpers.replaceAll(n, '?', encodeURIComponent('?'));
-            }
-            var wh      = hashHelpers.getWinHash(),
-                hash    = hashHelpers.getTrueHash(wh),
-                hsh_val = hash[0],
-                hsh_que = hash[1];
-            if (!hashHelpers.isEmpty(hsh_val)) {
-                n = hsh_val + n;
-            }
-            if (!hashHelpers.isEmpty(hsh_que)) {
-                n += '?' + hsh_que;
-            }
-            hashHelpers.setWinHash(n);
-            return true
-        },
-
-        /**
-         * add a query to location hash.
-         * @param {*} n
-         * @returns boolean
-         */
-        addQuery : function (n) {
-            if ( n === void 0 ) n = {};
-
-            if (!hashHelpers.isObj(n) || n.length === 0) {
-                return false
-            }
-            var wh      = hashHelpers.getWinHash(),
-                hash    = hashHelpers.getTrueHash(wh),
-                hsh_val = hash[0],
-                hsh_que = hash[1],
-                vl      = '';
-            if (!hashHelpers.isEmpty(hsh_que)) {
-                var oq  = hashHelpers.getQuery(hsh_que);
-                n       = Object.assign(oq, n);
-            }
-            if (!hashHelpers.isEmpty(hsh_val)) {
-                vl += hsh_val;
-            }
-            vl += '?' + hashHelpers.toQuery(n);
-            hashHelpers.setWinHash(vl);
-            return true
-        },
-
-        /**
-         * update a query value in location hash.
-         * @param {string} n
-         * @param {string|null|number} e
-         * @returns boolean
-         */
-        updateQuery : function (n, e) {
-            if (!hashHelpers.isString(n) || !(hashHelpers.isString(e) || hashHelpers.isNum(e) || hashHelpers.isNull(e))) {
-                return false
-            }
-            var wh      = hashHelpers.getWinHash(),
-                hash    = hashHelpers.getTrueHash(wh),
-                hsh_val = hash[0],
-                hsh_que = hash[1],
-                vl      = '',
-                cl      = {},
-                ch      = 0;
-            if (hashHelpers.isEmpty(hsh_que)) {
-                return false
-            }
-            if (!hashHelpers.isEmpty(hsh_val)) {
-                vl += hsh_val;
-            }
-            var que = hashHelpers.getQuery(hsh_que);
-            for (var i in que) {
-                if (!que.hasOwnProperty(i)) {
-                    continue
+                return {
+                    version : helper.isDef(info.version) ? info.version : '?'
                 }
-                if (i === n) {
-                    cl[i] = e;
-                    ch ++;
-                } else {
-                    cl[i] = que[i];
+            },
+
+            /**
+             * remove a string from location hash.
+             * @param {string|array} n The words/chars list
+             * @returns boolean
+             */
+            remove : function (n) {
+                if ( n === void 0 ) n = [];
+
+                if (helper.isString(n) && !helper.isEmpty(n)) {
+                    n = [n];
                 }
-            }
-            vl += '?' + hashHelpers.toQuery(cl);
-            hashHelpers.setWinHash(vl);
-            return ch !== 0
-        },
-
-        /**
-         * check if hash is locked.
-         * @param {object} n
-         * @returns boolean
-         */
-        isLocked : function (n) {
-            if ( n === void 0 ) n = {};
-
-            if (!hashHelpers.isDef(n) || !hashHelpers.isObj(n)) {
-                return false
-            }
-            return locked
-        },
-
-        /**
-         * unlock location's hash.
-         * @param {object} n
-         * @returns boolean
-         */
-        unLock : function (n) {
-            if ( n === void 0 ) n = {};
-
-            if (!hashHelpers.isDef(n) || !hashHelpers.isObj(n)) {
-                return false
-            }
-            if (locked && !force_lock) {
-                locked = false;
+                if (!helper.isArr(n) || n.length === 0) {
+                    return false
+                }
+                var wh = helper.getWinHash();
+                if (helper.isEmpty(wh)) {
+                    return false
+                }
+                for (var i in n) {
+                    if (!n.hasOwnProperty(i)) {
+                        continue
+                    }
+                    var vl = n[i];
+                    if (helper.getWinHash().includes(vl)) {
+                        helper.setWinHash(
+                            helper.replaceAll(
+                                helper.getWinHash(),vl, ''
+                            )
+                        );
+                    }
+                }
                 return true
-            }
-            return false
-        },
+            },
 
-        /**
-         * lock the page hash.
-         * @param {object} n
-         * @returns boolean
-         */
-        lock : function (n) {
-            if ( n === void 0 ) n = {};
+            /**
+             * remove a value from location hash.
+             * @param {string|array} n The words list
+             * @returns boolean
+             */
+            removeValue : function (n) {
+                if ( n === void 0 ) n = [];
 
-            if (locked || !hashHelpers.isDef(n) || !hashHelpers.isObj(n)) {
-                return false
-            }
-            var is_force = 'force' in n ? getBool(n.force) : false;
-            locked       = true;
-            force_lock   = is_force;
-            var wh     = hashHelpers.getWinHash();
-            window.onhashchange = function() {
-                if (locked) {
-                    hashHelpers.setWinHash(wh);
+                if (helper.isString(n) && !helper.isEmpty(n)) {
+                    n = [n];
                 }
-            };
-            return true
-        },
+                if (!helper.isArr(n) || n.length === 0) {
+                    return false
+                }
+                var wh      = helper.getWinHash(),
+                    hash    = helper.getTrueHash(wh),
+                    hsh_val = hash[0],
+                    hsh_que = hash[1],
+                    vt      = '';
+                if (helper.isEmpty(wh) || helper.isEmpty(hsh_val)) {
+                    return false
+                }
+                for (var i in n) {
+                    if (!n.hasOwnProperty(i)) {
+                        continue
+                    }
+                    var vl = n[i];
+                    if (hsh_val.includes(vl)) {
+                        hsh_val = helper.replaceAll(hsh_val, vl, '');
+                    }
+                }
+                vt += hsh_val;
+                if (!helper.isEmpty(hsh_que)) {
+                    vt += '?' + hsh_que;
+                }
+                helper.setWinHash(vt);
+                return true
+            },
 
-        /**
-         * checking with equals in location hash.
-         * @param {string} n
-         * @returns boolean
-         */
-        is : function (n) {
-            if ( n === void 0 ) n = '';
+            /**
+             * remove a query from location hash.
+             * @param {string|array} n
+             * @returns boolean
+             */
+            removeQuery : function (n) {
+                if ( n === void 0 ) n = [];
 
-            if (!hashHelpers.isString(n)) {
-                return false
-            }
-            return hashHelpers.getWinHash() === n
-        },
+                if (helper.isString(n) && !helper.isEmpty(n)) {
+                    n = [n];
+                }
+                if (!helper.isArr(n) || n.length === 0) {
+                    return false
+                }
+                var wh      = helper.getWinHash(),
+                    hash    = helper.getTrueHash(wh),
+                    hsh_val = hash[0],
+                    hsh_que = hash[1],
+                    vt      = '',
+                    cl      = {};
+                if (helper.isEmpty(wh) || helper.isEmpty(hsh_que)) {
+                    return false;
+                }
+                var que = helper.getQuery(hsh_que);
+                for (var i in que) {
+                    if (!que.hasOwnProperty(i)) {
+                        continue
+                    }
+                    if (!n.includes(i)) {
+                        cl[i] = que[i];
+                    }
+                }
+                if (!helper.isEmpty(hsh_val)) {
+                    vt += hsh_val;
+                }
+                vt += '?' + helper.toQuery(cl);
+                helper.setWinHash(vt);
+                return true
+            },
 
-        /**
-         * checking for value string in location hash.
-         * @param {string} n
-         * @return boolean
-         */
-        isValue : function (n) {
-            if ( n === void 0 ) n = '';
+            /**
+             * check for location hash value.
+             * @param {string} n
+             * @returns boolean
+             */
+            haveValue : function (n) {
+                if ( n === void 0 ) n = '';
 
-            if (!hashHelpers.isString(n)) {
-                return false
-            }
-            var wh = hashHelpers.getWinHash(),
-                hash = hashHelpers.getTrueHash(wh)[0];
-            return hash === n
-        },
+                if (!helper.isString(n)) {
+                    return false
+                }
+                var wh = helper.getWinHash(),
+                    wg = helper.getTrueHash(wh)[0];
+                if (helper.isEmpty(n)) {
+                    return !helper.isEmpty(wg)
+                }
+                return wg.includes(n)
+            },
 
-        /**
-         * check for query value in location hash.
-         * @param {string} n
-         * @param {string|null|number} e
-         * @returns boolean
-         */
-        isQuery : function (n, e) {
-            if (!hashHelpers.isString(n) || hashHelpers.isEmpty(n) ||
-                (!hashHelpers.isString(e) && !hashHelpers.isNum(e) && !hashHelpers.isNull(e))) {
+            /**
+             * checking for query exists on location hash.
+             * @param {string|array} n
+             * @retuens boolean
+             */
+            haveQuery : function (n) {
+                if ( n === void 0 ) n = [];
+
+                if (helper.isString(n)) {
+                    n = [n];
+                }
+                if (!helper.isArr(n)) {
+                    return false
+                }
+                var wh = helper.getWinHash(),
+                    wq = helper.getTrueHash(wh)[1];
+                if (n.length === 0) {
+                    return !helper.isEmpty(wq)
+                }
+                if (!helper.isQuery(wq)) {
+                    return false
+                }
+                var que = helper.getQuery(wq);
+                for (var i in n) {
+                    if (!n.hasOwnProperty(i)) {
+                        continue
+                    }
+                    if (!que.hasOwnProperty(n[i])) {
+                        return false
+                    }
+                }
+                return true
+            },
+
+            /**
+             * check or searching for a string in hash.
+             * @param {string|array} n
+             * @returns boolean
+             */
+            have : function (n) {
+                if ( n === void 0 ) n = '';
+
+                if (!helper.isString(n)) {
+                    return false
+                }
+                var wh = helper.getWinHash();
+                if (helper.isEmpty(wh)) {
+                    return false
+                }
+                if (helper.isEmpty(n)) {
+                    return true
+                }
+                return wh.includes(n)
+            },
+
+            /**
+             * clear the page hash.
+             * @param {boolean} n
+             * @returns boolean
+             */
+            clear : function (n) {
+                if ( n === void 0 ) n = true;
+
+                if (!helper.isBool(n)) {
+                    return false
+                }
+                window.location.hash = '';
+                if (n) {
+                    history.pushState(null, null, window.location.href.split('#')[0]);
+                }
+                return true
+            },
+
+            /**
+             * clear hash value from location hash.
+             * @returns boolean
+             */
+            clearValue : function () {
+                var wh = helper.getWinHash();
+                if (!helper.isTrueHash(wh)) {
+                    return false
+                }
+                var wg = helper.getTrueHash(wh)[1];
+                helper.setWinHash('?' + wg);
+                return true
+            },
+
+            /**
+             * clear hash query from location hash.
+             * @returns boolean
+             */
+            clearQuery : function () {
+                var wh = helper.getWinHash();
+                if (!helper.isTrueHash(wh)) {
+                    return false
+                }
+                var wg = helper.getTrueHash(wh)[0];
+                helper.setWinHash(wg);
+                return true
+            },
+
+            /**
+             * an easy way to get location hash.
+             * @param {*} n
+             * @returns string
+             */
+            get : function (n) {
+
+                return helper.getWinHash()
+            },
+
+            /**
+             * get location hash value.
+             * @param {*} n
+             * @returns string
+             */
+            getValue : function (n) {
+
+                var wh = helper.getWinHash();
+                return helper.isEmpty(wh) ? '' : helper.getTrueHash(wh)[0]
+            },
+
+            /**
+             * get the location hash query.
+             * @param {string|array} n
+             * @returns object
+             */
+            getQuery : function (n) {
+                if ( n === void 0 ) n = [];
+
+                if (helper.isString(n)) {
+                    n = [n];
+                }
+                if (!helper.isArr(n)) {
+                    return {}
+                }
+                var wh = helper.getWinHash();
+                if (helper.isEmpty(wh)) {
+                    return {}
+                }
+                var hsh_que = helper.getTrueHash(wh)[1];
+                if (helper.isEmpty(hsh_que) || !helper.isQuery(hsh_que)) {
+                    return {}
+                }
+                var que = helper.getQuery(hsh_que);
+                if (n.length === 1) {
+                    return que.hasOwnProperty(n[0]) ? que[n[0]] : ''
+                } else if (n.length !== 0) {
+                    var ans = {};
+                    for (var i in n) {
+                        if (n.hasOwnProperty(i) && que.hasOwnProperty(n[i])) {
+                            var v  = n[i];
+                            ans[v] = que[v];
+                        }
+                    }
+                    return ans
+                }
+                return que
+            },
+
+            /**
+             * set the page hash.
+             * @param {string} n
+             * @returns boolean
+             */
+            set : function (n) {
+                if ( n === void 0 ) n = '';
+
+                if (!helper.isString(n) || helper.isEmpty(n)) {
+                    return false
+                }
+                helper.setWinHash(n);
+                return true
+            },
+
+            /**
+             * set a value to location hash.
+             * @param {string} n
+             * @returns boolean
+             */
+            setValue : function (n) {
+                if ( n === void 0 ) n = '';
+
+                if (!helper.isString(n) || helper.isEmpty(n)) {
+                    return false
+                }
+                if (n.includes('?')) {
+                    n = helper.replaceAll(n, '?', encodeURIComponent('?'));
+                }
+                var wh      = helper.getWinHash(),
+                    hsh_que = helper.getTrueHash(wh)[1];
+                if (helper.isEmpty(wh) || helper.isEmpty(hsh_que)) {
+                    helper.setWinHash(n);
+                    return true
+                }
+                helper.setWinHash(n + '?' + hsh_que);
+                return true
+            },
+
+            /**
+             * set a query to location hash.
+             * @param {object} n
+             * @returns boolean
+             */
+            setQuery : function (n) {
+                if ( n === void 0 ) n = {};
+
+                if (!helper.isObj(n) || n.length === 0) {
+                    return false
+                }
+                var wh   = helper.getWinHash(),
+                    hash = helper.getTrueHash(wh)[0],
+                    aq   = helper.toQuery(n);
+                if (helper.isEmpty(wh) || helper.isEmpty(hash)) {
+                    helper.setWinHash('?' + aq);
+                    return true
+                }
+                helper.setWinHash(hash + '?' + aq);
+                return true
+            },
+
+            /**
+             * add a string to location hash.
+             * @param {string} n
+             * @returns boolean
+             */
+            add : function (n) {
+                if ( n === void 0 ) n = '';
+
+                if (!helper.isString(n) || helper.isEmpty(n)) {
+                    return false
+                }
+                var wh = helper.getWinHash();
+                if (helper.isEmpty(wh)) {
+                    helper.setWinHash(n);
+                    return true
+                }
+                helper.setWinHash(wh + n);
+                return true
+            },
+
+            /**
+             * add a value to location hash.
+             * @param {string} n
+             * @returns boolean
+             */
+            addValue : function (n) {
+                if ( n === void 0 ) n = '';
+
+                if (!helper.isString(n) || helper.isEmpty(n)) {
+                    return false
+                }
+                if (n.includes('?')) {
+                    n = helper.replaceAll(n, '?', encodeURIComponent('?'));
+                }
+                var wh      = helper.getWinHash(),
+                    hash    = helper.getTrueHash(wh),
+                    hsh_val = hash[0],
+                    hsh_que = hash[1];
+                if (!helper.isEmpty(hsh_val)) {
+                    n = hsh_val + n;
+                }
+                if (!helper.isEmpty(hsh_que)) {
+                    n += '?' + hsh_que;
+                }
+                helper.setWinHash(n);
+                return true
+            },
+
+            /**
+             * add a query to location hash.
+             * @param {*} n
+             * @returns boolean
+             */
+            addQuery : function (n) {
+                if ( n === void 0 ) n = {};
+
+                if (!helper.isObj(n) || n.length === 0) {
+                    return false
+                }
+                var wh      = helper.getWinHash(),
+                    hash    = helper.getTrueHash(wh),
+                    hsh_val = hash[0],
+                    hsh_que = hash[1],
+                    vl      = '';
+                if (!helper.isEmpty(hsh_que)) {
+                    var oq  = helper.getQuery(hsh_que);
+                    n       = Object.assign(oq, n);
+                }
+                if (!helper.isEmpty(hsh_val)) {
+                    vl += hsh_val;
+                }
+                vl += '?' + helper.toQuery(n);
+                helper.setWinHash(vl);
+                return true
+            },
+
+            /**
+             * update a query value in location hash.
+             * @param {string} n
+             * @param {string|null|number} e
+             * @returns boolean
+             */
+            updateQuery : function (n, e) {
+                if (!helper.isString(n) || !(helper.isString(e) || helper.isNum(e) || helper.isNull(e))) {
+                    return false
+                }
+                var wh      = helper.getWinHash(),
+                    hash    = helper.getTrueHash(wh),
+                    hsh_val = hash[0],
+                    hsh_que = hash[1],
+                    vl      = '',
+                    cl      = {},
+                    ch      = 0;
+                if (helper.isEmpty(hsh_que)) {
+                    return false
+                }
+                if (!helper.isEmpty(hsh_val)) {
+                    vl += hsh_val;
+                }
+                var que = helper.getQuery(hsh_que);
+                for (var i in que) {
+                    if (!que.hasOwnProperty(i)) {
+                        continue
+                    }
+                    if (i === n) {
+                        cl[i] = e;
+                        ch ++;
+                    } else {
+                        cl[i] = que[i];
+                    }
+                }
+                vl += '?' + helper.toQuery(cl);
+                helper.setWinHash(vl);
+                return ch !== 0
+            },
+
+            /**
+             * check if hash is locked.
+             * @param {object} n
+             * @returns boolean
+             */
+            isLocked : function (n) {
+                if ( n === void 0 ) n = {};
+
+                if (!helper.isDef(n) || !helper.isObj(n)) {
+                    return false
+                }
+                return locked
+            },
+
+            /**
+             * unlock location's hash.
+             * @param {object} n
+             * @returns boolean
+             */
+            unLock : function (n) {
+                if ( n === void 0 ) n = {};
+
+                if (!helper.isDef(n) || !helper.isObj(n)) {
+                    return false
+                }
+                if (locked && !force_lock) {
+                    locked = false;
+                    return true
+                }
                 return false
+            },
+
+            /**
+             * lock the page hash.
+             * @param {object} n
+             * @returns boolean
+             */
+            lock : function (n) {
+                if ( n === void 0 ) n = {};
+
+                if (locked || !helper.isDef(n) || !helper.isObj(n)) {
+                    return false
+                }
+                var is_force = 'force' in n ? helper.getBool(n.force) : false;
+                locked       = true;
+                force_lock   = is_force;
+                var wh     = helper.getWinHash();
+                window.onhashchange = function() {
+                    if (locked) {
+                        helper.setWinHash(wh);
+                    }
+                };
+                return true
+            },
+
+            /**
+             * checking with equals in location hash.
+             * @param {string} n
+             * @returns boolean
+             */
+            is : function (n) {
+                if ( n === void 0 ) n = '';
+
+                if (!helper.isString(n)) {
+                    return false
+                }
+                return helper.getWinHash() === n
+            },
+
+            /**
+             * checking for value string in location hash.
+             * @param {string} n
+             * @return boolean
+             */
+            isValue : function (n) {
+                if ( n === void 0 ) n = '';
+
+                if (!helper.isString(n)) {
+                    return false
+                }
+                var wh = helper.getWinHash(),
+                    hash = helper.getTrueHash(wh)[0];
+                return hash === n
+            },
+
+            /**
+             * check for query value in location hash.
+             * @param {string} n
+             * @param {string|null|number} e
+             * @returns boolean
+             */
+            isQuery : function (n, e) {
+                if (!helper.isString(n) || helper.isEmpty(n) ||
+                    (!helper.isString(e) && !helper.isNum(e) && !helper.isNull(e))) {
+                    return false
+                }
+                var wh      = helper.getWinHash(),
+                    hsh_que = helper.getTrueHash(wh)[1];
+                if (helper.isEmpty(hsh_que)) {
+                    return false
+                }
+                var que = helper.getQuery(hsh_que);
+                if (!que.hasOwnProperty(n)) {
+                    return false
+                }
+                return que[n] === e
             }
-            var wh      = hashHelpers.getWinHash(),
-                hsh_que = hashHelpers.getTrueHash(wh)[1];
-            if (hashHelpers.isEmpty(hsh_que)) {
-                return false
-            }
-            var que = hashHelpers.getQuery(hsh_que);
-            if (!que.hasOwnProperty(n)) {
-                return false
-            }
-            return que[n] === e
+
         }
 
-    };
+    }
 
     // set main Hash.js definer
 
     // set main hash.js function
     var Hash = function (n) {
 
-        return hashComponents
+        return components()
     };
 
     return Hash;
