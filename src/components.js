@@ -64,7 +64,7 @@ export default function (conf = {}) {
          */
         info : function(h = {}) {
             return {
-                version : helper.isDef(info.version) ? info.version : '?'
+                version : info.version || '?'
             }
         },
 
@@ -92,7 +92,7 @@ export default function (conf = {}) {
                 if (helper.getWinHash().includes(vl)) {
                     helper.setWinHash(
                         helper.replaceAll(
-                            helper.getWinHash(),vl, ''
+                            helper.getWinHash(), vl, ''
                         )
                     );
                 }
@@ -170,7 +170,9 @@ export default function (conf = {}) {
             if (!helper.isEmpty(hsh_val)) {
                 vt += hsh_val
             }
-            vt += '?' + helper.toQuery(cl)
+            if (helper.objSize(cl) !== 0) {
+                vt += '?' + helper.toQuery(cl)
+            }
             helper.setWinHash(vt)
             return true
         },

@@ -285,7 +285,7 @@ export default {
         if (q.includes('?')) {
             let spt = this.splitOnce(q, '?'),
                 que = spt[1]
-            return !this.isEmpty(que) && this.isQuery(que)
+            return this.isEmpty(que) || this.isQuery(que)
         }
         return true
     },
