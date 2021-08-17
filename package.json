@@ -3,31 +3,31 @@
   "version": "1.6.0",
   "description": "A simple and flexible JavaScript library that manages \"window.location.hash\". With the ability to support queries. (#value?query)",
   "main": "src/hash.js",
-  "directories": {
-    "test": "test"
-  },
   "devDependencies": {
     "@rollup/plugin-buble": "^0.21.3",
     "@rollup/plugin-commonjs": "^20.0.0",
     "@rollup/plugin-node-resolve": "^13.0.4",
     "rollup": "2.56.2",
-    "rollup-plugin-multi-entry": "^2.1.0"
+    "rollup-plugin-flow-no-whitespace": "^1.0.0",
+    "rollup-plugin-terser": "^7.0.2"
   },
   "scripts": {
-    "install": "npm install",
-    "build": "rollup src/hash.js --file dist/hash.js"
+    "build": "npm install",
+    "dev": "rollup --config"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/irmmr/hash.js.git"
   },
   "keywords": [
-    "hashjs",
+    "hash.js",
     "window.location.hash",
     "page hash",
     "hash query",
     "javascript",
-    "hash.js"
+    "hash.js",
+    "npm",
+    "node"
   ],
   "author": "Irmmr",
   "license": "MIT",

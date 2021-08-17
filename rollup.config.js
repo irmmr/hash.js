@@ -1,7 +1,9 @@
 // main rollup build config
 import commonjs from '@rollup/plugin-commonjs'
-import {nodeResolve} from '@rollup/plugin-node-resolve';
-import buble from '@rollup/plugin-buble';
+import {nodeResolve} from '@rollup/plugin-node-resolve'
+import buble from '@rollup/plugin-buble'
+import whiteSpace from 'rollup-plugin-flow-no-whitespace'
+import {terser} from 'rollup-plugin-terser'
 import info from './src/info'
 
 // description of library
@@ -16,16 +18,30 @@ function getBanner(format) {
  */\n`
 }
 
+// trs comments
+const trs = terser({
+    output: {
+        comments: function (node, comment) {
+            let text = comment.value,
+                type = comment.type
+            if (type === "comment2") {
+                return /HashJs javascript library/i.test(text);
+            }
+        },
+    },
+})
+
 export default {
     input: 'src/hash.js',
     moduleName: 'Hash',
     sourceMap: true,
     plugins: [
+        whiteSpace(),
         buble(),
         nodeResolve({
             browser: true
         }),
-        commonjs(),
+        commonjs()
     ],
     output: [
         {
@@ -33,6 +49,15 @@ export default {
             format: 'umd',
             name: 'Hash',
             env: 'production',
+            banner: getBanner('umd - main')
+        },
+        {
+            file: 'dist/hash.min.js',
+            format: 'umd',
+            name: 'Hash',
+            env: 'production',
+            sourceMap: true,
+            plugins: [trs],
             banner: getBanner('umd - main')
         },
         {
