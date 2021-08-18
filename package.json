@@ -3,6 +3,7 @@
   "version": "1.6.1",
   "description": "A simple and flexible JavaScript library that manages \"window.location.hash\". With the ability to support queries. (#value?query)",
   "main": "src/hash.js",
+  "type": "module",
   "devDependencies": {
     "@rollup/plugin-buble": "^0.21.3",
     "@rollup/plugin-commonjs": "^20.0.0",
