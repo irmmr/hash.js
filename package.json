@@ -1,6 +1,6 @@
 {
   "name": "@irmmr/hash.js",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "A simple and flexible JavaScript library that manages \"window.location.hash\". With the ability to support queries. (#value?query)",
   "main": "src/hash.js",
   "jsdelivr": "dist/hash.js",
