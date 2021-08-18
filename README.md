@@ -2,10 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/irmmr/hash.js/blob/master/LICENSE"><img alt="GitHub license" src="https://img.shields.io/github/license/irmmr/hash.js"></a>
-    <img alt="version" src="https://img.shields.io/static/v1?label=version&message=v1.6&color=success">
-   <a href="https://irmmr.github.io/hash.js/" target="_blank">
-    <img alt="see page" src="https://img.shields.io/static/v1?label=page&message=click%20here&color=yellow">
-  </a>
+  <a href="https://www.npmjs.com/package/@irmmr/hash.js"><img alt="npm" src="https://img.shields.io/npm/v/@irmmr/hash.js"></a>
 </p>
 
 # Hash.js
@@ -101,20 +98,6 @@ hsh.setQuery({
   page: 1,
   redirect: '/home'
 })                                    // page's hash => #new-value?page=1&redirect=/home
-```
-```javascript
-// Lock location's hash
-
-// set a value before
-hsh.set('hello');                    // page's hash => #hello
-
-// lock it
-hsh.lock();
-
-// set new value
-hsh.set('goodbye');                 // page's hash => #hello
-hsh.set('anything');                // page's hash => #hello
-hsh.clear();                        // page's hash => #hello
 ```
 
 # How to use ?
