@@ -39,7 +39,6 @@ This library can do these works for you:
 The functions of this library are summarized in 3 sections. The main part is called `lib` and is used as a constructor that you need create an object from it to use its features. The other section is `info` and just shows the library versions. The last section is `event` that only have two mods and have listeners duty: **load** and **change**
 - `load` : The page's load event listener
 - `change` : The page's hashchange event listener
-> In addition to this types, this library can be used from `window.location.HashModule`.
 ```javascript
 import Hash from '@irmmr/hash.js';
 
