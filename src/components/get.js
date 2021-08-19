@@ -35,8 +35,8 @@ export default {
             return {}
         }
         n       = n.filter(i => i !== '')
-        let emp = n.length === 1 ? undefined : {}
-        let wh  = helper.getWinHash()
+        let emp = n.length === 1 ? undefined : helper.createObjVal(n, undefined),
+            wh  = helper.getWinHash()
         if (helper.isEmpty(wh)) {
             return emp
         }
