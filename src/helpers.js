@@ -113,7 +113,14 @@ export default {
      * @returns 
      */
     isEmpty: function (h) {
-        return h === ''
+        if (this.isString(h)) {
+            return h === ''
+        } else if (this.isArr(h)) {
+            return h.length === 0
+        } else if (this.isObj(h)) {
+            return this.objSize(h) === 0
+        }
+        return false
     },
 
     /**
@@ -324,6 +331,28 @@ export default {
      */
     setWinHash: function (q) {
         window.location.hash = q
+    },
+
+    /**
+     * create object of values.
+     */
+    createObjVal: function (names, value) {
+        if (this.isString(names) && !this.isEmpty(names)) {
+            names = [names]
+        }
+        if (!this.isArr(names)) {
+            return {}
+        }
+        names = names.filter(i => i !== '')
+        if (this.isEmpty(names)) {
+            return {}
+        }
+        let fetch = {}
+        for (let i in names) {
+            if (!names.hasOwnProperty(i)) continue
+            fetch[names[i]] = value
+        }
+        return fetch
     }
 
 }
