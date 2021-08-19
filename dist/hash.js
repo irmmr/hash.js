@@ -1086,23 +1086,34 @@
     };
 
     // set all components as prototype to 'HashComponent'
-    HashComponent.prototype = Object.assign(
-        // all prototypes and methods
-        addMethod,
-        clearMethod,
-        configMethod,
-        eventMethod,
-        getMethod,
-        haveMethod,
-        infoMethod,
-        isMethod,
-        lockMethod,
-        queryMethod,
-        removeMethod,
-        setMethod,
-        // prototypes of 'HashComponent'
-        HashComponent.prototype
-    );
+    HashComponent.prototype.add         = addMethod.add;
+    HashComponent.prototype.addValue    = addMethod.addValue;
+    HashComponent.prototype.addQuery    = addMethod.addQuery;
+    HashComponent.prototype.clear       = clearMethod.clear;
+    HashComponent.prototype.clearValue  = clearMethod.clearValue;
+    HashComponent.prototype.clearQuery  = clearMethod.clearQuery;
+    HashComponent.prototype.config      = configMethod.config;
+    HashComponent.prototype.event       = eventMethod.event;
+    HashComponent.prototype.get         = getMethod.get;
+    HashComponent.prototype.getValue    = getMethod.getValue;
+    HashComponent.prototype.getQuery    = getMethod.getQuery;
+    HashComponent.prototype.haveValue   = haveMethod.haveValue;
+    HashComponent.prototype.haveQuery   = haveMethod.haveQuery;
+    HashComponent.prototype.have        = haveMethod.have;
+    HashComponent.prototype.info        = infoMethod.info;
+    HashComponent.prototype.is          = isMethod.is;
+    HashComponent.prototype.isValue     = isMethod.isValue;
+    HashComponent.prototype.isQuery     = isMethod.isQuery;
+    HashComponent.prototype.isLocked    = lockMethod.isLocked;
+    HashComponent.prototype.unLock      = lockMethod.unLock;
+    HashComponent.prototype.lock        = lockMethod.lock;
+    HashComponent.prototype.updateQuery = queryMethod.updateQuery;
+    HashComponent.prototype.remove      = removeMethod.remove;
+    HashComponent.prototype.removeValue = removeMethod.removeValue;
+    HashComponent.prototype.removeQuery = removeMethod.removeQuery;
+    HashComponent.prototype.set         = setMethod.set;
+    HashComponent.prototype.setValue    = setMethod.setValue;
+    HashComponent.prototype.setQuery    = setMethod.setQuery;
 
     // define all hash components into main handle
     var Hash = new HashComponent();
