@@ -6,7 +6,7 @@
 </p>
 
 # Hash.js
-> It is better to use version **1.6.4** and above.
+> It is better to use version **1.7.0** and above. Lower versions are not recommended at all.
 
 **Hash.js** is a simple javascript library by pure js that manage the page `location.hash`. to `change`, `add`, `set`, `check`, `get` the hash value or query you can use this library. The page hash is a combination of 2 parts, "value" and "query". This value is set as follows: `#value?query`. This principle may be incorrect, but it is defined in this library!
 
@@ -23,7 +23,7 @@ Or use the built-in version of this library separately.
 ```
 You can also use with: `jsdelivr`:
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@irmmr/hash.js@1.6.4"></script>
+<script src="https://cdn.jsdelivr.net/npm/@irmmr/hash.js@1.7.0"></script>
 ```
 
 # Usage
@@ -54,7 +54,7 @@ Hash.event(listener, function () {
   // do somthing ...
 });
 ```
-`Versions less than 1.6.4`: You must use the Hash method as a function.
+`Versions less than 1.7.0`: You must use the Hash method as a function.
 ```javascript
 import Hash from '@irmmr/hash.js';
 
