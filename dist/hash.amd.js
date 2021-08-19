@@ -1,5 +1,5 @@
 /**
- * HashJs javascript library v1.6.6
+ * HashJs javascript library v1.7.0
  * Copyright (c) 2021 irmmr
  * MIT License
  *
@@ -716,7 +716,7 @@ define(function () { 'use strict';
 
     // Hash main information of library such as versions.
     var info = {
-        version : '1.6.6'
+        version : '1.7.0'
     };
 
     var infoMethod = {
