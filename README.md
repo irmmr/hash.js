@@ -6,7 +6,7 @@
 </p>
 
 # Hash.js
-> Please use only version **1.6.0** or higher.
+> It is better to use version **1.6.4** and above.
 
 **Hash.js** is a simple javascript library by pure js that manage the page `location.hash`. to `change`, `add`, `set`, `check`, `get` the hash value or query you can use this library. The page hash is a combination of 2 parts, "value" and "query". This value is set as follows: `#value?query`. This principle may be incorrect, but it is defined in this library!
 
@@ -20,6 +20,10 @@ npm install @irmmr/hash.js
 Or use the built-in version of this library separately.
 ```html
 <script src="path/to/dist/hash.js"></script>
+```
+You can also use with: `jsdelivr`:
+```html
+<script src="https://cdn.jsdelivr.net/npm/@irmmr/hash.js@1.6.4"></script>
 ```
 
 # Usage
@@ -39,70 +43,61 @@ This library can do these works for you:
 The functions of this library are summarized in 3 sections. The main part is called `lib` and is used as a constructor that you need create an object from it to use its features. The other section is `info` and just shows the library versions. The last section is `event` that only have two mods and have listeners duty: **load** and **change**
 - `load` : The page's load event listener
 - `change` : The page's hashchange event listener
-> In addition to this types, this library can be used from `window.location.HashModule`.
 ```javascript
 import Hash from '@irmmr/hash.js';
 
-// use Hash.js main library
-const hsh = Hash();
-
 // use Hash.js information
-const inf = Hash().info();
+Hash.info();
 
 // use Hash.js event
-Hash().event(listener, function () {
+Hash.event(listener, function () {
   // do somthing ...
 });
 ```
+`Versions less than 1.6.4`: You must use the Hash method as a function.
+```javascript
+import Hash from '@irmmr/hash.js';
 
-# Examples
-I will add some examples soon ...
+// use Hash.js information
+Hash().info();
+
+// use Hash.js event
+Hash().event(listener, function () {
+    // do somthing ...
+});
+```
+
+# How to use?
+These include a few simple examples.
 > These do not include all features.
 ```javascript
-// To use, you must use this way.
-const hsh = Hash();
-```
-```javascript
-// Simple example for set and get page's hash.
-
 // set a simple value
-hsh.set('hello');       // page's hash => #hello
+Hash.set('hello');       // page's hash => #hello
 
 // get location's hash
-let ha = hsh.get();     // returns     => 'hello
+let ha = Hash.get();     // returns     => 'hello
 ```
 ```javascript
-// Simple example for set and get query
-
 // #{value}?{query}
 // set a query
-hsh.setQuery({
+Hash.setQuery({
   a : 'b',
   c : 'd',
   e : null
 });                         // page's hash => #?a=b&c=d&e
 
 // get query
-let hq = hsh.getQuery();    // returns     => Object { a: "b", c: "d", e: null }
-let a  = hsh.getQuery('a'); // returns     => 'b'
+let hq = Hash.getQuery();    // returns     => Object { a: "b", c: "d", e: null }
+let a  = Hash.getQuery('a'); // returns     => 'b'
 ```
 ```javascript
-// Get the location's hash query and value
+// set value and query
+Hash.set('value?a=1&b=2&redirect=/');  // page's hash => #value?a=1&b=2&redirect=/
 
 // set value and query
-hsh.set('value?a=1&b=2&redirect=/');  // page's hash => #value?a=1&b=2&redirect=/
-
-// set value and query
-hsh.setValue('new-value');            // page's hash => #new-value?a=1&b=2&redirect=/
-hsh.setQuery({
+Hash.setValue('new-value');            // page's hash => #new-value?a=1&b=2&redirect=/
+Hash.setQuery({
   page: 1,
   redirect: '/home'
-})                                    // page's hash => #new-value?page=1&redirect=/home
+})                                     // page's hash => #new-value?page=1&redirect=/home
 ```
-
-# How to use ?
-To using `Hash.js`, you need add `hash.js` as a script to your html codes!
-```html
-<script src="path/to/hash.js"></script>
-```
-
