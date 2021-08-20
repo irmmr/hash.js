@@ -11,7 +11,7 @@ export default {
         if (!helper.isBool(n)) {
             return false
         }
-        window.location.hash = ''
+        helper.setWinHash('')
         if (n) {
             history.pushState(null, null, window.location.href.split('#')[0])
         }
@@ -24,11 +24,19 @@ export default {
      */
     clearValue: function () {
         let wh = helper.getWinHash()
+        if (helper.isEmpty(wh)) {
+            return true
+        }
         if (!helper.isTrueHash(wh)) {
             return false
         }
-        let wg = helper.getTrueHash(wh)[1]
-        helper.setWinHash('?' + wg)
+        let wg = helper.getTrueHash(wh),
+            wv = wg[0],
+            wq = wg[1]
+        if (helper.isEmpty(wv)) {
+            return true
+        }
+        helper.setWinHash(helper.isEmpty(wq) ? '' : '?' + wq)
         return true
     },
 
@@ -38,11 +46,19 @@ export default {
      */
     clearQuery: function () {
         let wh = helper.getWinHash()
+        if (helper.isEmpty(wh)) {
+            return true
+        }
         if (!helper.isTrueHash(wh)) {
             return false
         }
-        let wg = helper.getTrueHash(wh)[0]
-        helper.setWinHash(wg)
+        let wg = helper.getTrueHash(wh),
+            wv = wg[0],
+            wq = wg[1]
+        if (helper.isEmpty(wq)) {
+            return true
+        }
+        helper.setWinHash(wv)
         return true
     }
 
