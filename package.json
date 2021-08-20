@@ -15,7 +15,8 @@
   },
   "scripts": {
     "build": "npm install",
-    "dev": "rollup --config"
+    "dev": "rollup --config",
+    "dev-test": "rollup src/hash.js --file lab/hash.js --format umd --name \"Hash\""
   },
   "repository": {
     "type": "git",
