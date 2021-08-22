@@ -353,6 +353,15 @@ export default {
             fetch[names[i]] = value
         }
         return fetch
+    },
+
+    /**
+     * check if the parameter/argument is a valid query value type.
+     * @param n The input value
+     * @returns {*|boolean}
+     */
+    isQueParOk: function (n) {
+        return this.isString(n) || this.isNull(n) || n === undefined || this.isNum(n)
     }
 
 }
