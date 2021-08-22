@@ -101,3 +101,11 @@ Hash.setQuery({
   redirect: '/home'
 })                                     // page's hash => #new-value?page=1&redirect=/home
 ```
+```javascript
+// goto ...
+Hash.event('load, change', function () {
+  if (Hash.haveQuery('goto') && !Hash.isQuery('goto', null)) {
+    window.location.href = Hash.getQuery('goto')
+  }
+})
+```
