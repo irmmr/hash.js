@@ -1,11 +1,11 @@
 import {HashComponent} from "./core";
 
 // add prototypes
+import getMethod from "./components/get"
 import addMethod from "./components/add"
 import clearMethod from "./components/clear"
 import configMethod from "./components/config"
 import eventMethod from "./components/event"
-import getMethod from "./components/get"
 import haveMethod from "./components/have"
 import infoMethod from "./components/info"
 import isMethod from "./components/is"

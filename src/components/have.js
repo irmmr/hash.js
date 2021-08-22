@@ -4,19 +4,28 @@ export default {
 
     /**
      * check for location hash value.
-     * @param {string} n
+     * @param {string|array} n
      * @returns boolean
      */
     haveValue: function (n = '') {
-        if (!helper.isString(n)) {
+        if (helper.isString(n)) {
+            n = [n]
+        }
+        if (!helper.isArr(n)) {
             return false
         }
-        let wh = helper.getWinHash(),
-            wg = helper.getTrueHash(wh)[0]
+        let wv = this.getValue()
+        n      = n.filter(i => i !== '')
         if (helper.isEmpty(n)) {
-            return !helper.isEmpty(wg)
+            return !helper.isEmpty(wv)
         }
-        return wg.includes(n)
+        for (let i in n) {
+            if (!n.hasOwnProperty(i)) continue
+            if (!wv.includes(n[i])) {
+                return false
+            }
+        }
+        return true
     },
 
     /**
@@ -41,9 +50,7 @@ export default {
         }
         let que = helper.getQuery(wq)
         for (let i in n) {
-            if (!n.hasOwnProperty(i)) {
-                continue
-            }
+            if (!n.hasOwnProperty(i)) continue
             if (!que.hasOwnProperty(n[i])) {
                 return false
             }
@@ -57,17 +64,24 @@ export default {
      * @returns boolean
      */
     have: function (n = '') {
-        if (!helper.isString(n)) {
+        if (helper.isString(n)) {
+            n = [n]
+        }
+        if (!helper.isArr(n)) {
             return false
         }
         let wh = helper.getWinHash()
-        if (helper.isEmpty(wh)) {
-            return false
-        }
+        n      = n.filter(i => i !== '')
         if (helper.isEmpty(n)) {
-            return true
+            return !helper.isEmpty(wh)
         }
-        return wh.includes(n)
+        for (let i in n) {
+            if (!n.hasOwnProperty(i)) continue
+            if (!wh.includes(n[i])) {
+                return false
+            }
+        }
+        return true
     }
     
 }

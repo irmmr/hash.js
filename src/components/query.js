@@ -9,7 +9,7 @@ export default {
      * @returns boolean
      */
     updateQuery: function (n, e) {
-        if (!helper.isString(n) || !(helper.isString(e) || helper.isNum(e) || helper.isNull(e))) {
+        if (!helper.isString(n) || !helper.isQueParOk(e)) {
             return false
         }
         let wh      = helper.getWinHash(),
