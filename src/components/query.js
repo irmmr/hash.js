@@ -12,6 +12,9 @@ export default {
         if (!helper.isString(n) || !helper.isQueParOk(e)) {
             return false
         }
+        if (e === undefined) {
+            return false
+        }
         let wh      = helper.getWinHash(),
             hash    = helper.getTrueHash(wh),
             hsh_val = hash[0],
