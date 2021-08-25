@@ -1,5 +1,5 @@
 /**
- * HashJs javascript library v1.7.0
+ * HashJs javascript library v1.7.1
  * Copyright (c) 2021 irmmr
  * MIT License
  *
@@ -239,9 +239,7 @@ var helper = {
         var qa = q.split('&'),
             output = {};
         for (var i in qa) {
-            if (!qa.hasOwnProperty(i)) {
-                continue
-            }
+            if (!qa.hasOwnProperty(i)) { continue }
             var query    = qa[i],
                 q_parse  = this.splitOnce(query, '='),
                 q_len    = query.split('=').length,
@@ -271,24 +269,19 @@ var helper = {
         if (!this.isDef(q) || !this.isObj(q)) {
             return ''
         }
-        var all_query = '',
-            que_size  = this.objSize(q),
-            num_data  = 0;
+        var collector = [];
         for (var i in q) {
-            if (!q.hasOwnProperty(i)) {
-                continue
-            }
-            num_data ++;
+            if (!q.hasOwnProperty(i) || q[i] === undefined) { continue }
             var data_val = q[i];
             if (this.isNull(data_val)) {
-                all_query += num_data === que_size ? i : i + '&';
+                collector.push(i);
             } else {
                 var data_str    = this.getString(data_val),
                     data_encode = encode_uri ? encodeURIComponent(data_str) : data_str;
-                all_query += num_data === que_size ? i + '=' + data_encode : i + '=' + data_encode + '&';
+                collector.push(i + '=' + data_encode);
             }
         }
-        return all_query
+        return collector.join('&')
     },
 
     /**
@@ -377,8 +370,82 @@ var helper = {
             fetch[names[i]] = value;
         }
         return fetch
+    },
+
+    /**
+     * check if the parameter/argument is a valid query value type.
+     * @param n The input value
+     * @returns {*|boolean}
+     */
+    isQueParOk: function (n) {
+        return this.isString(n) || this.isNull(n) || n === undefined || this.isNum(n)
     }
 
+};
+
+var getMethod = {
+    
+    /**
+     * an easy way to get location hash.
+     * @param {*} n
+     * @returns string
+     */
+    get: function (n) {
+
+        return helper.getWinHash()
+    },
+
+    /**
+     * get location hash value.
+     * @param {*} n
+     * @returns string
+     */
+    getValue: function (n) {
+
+        var wh = helper.getWinHash();
+        return helper.isEmpty(wh) ? '' : helper.getTrueHash(wh)[0]
+    },
+
+    /**
+     * get the location hash query.
+     * @param {string|array} n
+     * @returns object
+     */
+    getQuery: function (n) {
+        if ( n === void 0 ) n = [];
+
+        if (helper.isString(n)) {
+            n = [n];
+        }
+        if (!helper.isArr(n)) {
+            return {}
+        }
+        n       = n.filter(function (i) { return i !== ''; });
+        var emp = n.length === 1 ? undefined : helper.createObjVal(n, undefined),
+            wh  = helper.getWinHash();
+        if (helper.isEmpty(wh)) {
+            return emp
+        }
+        var hsh_que = helper.getTrueHash(wh)[1];
+        if (helper.isEmpty(hsh_que) || !helper.isQuery(hsh_que)) {
+            return emp
+        }
+        var que = helper.getQuery(hsh_que);
+        if (n.length === 1) {
+            return que.hasOwnProperty(n[0]) ? que[n[0]] : emp
+        } else if (n.length !== 0) {
+            var ans = {};
+            for (var i in n) {
+                if (n.hasOwnProperty(i)) {
+                    var v  = n[i];
+                    ans[v] = que.hasOwnProperty(v) ? que[v] : undefined;
+                }
+            }
+            return ans
+        }
+        return que
+    }
+    
 };
 
 var addMethod = {
@@ -474,7 +541,7 @@ var clearMethod = {
         if (!helper.isBool(n)) {
             return false
         }
-        window.location.hash = '';
+        helper.setWinHash('');
         if (n) {
             history.pushState(null, null, window.location.href.split('#')[0]);
         }
@@ -487,11 +554,19 @@ var clearMethod = {
      */
     clearValue: function () {
         var wh = helper.getWinHash();
+        if (helper.isEmpty(wh)) {
+            return true
+        }
         if (!helper.isTrueHash(wh)) {
             return false
         }
-        var wg = helper.getTrueHash(wh)[1];
-        helper.setWinHash('?' + wg);
+        var wg = helper.getTrueHash(wh),
+            wv = wg[0],
+            wq = wg[1];
+        if (helper.isEmpty(wv)) {
+            return true
+        }
+        helper.setWinHash(helper.isEmpty(wq) ? '' : '?' + wq);
         return true
     },
 
@@ -501,11 +576,19 @@ var clearMethod = {
      */
     clearQuery: function () {
         var wh = helper.getWinHash();
+        if (helper.isEmpty(wh)) {
+            return true
+        }
         if (!helper.isTrueHash(wh)) {
             return false
         }
-        var wg = helper.getTrueHash(wh)[0];
-        helper.setWinHash(wg);
+        var wg = helper.getTrueHash(wh),
+            wv = wg[0],
+            wq = wg[1];
+        if (helper.isEmpty(wq)) {
+            return true
+        }
+        helper.setWinHash(wv);
         return true
     }
 
@@ -571,90 +654,34 @@ var eventMethod = {
 
 };
 
-var getMethod = {
-    
-    /**
-     * an easy way to get location hash.
-     * @param {*} n
-     * @returns string
-     */
-    get: function (n) {
-
-        return helper.getWinHash()
-    },
-
-    /**
-     * get location hash value.
-     * @param {*} n
-     * @returns string
-     */
-    getValue: function (n) {
-
-        var wh = helper.getWinHash();
-        return helper.isEmpty(wh) ? '' : helper.getTrueHash(wh)[0]
-    },
-
-    /**
-     * get the location hash query.
-     * @param {string|array} n
-     * @returns object
-     */
-    getQuery: function (n) {
-        if ( n === void 0 ) n = [];
-
-        if (helper.isString(n)) {
-            n = [n];
-        }
-        if (!helper.isArr(n)) {
-            return {}
-        }
-        n       = n.filter(function (i) { return i !== ''; });
-        var emp = n.length === 1 ? undefined : helper.createObjVal(n, undefined),
-            wh  = helper.getWinHash();
-        if (helper.isEmpty(wh)) {
-            return emp
-        }
-        var hsh_que = helper.getTrueHash(wh)[1];
-        if (helper.isEmpty(hsh_que) || !helper.isQuery(hsh_que)) {
-            return emp
-        }
-        var que = helper.getQuery(hsh_que);
-        if (n.length === 1) {
-            return que.hasOwnProperty(n[0]) ? que[n[0]] : emp
-        } else if (n.length !== 0) {
-            var ans = {};
-            for (var i in n) {
-                if (n.hasOwnProperty(i)) {
-                    var v  = n[i];
-                    ans[v] = que.hasOwnProperty(v) ? que[v] : undefined;
-                }
-            }
-            return ans
-        }
-        return que
-    }
-    
-};
-
 var haveMethod = {
 
     /**
      * check for location hash value.
-     * @param {string} n
+     * @param {string|array} n
      * @returns boolean
      */
     haveValue: function (n) {
         if ( n === void 0 ) n = '';
 
-        if (!helper.isString(n)) {
+        if (helper.isString(n)) {
+            n = [n];
+        }
+        if (!helper.isArr(n)) {
             return false
         }
-        var wh = helper.getWinHash(),
-            wg = helper.getTrueHash(wh)[0];
+        var wv = this.getValue();
+        n      = n.filter(function (i) { return i !== ''; });
         if (helper.isEmpty(n)) {
-            return !helper.isEmpty(wg)
+            return !helper.isEmpty(wv)
         }
-        return wg.includes(n)
+        for (var i in n) {
+            if (!n.hasOwnProperty(i)) { continue }
+            if (!wv.includes(n[i])) {
+                return false
+            }
+        }
+        return true
     },
 
     /**
@@ -681,9 +708,7 @@ var haveMethod = {
         }
         var que = helper.getQuery(wq);
         for (var i in n) {
-            if (!n.hasOwnProperty(i)) {
-                continue
-            }
+            if (!n.hasOwnProperty(i)) { continue }
             if (!que.hasOwnProperty(n[i])) {
                 return false
             }
@@ -699,24 +724,31 @@ var haveMethod = {
     have: function (n) {
         if ( n === void 0 ) n = '';
 
-        if (!helper.isString(n)) {
+        if (helper.isString(n)) {
+            n = [n];
+        }
+        if (!helper.isArr(n)) {
             return false
         }
         var wh = helper.getWinHash();
-        if (helper.isEmpty(wh)) {
-            return false
-        }
+        n      = n.filter(function (i) { return i !== ''; });
         if (helper.isEmpty(n)) {
-            return true
+            return !helper.isEmpty(wh)
         }
-        return wh.includes(n)
+        for (var i in n) {
+            if (!n.hasOwnProperty(i)) { continue }
+            if (!wh.includes(n[i])) {
+                return false
+            }
+        }
+        return true
     }
     
 };
 
 // Hash main information of library such as versions.
 var info = {
-    version : '1.7.0'
+    version : '1.7.1'
 };
 
 var infoMethod = {
@@ -741,12 +773,7 @@ var isMethod = {
      * @returns boolean
      */
     is: function (n) {
-        if ( n === void 0 ) n = '';
-
-        if (!helper.isString(n)) {
-            return false
-        }
-        return helper.getWinHash() === n
+        return helper.isString(n) && helper.getWinHash() === n
     },
 
     /**
@@ -755,37 +782,20 @@ var isMethod = {
      * @return boolean
      */
     isValue: function (n) {
-        if ( n === void 0 ) n = '';
-
-        if (!helper.isString(n)) {
-            return false
-        }
-        var wh = helper.getWinHash(),
-            hash = helper.getTrueHash(wh)[0];
-        return hash === n
+        return helper.isString(n) && this.getValue() === n
     },
 
     /**
      * check for query value in location hash.
      * @param {string} n
-     * @param {string|null|number} e
+     * @param {string|null|number|undefined} e
      * @returns boolean
      */
     isQuery: function (n, e) {
-        if (!helper.isString(n) || helper.isEmpty(n) ||
-            (!helper.isString(e) && !helper.isNum(e) && !helper.isNull(e))) {
+        if (!helper.isString(n) || helper.isEmpty(n) || !helper.isQueParOk(e)) {
             return false
         }
-        var wh      = helper.getWinHash(),
-            hsh_que = helper.getTrueHash(wh)[1];
-        if (helper.isEmpty(hsh_que)) {
-            return false
-        }
-        var que = helper.getQuery(hsh_que);
-        if (!que.hasOwnProperty(n)) {
-            return false
-        }
-        return que[n] === e
+        return this.getQuery(n) === e
     }
     
 };
@@ -862,7 +872,10 @@ var queryMethod = {
      * @returns boolean
      */
     updateQuery: function (n, e) {
-        if (!helper.isString(n) || !(helper.isString(e) || helper.isNum(e) || helper.isNull(e))) {
+        if (!helper.isString(n) || !helper.isQueParOk(e)) {
+            return false
+        }
+        if (e === undefined) {
             return false
         }
         var wh      = helper.getWinHash(),
