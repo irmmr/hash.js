@@ -217,9 +217,7 @@ export default {
         let qa = q.split('&'),
             output = {}
         for (let i in qa) {
-            if (!qa.hasOwnProperty(i)) {
-                continue
-            }
+            if (!qa.hasOwnProperty(i)) continue
             let query    = qa[i],
                 q_parse  = this.splitOnce(query, '='),
                 q_len    = query.split('=').length,
@@ -247,24 +245,19 @@ export default {
         if (!this.isDef(q) || !this.isObj(q)) {
             return ''
         }
-        let all_query = '',
-            que_size  = this.objSize(q),
-            num_data  = 0
+        let collector = []
         for (let i in q) {
-            if (!q.hasOwnProperty(i)) {
-                continue
-            }
-            num_data ++
+            if (!q.hasOwnProperty(i) || q[i] === undefined) continue
             let data_val = q[i]
             if (this.isNull(data_val)) {
-                all_query += num_data === que_size ? i : i + '&'
+                collector.push(i)
             } else {
                 let data_str    = this.getString(data_val),
                     data_encode = encode_uri ? encodeURIComponent(data_str) : data_str
-                all_query += num_data === que_size ? i + '=' + data_encode : i + '=' + data_encode + '&'
+                collector.push(i + '=' + data_encode)
             }
         }
-        return all_query
+        return collector.join('&')
     },
 
     /**
