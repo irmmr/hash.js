@@ -69,43 +69,12 @@ Hash().event(listener, function () {
 
 # How to use?
 These include a few simple examples.
-> These do not include all features.
+### Simple use
 ```javascript
-// set a simple value
-Hash.set('hello');       // page's hash => #hello
+// set a value to location.hash
+Hash.set('hello-babe'); // page's hash => '#hello-babe'
 
-// get location's hash
-let ha = Hash.get();     // returns     => 'hello
+// get location.hash
+Hash.get();             // returns => 'hello-babe'
 ```
-```javascript
-// #{value}?{query}
-// set a query
-Hash.setQuery({
-  a : 'b',
-  c : 'd',
-  e : null
-});                         // page's hash => #?a=b&c=d&e
-
-// get query
-let hq = Hash.getQuery();    // returns     => Object { a: "b", c: "d", e: null }
-let a  = Hash.getQuery('a'); // returns     => 'b'
-```
-```javascript
-// set value and query
-Hash.set('value?a=1&b=2&redirect=/');  // page's hash => #value?a=1&b=2&redirect=/
-
-// set value and query
-Hash.setValue('new-value');            // page's hash => #new-value?a=1&b=2&redirect=/
-Hash.setQuery({
-  page: 1,
-  redirect: '/home'
-})                                     // page's hash => #new-value?page=1&redirect=/home
-```
-```javascript
-// goto ...
-Hash.event('load, change', function () {
-  if (Hash.haveQuery('goto') && !Hash.isQuery('goto', null)) {
-    window.location.href = Hash.getQuery('goto')
-  }
-})
-```
+View the full document: [Document](/DOCUMENT.md)
