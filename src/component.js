@@ -4,7 +4,6 @@ import {HashComponent} from "./core";
 import getMethod from "./components/get"
 import addMethod from "./components/add"
 import clearMethod from "./components/clear"
-import configMethod from "./components/config"
 import eventMethod from "./components/event"
 import haveMethod from "./components/have"
 import infoMethod from "./components/info"
@@ -21,7 +20,6 @@ HashComponent.prototype.addQuery    = addMethod.addQuery
 HashComponent.prototype.clear       = clearMethod.clear
 HashComponent.prototype.clearValue  = clearMethod.clearValue
 HashComponent.prototype.clearQuery  = clearMethod.clearQuery
-HashComponent.prototype.config      = configMethod.config
 HashComponent.prototype.event       = eventMethod.event
 HashComponent.prototype.get         = getMethod.get
 HashComponent.prototype.getValue    = getMethod.getValue
