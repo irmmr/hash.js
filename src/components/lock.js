@@ -1,5 +1,3 @@
-import helper from "../helpers";
-
 // main lock variables
 let locked     = false,
     force_lock = false
@@ -12,7 +10,7 @@ export default {
      * @returns boolean
      */
     isLocked: function (n = {}) {
-        if (!helper.isDef(n) || !helper.isObj(n)) {
+        if (!this._h.isDef(n) || !this._h.isObj(n)) {
             return false
         }
         return locked
@@ -24,7 +22,7 @@ export default {
      * @returns boolean
      */
     unLock: function (n = {}) {
-        if (!helper.isDef(n) || !helper.isObj(n)) {
+        if (!this._h.isDef(n) || !this._h.isObj(n)) {
             return false
         }
         if (locked && !force_lock) {
@@ -40,16 +38,17 @@ export default {
      * @returns boolean
      */
     lock: function (n = {}) {
-        if (locked || !helper.isDef(n) || !helper.isObj(n)) {
+        if (locked || !this._h.isDef(n) || !this._h.isObj(n)) {
             return false
         }
-        let is_force = 'force' in n ? helper.getBool(n.force) : false
+        let is_force = 'force' in n ? this._h.getBool(n.force) : false
         locked       = true
         force_lock   = is_force
-        const wh     = helper.getWinHash()
+        const wh     = this._h.getWinHash(),
+              th     = this
         window.onhashchange = function() {
             if (locked) {
-                helper.setWinHash(wh)
+                th._h.setWinHash(wh)
             }
         }
         return true

@@ -1,5 +1,3 @@
-import helper from "../helpers";
-
 export default {
 
     /**
@@ -8,12 +6,13 @@ export default {
      * @returns boolean
      */
     clear: function (n = true) {
-        if (!helper.isBool(n)) {
+        if (!this._h.isBool(n)) {
             return false
         }
-        helper.setWinHash('')
         if (n) {
             history.pushState(null, null, window.location.href.split('#')[0])
+        } else {
+            this._h.setWinHash('')
         }
         return true
     },
@@ -23,20 +22,20 @@ export default {
      * @returns boolean
      */
     clearValue: function () {
-        let wh = helper.getWinHash()
-        if (helper.isEmpty(wh)) {
+        let wh = this._h.getWinHash()
+        if (this._h.isEmpty(wh)) {
             return true
         }
-        if (!helper.isTrueHash(wh)) {
+        if (!this._h.isTrueHash(wh)) {
             return false
         }
-        let wg = helper.getTrueHash(wh),
+        let wg = this._h.getTrueHash(wh),
             wv = wg[0],
             wq = wg[1]
-        if (helper.isEmpty(wv)) {
+        if (this._h.isEmpty(wv)) {
             return true
         }
-        helper.setWinHash(helper.isEmpty(wq) ? '' : '?' + wq)
+        this._h.setWinHash(this._h.isEmpty(wq) ? '' : '?' + wq)
         return true
     },
 
@@ -45,20 +44,20 @@ export default {
      * @returns boolean
      */
     clearQuery: function () {
-        let wh = helper.getWinHash()
-        if (helper.isEmpty(wh)) {
+        let wh = this._h.getWinHash()
+        if (this._h.isEmpty(wh)) {
             return true
         }
-        if (!helper.isTrueHash(wh)) {
+        if (!this._h.isTrueHash(wh)) {
             return false
         }
-        let wg = helper.getTrueHash(wh),
+        let wg = this._h.getTrueHash(wh),
             wv = wg[0],
             wq = wg[1]
-        if (helper.isEmpty(wq)) {
+        if (this._h.isEmpty(wq)) {
             return true
         }
-        helper.setWinHash(wv)
+        this._h.setWinHash(wv)
         return true
     }
 

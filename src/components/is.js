@@ -8,7 +8,7 @@ export default {
      * @returns boolean
      */
     is: function (n) {
-        return helper.isString(n) && helper.getWinHash() === n
+        return this._h.isString(n) && this._h.getWinHash() === n
     },
 
     /**
@@ -17,7 +17,7 @@ export default {
      * @return boolean
      */
     isValue: function (n) {
-        return helper.isString(n) && this.getValue() === n
+        return this._h.isString(n) && this.getValue() === n
     },
 
     /**
@@ -27,7 +27,7 @@ export default {
      * @returns boolean
      */
     isQuery: function (n, e) {
-        if (!helper.isString(n) || helper.isEmpty(n) || !helper.isQueParOk(e)) {
+        if (!this._h.isString(n) || this._h.isEmpty(n) || !this._h.isQueParOk(e)) {
             return false
         }
         return this.getQuery(n) === e

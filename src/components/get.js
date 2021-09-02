@@ -9,7 +9,7 @@ export default {
      * @returns string
      */
     get: function (n = {}) {
-        return helper.getWinHash()
+        return this._h.getWinHash()
     },
 
     /**
@@ -18,8 +18,8 @@ export default {
      * @returns string
      */
     getValue: function (n = {}) {
-        let wh = helper.getWinHash()
-        return helper.isEmpty(wh) ? '' : helper.getTrueHash(wh)[0]
+        let wh = this._h.getWinHash()
+        return this._h.isEmpty(wh) ? '' : this._h.getTrueHash(wh)[0]
     },
 
     /**
@@ -28,23 +28,23 @@ export default {
      * @returns object
      */
     getQuery: function (n = []) {
-        if (helper.isString(n)) {
+        if (this._h.isString(n)) {
             n = [n]
         }
-        if (!helper.isArr(n)) {
+        if (!this._h.isArr(n)) {
             return {}
         }
         n       = n.filter(i => i !== '')
-        let emp = n.length === 1 ? undefined : helper.createObjVal(n, undefined),
-            wh  = helper.getWinHash()
-        if (helper.isEmpty(wh)) {
+        let emp = n.length === 1 ? undefined : this._h.createObjVal(n, undefined),
+            wh  = this._h.getWinHash()
+        if (this._h.isEmpty(wh)) {
             return emp
         }
-        let hsh_que = helper.getTrueHash(wh)[1]
-        if (helper.isEmpty(hsh_que) || !helper.isQuery(hsh_que)) {
+        let hsh_que = this._h.getTrueHash(wh)[1]
+        if (this._h.isEmpty(hsh_que) || !this._h.isQuery(hsh_que)) {
             return emp
         }
-        let que = helper.getQuery(hsh_que)
+        let que = this._h.getQuery(hsh_que)
         if (n.length === 1) {
             return que.hasOwnProperty(n[0]) ? que[n[0]] : emp
         } else if (n.length !== 0) {

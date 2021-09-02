@@ -8,16 +8,16 @@ export default {
      * @returns boolean
      */
     haveValue: function (n = '') {
-        if (helper.isString(n)) {
+        if (this._h.isString(n)) {
             n = [n]
         }
-        if (!helper.isArr(n)) {
+        if (!this._h.isArr(n)) {
             return false
         }
         let wv = this.getValue()
         n      = n.filter(i => i !== '')
-        if (helper.isEmpty(n)) {
-            return !helper.isEmpty(wv)
+        if (this._h.isEmpty(n)) {
+            return !this._h.isEmpty(wv)
         }
         for (let i in n) {
             if (!n.hasOwnProperty(i)) continue
@@ -34,21 +34,21 @@ export default {
      * @retuens boolean
      */
     haveQuery: function (n = []) {
-        if (helper.isString(n)) {
+        if (this._h.isString(n)) {
             n = [n]
         }
-        if (!helper.isArr(n)) {
+        if (!this._h.isArr(n)) {
             return false
         }
-        let wh = helper.getWinHash(),
-            wq = helper.getTrueHash(wh)[1]
+        let wh = this._h.getWinHash(),
+            wq = this._h.getTrueHash(wh)[1]
         if (n.length === 0) {
-            return !helper.isEmpty(wq)
+            return !this._h.isEmpty(wq)
         }
-        if (!helper.isQuery(wq)) {
+        if (!this._h.isQuery(wq)) {
             return false
         }
-        let que = helper.getQuery(wq)
+        let que = this._h.getQuery(wq)
         for (let i in n) {
             if (!n.hasOwnProperty(i)) continue
             if (!que.hasOwnProperty(n[i])) {
@@ -64,16 +64,16 @@ export default {
      * @returns boolean
      */
     have: function (n = '') {
-        if (helper.isString(n)) {
+        if (this._h.isString(n)) {
             n = [n]
         }
-        if (!helper.isArr(n)) {
+        if (!this._h.isArr(n)) {
             return false
         }
-        let wh = helper.getWinHash()
+        let wh = this._h.getWinHash()
         n      = n.filter(i => i !== '')
-        if (helper.isEmpty(n)) {
-            return !helper.isEmpty(wh)
+        if (this._h.isEmpty(n)) {
+            return !this._h.isEmpty(wh)
         }
         for (let i in n) {
             if (!n.hasOwnProperty(i)) continue

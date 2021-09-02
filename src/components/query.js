@@ -9,26 +9,26 @@ export default {
      * @returns boolean
      */
     updateQuery: function (n, e) {
-        if (!helper.isString(n) || !helper.isQueParOk(e)) {
+        if (!this._h.isString(n) || !this._h.isQueParOk(e)) {
             return false
         }
         if (e === undefined) {
             return false
         }
-        let wh      = helper.getWinHash(),
-            hash    = helper.getTrueHash(wh),
+        let wh      = this._h.getWinHash(),
+            hash    = this._h.getTrueHash(wh),
             hsh_val = hash[0],
             hsh_que = hash[1],
             vl      = '',
             cl      = {},
             ch      = 0
-        if (helper.isEmpty(hsh_que)) {
+        if (this._h.isEmpty(hsh_que)) {
             return false
         }
-        if (!helper.isEmpty(hsh_val)) {
+        if (!this._h.isEmpty(hsh_val)) {
             vl += hsh_val
         }
-        let que = helper.getQuery(hsh_que)
+        let que = this._h.getQuery(hsh_que)
         for (let i in que) {
             if (!que.hasOwnProperty(i)) {
                 continue
@@ -40,8 +40,8 @@ export default {
                 cl[i] = que[i]
             }
         }
-        vl += '?' + helper.toQuery(cl)
-        helper.setWinHash(vl)
+        vl += '?' + this._h.toQuery(cl)
+        this._h.setWinHash(vl)
         return ch !== 0
     }
     

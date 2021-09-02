@@ -8,10 +8,10 @@ export default {
      * @returns boolean
      */
     set: function (n = '') {
-        if (!helper.isString(n) || helper.isEmpty(n)) {
+        if (!this._h.isString(n) || this._h.isEmpty(n)) {
             return false
         }
-        helper.setWinHash(n)
+        this._h.setWinHash(n)
         return true
     },
 
@@ -21,19 +21,19 @@ export default {
      * @returns boolean
      */
     setValue: function (n = '') {
-        if (!helper.isString(n) || helper.isEmpty(n)) {
+        if (!this._h.isString(n) || this._h.isEmpty(n)) {
             return false
         }
         if (n.includes('?')) {
-            n = helper.replaceAll(n, '?', encodeURIComponent('?'))
+            n = this._h.replaceAll(n, '?', encodeURIComponent('?'))
         }
-        let wh      = helper.getWinHash(),
-            hsh_que = helper.getTrueHash(wh)[1]
-        if (helper.isEmpty(wh) || helper.isEmpty(hsh_que)) {
-            helper.setWinHash(n)
+        let wh      = this._h.getWinHash(),
+            hsh_que = this._h.getTrueHash(wh)[1]
+        if (this._h.isEmpty(wh) || this._h.isEmpty(hsh_que)) {
+            this._h.setWinHash(n)
             return true
         }
-        helper.setWinHash(n + '?' + hsh_que)
+        this._h.setWinHash(n + '?' + hsh_que)
         return true
     },
 
@@ -43,17 +43,17 @@ export default {
      * @returns boolean
      */
     setQuery: function (n = {}) {
-        if (!helper.isObj(n) || n.length === 0) {
+        if (!this._h.isObj(n) || n.length === 0) {
             return false
         }
-        let wh   = helper.getWinHash(),
-            hash = helper.getTrueHash(wh)[0],
-            aq   = helper.toQuery(n)
-        if (helper.isEmpty(wh) || helper.isEmpty(hash)) {
-            helper.setWinHash('?' + aq)
+        let wh   = this._h.getWinHash(),
+            hash = this._h.getTrueHash(wh)[0],
+            aq   = this._h.toQuery(n)
+        if (this._h.isEmpty(wh) || this._h.isEmpty(hash)) {
+            this._h.setWinHash('?' + aq)
             return true
         }
-        helper.setWinHash(hash + '?' + aq)
+        this._h.setWinHash(hash + '?' + aq)
         return true
     }
     

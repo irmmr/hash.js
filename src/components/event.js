@@ -10,17 +10,17 @@ export default {
      * @returns
      */
     event: function (e, func = function() {}) {
-        if (!helper.isDef(e) || !helper.isString(e)) {
+        if (!this._h.isDef(e) || !this._h.isString(e)) {
             return
         }
         let event   = e.toLowerCase(),
             evs     = event.split(',')
-        func    = helper.isDef(func) && helper.isFunc(func) ? func : vars.emptyFunc
+        func    = this._h.isDef(func) && this._h.isFunc(func) ? func : vars.emptyFunc
         for (let i in evs) {
             if (!evs.hasOwnProperty(i)) {
                 continue
             }
-            let current_ev = helper.replaceAll(evs[i], ' ', '')
+            let current_ev = this._h.replaceAll(evs[i], ' ', '')
             switch (current_ev) {
                 case 'change' :
                     window.addEventListener('hashchange', func);
@@ -29,7 +29,7 @@ export default {
                     window.addEventListener('load', func);
                     break;
                 case 'ready' :
-                    helper.lunchFunc(func);
+                    this._h.lunchFunc(func);
                     break;
                 default :
                     // nothing to do

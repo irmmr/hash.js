@@ -8,15 +8,15 @@ export default {
      * @returns boolean
      */
     add: function (n = '') {
-        if (!helper.isString(n) || helper.isEmpty(n)) {
+        if (!this._h.isString(n) || this._h.isEmpty(n)) {
             return false
         }
-        let wh = helper.getWinHash()
-        if (helper.isEmpty(wh)) {
-            helper.setWinHash(n)
+        let wh = this._h.getWinHash()
+        if (this._h.isEmpty(wh)) {
+            this._h.setWinHash(n)
             return true
         }
-        helper.setWinHash(wh + n)
+        this._h.setWinHash(wh + n)
         return true
     },
 
@@ -26,23 +26,23 @@ export default {
      * @returns boolean
      */
     addValue: function (n = '') {
-        if (!helper.isString(n) || helper.isEmpty(n)) {
+        if (!this._h.isString(n) || this._h.isEmpty(n)) {
             return false
         }
         if (n.includes('?')) {
-            n = helper.replaceAll(n, '?', encodeURIComponent('?'))
+            n = this._h.replaceAll(n, '?', encodeURIComponent('?'))
         }
-        let wh      = helper.getWinHash(),
-            hash    = helper.getTrueHash(wh),
+        let wh      = this._h.getWinHash(),
+            hash    = this._h.getTrueHash(wh),
             hsh_val = hash[0],
             hsh_que = hash[1]
-        if (!helper.isEmpty(hsh_val)) {
+        if (!this._h.isEmpty(hsh_val)) {
             n = hsh_val + n
         }
-        if (!helper.isEmpty(hsh_que)) {
+        if (!this._h.isEmpty(hsh_que)) {
             n += '?' + hsh_que
         }
-        helper.setWinHash(n)
+        this._h.setWinHash(n)
         return true
     },
 
@@ -52,23 +52,23 @@ export default {
      * @returns boolean
      */
     addQuery: function (n = {}) {
-        if (!helper.isObj(n) || n.length === 0) {
+        if (!this._h.isObj(n) || n.length === 0) {
             return false
         }
-        let wh      = helper.getWinHash(),
-            hash    = helper.getTrueHash(wh),
+        let wh      = this._h.getWinHash(),
+            hash    = this._h.getTrueHash(wh),
             hsh_val = hash[0],
             hsh_que = hash[1],
             vl      = ''
-        if (!helper.isEmpty(hsh_que)) {
-            let oq  = helper.getQuery(hsh_que)
+        if (!this._h.isEmpty(hsh_que)) {
+            let oq  = this._h.getQuery(hsh_que)
             n       = Object.assign(oq, n)
         }
-        if (!helper.isEmpty(hsh_val)) {
+        if (!this._h.isEmpty(hsh_val)) {
             vl += hsh_val
         }
-        vl += '?' + helper.toQuery(n)
-        helper.setWinHash(vl)
+        vl += '?' + this._h.toQuery(n)
+        this._h.setWinHash(vl)
         return true
     }
 

@@ -1,81 +1,118 @@
 // define main helpers handle
-export default {
+import vars from "./vars";
+
+export default class HashHelper {
+    /**
+     * @type    {Readonly<{}>}
+     * @private
+     */
+    #_conf     = vars.emptyObj
+
+    /**
+     * get a config value for other methods for helpers.
+     *
+     * @param   name    The name of config.
+     * @param   def     The default value of config.
+     * @returns {string|*}
+     * @private
+     */
+    #__conf(name = '', def = null) {
+        if ('' === name) return this.#_conf
+        return this.#__has_conf(name) ? this.#_conf[name] : def
+    }
+
+    /**
+     * check for a config exists.
+     * @param   name     The name if config.
+     * @returns {boolean}
+     * @private
+     */
+    #__has_conf(name) {
+        return typeof this.#_conf[name] !== 'undefined'
+    }
+
+    /**
+     * main constructor.
+     * @param configs
+     */
+    constructor(configs = {}) {
+        this.#_conf = configs
+    }
+
+    /**
+     * re-load all configs.
+     *
+     * @param   configs Entry options
+     */
+    __config(configs) {
+        this.#_conf = configs
+    }
 
     /**
      * check if the variable is defined.
      * @param {*} h The input variable of check
      * @returns {boolean}
      */
-    isDef: function (h) {
+    isDef(h) {
         return typeof h !== undefined && h !== null
-    },
+    }
 
     /**
      * check if variable is not defined.
      * @param {*} h The input variable of check
      * @returns 
      */
-    isUnDef: function (h) {
+    isUnDef(h) {
         return typeof h === undefined || h === null
-    },
+    }
 
     /**
      * check if the type of variable is string.
      * @param {*} h The input variable of check
      * @returns 
      */
-    isString: function (h) {
+    isString(h) {
         return this.isDef(h) && typeof h === 'string'
-    },
+    }
 
     /**
      * check if the type of variable is boolean
      * @param {*} h The input variable of check
      * @returns 
      */
-    isBool: function (h) {
+    isBool(h) {
         return this.isDef(h) && typeof h === 'boolean'
-    },
+    }
 
     /**
      * Convert anything to boolean data type.
      * @param {string|boolean|number} h The input data
      * @returns
      */
-    getBool: function (h) {
+    getBool(h) {
         if (this.isBool(h)) {
             return h
         }
         return this.isString(h) && h.toLowerCase() === 'true'
-    },
-
-    /**
-     * Get attribute value if exists
-     * @param {*} el     Element
-     * @param {*} attr   Attribute name
-     * @returns 
-     */
-    getAttr: function (el, attr) {
-        return el.hasAttribute(attr) ? el.getAttribute(attr) : ""
-    },
+    }
 
     /**
      * check if the type of variable is object.
      * @param {*} h The input data
      * @returns 
      */
-    isObj: function (h) {
+    isObj(h) {
         return h !== null && typeof h === 'object'
-    },
+    }
 
     /**
      * check if the type of variable is function.
      * @param {*} h The input data
      * @returns 
      */
-    isFunc: function (h) {
+    isFunc(h) {
         return this.isDef(h) && typeof h === 'function'
-    },
+    }
 
     /**
      * replace all a to b in a string data.
@@ -84,9 +121,9 @@ export default {
      * @param {string} b Replace with
      * @returns 
      */
-    replaceAll: function (h, a, b) {
+    replaceAll(h, a, b) {
         return h.split(a).join(b)
-    },
+    }
 
     /**
      * run a callback using argument is safe mode.
@@ -94,25 +131,25 @@ export default {
      * @param {*}         argc Function arguments
      * @returns 
      */
-    lunchFunc: function (func, argc = null) {
+    lunchFunc(func, argc = null) {
         return this.isFunc(func) ? argc !== null ? func(argc) : func() : null
-    },
+    }
 
     /**
      * check if the type of variable is number.
      * @param {*} h The input data
      * @returns 
      */
-    isNum: function (h) {
+    isNum(h) {
         return this.isDef(h) && Number.isNaN(Number(h))
-    },
+    }
 
     /**
      * check if the value of variable is empty.
      * @param {*} h The input data
      * @returns 
      */
-    isEmpty: function (h) {
+    isEmpty(h) {
         if (this.isString(h)) {
             return h === ''
         } else if (this.isArr(h)) {
@@ -121,23 +158,23 @@ export default {
             return this.objSize(h) === 0
         }
         return false
-    },
+    }
 
     /**
      * check if the value of variable is null.
      * @param {*} h The input data
      * @returns 
      */
-    isNull: function (h) {
+    isNull(h) {
         return h == null
-    },
+    }
 
     /**
      * get the object length
      * @param {object} h The object
      * @returns The object length/size
      */
-    objSize: function (h) {
+    objSize(h) {
         let size = 0, key
         if (!this.isDef(h) || !this.isObj(h)) {
             return size
@@ -148,7 +185,7 @@ export default {
             }
         }
         return size
-    },
+    }
 
     /**
      * split just one time in string.
@@ -156,10 +193,10 @@ export default {
      * @param {string} delim  The delim for split
      * @returns 
      */
-    splitOnce: function (string, delim) {
+    splitOnce(string, delim) {
         let components = string.split(delim)
         return [components.shift(), components.join(delim)]
-    },
+    }
 
     /**
      * split just one time in string from end.
@@ -167,35 +204,36 @@ export default {
      * @param {string} delim  The delim for split
      * @returns
      */
-    splitOnceEnd: function (string, delim) {
+    splitOnceEnd(string, delim) {
         let components = string.split(delim)
         return [components.slice(0, components.length - 1).join(delim), components.pop()]
-    },
+    }
     
     /**
      * check if the type of variable is array.
      * @param {*} h The input data
      * @returns 
      */
-    isArr: function (h) {
+    isArr(h) {
         return this.isDef(h) && Array.isArray(h)
-    },
+    }
 
     /**
      * convert data to string
      * @param {*} h 
      * @returns 
      */
-    getString: function (h) {
-        return this.isDef(h) ? this.isString(h) ? h : h.toString() : ''
-    },
+    getString(h) {
+        if (typeof h === 'undefined') return ''
+        return this.isString(h) ? h : h.toString()
+    }
 
     /**
      * check if string is query
      * @param {string} q The input string
      * @returns 
      */
-    isQuery: function (q) {
+    isQuery(q) {
         if (!this.isString(q)) {
             return false
         }
@@ -203,14 +241,14 @@ export default {
             q = '?' + q
         }
         return (new RegExp(/\?.+(=|).*/g)).test(q)
-    },
+    }
 
     /**
      * get all values and names of query.
      * @param {string} q The query string without "?"
      * @returns 
      */
-    getQuery: function (q) {
+    getQuery(q) {
         if (!this.isQuery(q)) {
             return {}
         }
@@ -233,7 +271,7 @@ export default {
             }
         }
         return output
-    },
+    }
     
     /**
      * convert object to query string.
@@ -241,7 +279,7 @@ export default {
      * @param {boolean} encode_uri  Encode uri component status
      * @returns 
      */
-    toQuery: function (q, encode_uri = false) {
+    toQuery(q, encode_uri = false) {
         if (!this.isDef(q) || !this.isObj(q)) {
             return ''
         }
@@ -258,7 +296,7 @@ export default {
             }
         }
         return collector.join('&')
-    },
+    }
 
     /**
      * get length of all "q" in "t".
@@ -266,19 +304,19 @@ export default {
      * @param {string} q The input char/string
      * @returns 
      */
-    lenOfChar: function (t, q) {
+    lenOfChar(t, q) {
         if (!t.includes(q)) {
             return 0
         }
         return t.split('').filter(i => i === q).length
-    },
+    }
 
     /**
      * validation a hash for query exists.
      * @param {string} q The hash string
      * @returns 
      */
-    isTrueHash: function (q) {
+    isTrueHash(q) {
         if (!this.isString(q)) {
             return false
         }
@@ -288,14 +326,14 @@ export default {
             return this.isEmpty(que) || this.isQuery(que)
         }
         return true
-    },
+    }
 
     /**
      * get hash value and query string.
      * @param {string} q The hash string
      * @returns 
      */
-    getTrueHash: function (q) {
+    getTrueHash(q) {
         if (!this.isString(q)) {
             return ['', '']
         }
@@ -307,29 +345,54 @@ export default {
             return this.splitOnce(q, '?')
         }
         return emp
-    },
+    }
 
     /**
      * get the value of window hash.
      * @returns 
      */
-    getWinHash: function () {
-        let hsh = window.location.hash
-        return hsh.startsWith('#') ? hsh.slice(1) : hsh
-    },
+    getWinHash() {
+        let hash = '',
+            hsh  = this.#__conf('getHashCallback')
+        if (this.isFunc(hsh)) {
+            hash = this.lunchFunc(hsh)
+        } else {
+            hash = window.location.hash
+        }
+        // convert to string
+        hash = this.getString(hash)
+        // apply filters
+        let fil = this.#__conf('getHashFilter')
+        if (this.isFunc(fil)) {
+            hash = this.lunchFunc(fil, hash)
+        }
+        // convert again to string
+        hash = this.getString(hash)
+        return hash.startsWith('#') ? hash.slice(1) : hash
+    }
 
     /**
      * set the window hash.
      * @param {string} q Hash value
      */
-    setWinHash: function (q) {
-        window.location.hash = q
-    },
+    setWinHash(q) {
+        let handle = this.#__conf('setHashCallback'),
+            filter = this.#__conf('setHashFilter')
+        if (this.isFunc(filter)) {
+            q = this.lunchFunc(filter, q)
+        }
+        q = this.getString(q)
+        if (this.isFunc(handle)) {
+            this.lunchFunc(handle, q)
+        } else {
+            window.location.hash = q
+        }
+    }
 
     /**
      * create object of values.
      */
-    createObjVal: function (names, value) {
+    createObjVal(names, value) {
         if (this.isString(names) && !this.isEmpty(names)) {
             names = [names]
         }
@@ -346,14 +409,14 @@ export default {
             fetch[names[i]] = value
         }
         return fetch
-    },
+    }
 
     /**
      * check if the parameter/argument is a valid query value type.
      * @param n The input value
      * @returns {*|boolean}
      */
-    isQueParOk: function (n) {
+    isQueParOk(n) {
         return this.isString(n) || this.isNull(n) || n === undefined || this.isNum(n)
     }
 
