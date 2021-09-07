@@ -23,7 +23,7 @@ Or use the built-in version of this library separately.
 ```
 You can also use with: `jsdelivr`:
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@irmmr/hash.js@1.7.1"></script>
+<script src="https://cdn.jsdelivr.net/npm/@irmmr/hash.js@1.7.2"></script>
 ```
 
 # Usage
@@ -32,7 +32,7 @@ This library can do these works for you:
 - `change` : Change the page's hash value or query
 - `add` : Add some values or queries to page's hash
 - `evaluate` - Evaluate and check hash values and queries
-- `set` - Set vlues and queries to page's hash
+- `set` - Set values and queries to page's hash
 - `update` - Update hash values and queries
 - `clear` - Clear the page's hash
 - `remove` - Remove some parts of page's hash
@@ -69,7 +69,58 @@ Hash().event(listener, function () {
 
 # How to use?
 These include a few simple examples.
-### Simple use
+### Config
+Configures are for changing a series of library functions and values so that you have more access
+```javascript
+Hash.config({
+    // get page hash by collecting custom data
+    getHashCallback: null,
+    // set page hash by custom action
+    setHashCallback: null,
+    // get page hash using filter
+    getHashFilter: null,
+    // set page hash by a filter
+    setHashFilter: null,
+    // get location href using custom callback
+    getHrefCallback: null,
+    // the 'window' main object for using in library
+    // if it is null, the original 'window' is inserted
+    window: null,
+    // should errors be logged in console or not?
+    log: true
+})
+```
+**hey :** If you use `null` for each case, the default value and function will be specified.
+
+**notice :** These values and functions are for your testing and understanding only and you do not need to use them at all. These apply only when you want to customize the received functions and so on. 
+```javascript
+Hash.config({
+    getHashCallback: () => {
+        // default -> window.location.hash
+        return document.URL.split('#')[1]
+    },
+    setHashCallback: (data) => {
+        // default -> window.location.hash = data
+        window.location.href = document.URL.split('#')[0] + '#' + data
+    },
+    getHashFilter: (hash) => {
+        return hash + ":)"
+    },
+    setHashFilter: (data) => {
+        return data.replace('#', '')
+    },
+    getHrefCallback: () => {
+        // default -> window.location.href
+        return document.URL
+    },
+    // if 'window' is not entered properly, everything will go wrong.
+    // if the value is null, it changes to "window".
+    window: window,
+    // false if you do not want the errors to cause errors in the script in any way.
+    log: false
+})
+```
+### Use it !
 ```javascript
 // set a value to location.hash
 Hash.set('hello-babe'); // page's hash => '#hello-babe'
