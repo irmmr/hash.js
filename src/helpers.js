@@ -5,12 +5,6 @@ import message from "./message";
 
 export default class HashHelper {
     /**
-     * @type    {Readonly<{}>}
-     * @private
-     */
-    #_conf     = vars.emptyObj
-
-    /**
      * get a config value for other methods for helpers.
      *
      * @param   name    The name of config.
@@ -18,9 +12,9 @@ export default class HashHelper {
      * @returns {string|*}
      * @private
      */
-    #__conf(name = '', def = null) {
-        if ('' === name) return this.#_conf
-        return this.#__has_conf(name) ? this.#_conf[name] : def
+    __conf(name = '', def = null) {
+        if ('' === name) return this._conf
+        return this.__has_conf(name) ? this._conf[name] : def
     }
 
     /**
@@ -29,8 +23,8 @@ export default class HashHelper {
      * @returns {boolean}
      * @private
      */
-    #__has_conf(name) {
-        return typeof this.#_conf[name] !== 'undefined'
+    __has_conf(name) {
+        return typeof this._conf[name] !== 'undefined'
     }
 
     /**
@@ -38,7 +32,7 @@ export default class HashHelper {
      * @param configs
      */
     constructor(configs = {}) {
-        this.#_conf = configs
+        this._conf = configs
     }
 
     /**
@@ -47,7 +41,7 @@ export default class HashHelper {
      * @param   configs Entry options
      */
     __config(configs) {
-        this.#_conf = configs
+        this._conf = configs
     }
 
     /**
@@ -356,7 +350,7 @@ export default class HashHelper {
     getWinHash() {
         let hash = '',
             win  = this.getWindow(),
-            hsh  = this.#__conf('getHashCallback')
+            hsh  = this.__conf('getHashCallback')
         if (this.isFunc(hsh)) {
             hash = this.lunchFunc(hsh)
         } else {
@@ -370,7 +364,7 @@ export default class HashHelper {
         // convert to string
         hash = this.getString(hash)
         // apply filters
-        let fil = this.#__conf('getHashFilter')
+        let fil = this.__conf('getHashFilter')
         if (this.isFunc(fil)) {
             hash = this.lunchFunc(fil, hash)
         }
@@ -384,8 +378,8 @@ export default class HashHelper {
      * @param {string} q Hash value
      */
     setWinHash(q) {
-        let handle = this.#__conf('setHashCallback'),
-            filter = this.#__conf('setHashFilter'),
+        let handle = this.__conf('setHashCallback'),
+            filter = this.__conf('setHashFilter'),
             win    = this.getWindow()
         if (this.isFunc(filter)) {
             q = this.lunchFunc(filter, q)
@@ -441,7 +435,7 @@ export default class HashHelper {
     getHref() {
         let href = '',
             win  = this.getWindow(),
-            hsh  = this.#__conf('getHrefCallback')
+            hsh  = this.__conf('getHrefCallback')
         if (this.isFunc(hsh)) {
             href = this.lunchFunc(hsh)
         } else {
@@ -461,7 +455,7 @@ export default class HashHelper {
      * @returns {Window|string|*}
      */
     getWindow() {
-        return this.#__conf('window') || window
+        return this.__conf('window') || window
     }
 
     /**
@@ -470,7 +464,7 @@ export default class HashHelper {
      * @param force_log  The force logger.
      */
     err(message, force_log = false) {
-        if (force_log || this.#__conf('log') === true) {
+        if (force_log || this.__conf('log') === true) {
             throw new Error(info.name + " -> " + message)
         }
     }

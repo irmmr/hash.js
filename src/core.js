@@ -4,31 +4,14 @@ import HashHelper from "./helpers";
 
 export class HashComponent {
     /**
-     * @type    {Readonly<{}>}
-     * @private
-     */
-    #_conf     = vars.emptyObj
-
-    /**
-     * @type    {Readonly<{}>}
-     * @private
-     */
-    #_def_conf = vars.emptyObj
-
-    /**
-     * @type    {null|HashHelper}
-     */
-    _h         = null
-
-    /**
      * main constructor.
      * @param default_options
      * @param options
      */
     constructor(default_options = {}, options = {}) {
-        this.#_def_conf  = typeof default_options === 'object' ? default_options : {}
-        this.#_conf      = typeof options === 'object' ? Object.assign(this.#_def_conf, options) : this.#_def_conf
-        this._h          = new HashHelper(this.#_conf)
+        this._def_conf  = typeof default_options === 'object' ? default_options : {}
+        this._conf      = typeof options === 'object' ? Object.assign(this._def_conf, options) : this._def_conf
+        this._h          = new HashHelper(this._conf)
     }
 
     /**
@@ -39,8 +22,8 @@ export class HashComponent {
      * @returns {string|*}
      */
     __g_conf(name = '', def = '') {
-        if ('' === name) return this.#_conf
-        return typeof this.#_conf[name] !== 'undefined' ? this.#_conf[name] : def
+        if ('' === name) return this._conf
+        return typeof this._conf[name] !== 'undefined' ? this._conf[name] : def
     }
 
     /**
@@ -50,9 +33,9 @@ export class HashComponent {
      * @returns {HashComponent}
      */
     config(config = {}) {
-        this.#_conf = Object.assign(this.#_conf, config)
-        this.#_conf = Object.assign(this.#_def_conf, this.#_conf)
-        this._h.__config(this.#_conf)
+        this._conf = Object.assign(this._conf, config)
+        this._conf = Object.assign(this._def_conf, this._conf)
+        this._h.__config(this._conf)
 
         return this
     }
@@ -61,8 +44,8 @@ export class HashComponent {
      * reset all configs.
      */
     resetConfig() {
-        this.#_conf = this.#_def_conf
-        this._h.__config(this.#_conf)
+        this._conf = this._def_conf
+        this._h.__config(this._conf)
 
         return this
     }

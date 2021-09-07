@@ -1,5 +1,5 @@
 /**
- * HashJs javascript library v1.7.1
+ * HashJs javascript library v1.7.2
  * Copyright (c) 2021 irmmr
  * MIT License
  *
@@ -13,93 +13,138 @@
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.Hash = factory());
 }(this, (function () { 'use strict';
 
-    // component main class
-    var HashComponent = function HashComponent(default_options, options) {
-        if ( default_options === void 0 ) default_options = {};
-        if ( options === void 0 ) options = {};
+    // blank variables for use in return of functions
+    var vars = {
+        emptyObj: Object.freeze({}),
+        emptyFunc: function() {}
+    };
 
-        this.config     = typeof options === 'object' ? options : {};
-        this.default_config = typeof default_options === 'object' ? default_options : {};
+    // Hash main information of library such as versions.
+    var info = {
+        name: 'HashJs',
+        module: 'Hash',
+        version : '1.7.2'
+    };
+
+    var message = {
+        event_und: '"addEventListener" does not exist in the "window" that you defined.',
+        win_problem: 'The "window" you defined in configs has some problems.'
     };
 
     // define main helpers handle
-    var helper = {
+
+    class HashHelper {
+        /**
+         * @type    {Readonly<{}>}
+         * @private
+         */
+        #_conf     = vars.emptyObj
+
+        /**
+         * get a config value for other methods for helpers.
+         *
+         * @param   name    The name of config.
+         * @param   def     The default value of config.
+         * @returns {string|*}
+         * @private
+         */
+        #__conf(name = '', def = null) {
+            if ('' === name) return this.#_conf
+            return this.#__has_conf(name) ? this.#_conf[name] : def
+        }
+
+        /**
+         * check for a config exists.
+         * @param   name     The name if config.
+         * @returns {boolean}
+         * @private
+         */
+        #__has_conf(name) {
+            return typeof this.#_conf[name] !== 'undefined'
+        }
+
+        /**
+         * main constructor.
+         * @param configs
+         */
+        constructor(configs = {}) {
+            this.#_conf = configs;
+        }
+
+        /**
+         * re-load all configs.
+         *
+         * @param   configs Entry options
+         */
+        __config(configs) {
+            this.#_conf = configs;
+        }
 
         /**
          * check if the variable is defined.
          * @param {*} h The input variable of check
          * @returns {boolean}
          */
-        isDef: function (h) {
+        isDef(h) {
             return typeof h !== undefined && h !== null
-        },
+        }
 
         /**
          * check if variable is not defined.
          * @param {*} h The input variable of check
          * @returns 
          */
-        isUnDef: function (h) {
+        isUnDef(h) {
             return typeof h === undefined || h === null
-        },
+        }
 
         /**
          * check if the type of variable is string.
          * @param {*} h The input variable of check
          * @returns 
          */
-        isString: function (h) {
+        isString(h) {
             return this.isDef(h) && typeof h === 'string'
-        },
+        }
 
         /**
          * check if the type of variable is boolean
          * @param {*} h The input variable of check
          * @returns 
          */
-        isBool: function (h) {
+        isBool(h) {
             return this.isDef(h) && typeof h === 'boolean'
-        },
+        }
 
         /**
          * Convert anything to boolean data type.
          * @param {string|boolean|number} h The input data
          * @returns
          */
-        getBool: function (h) {
+        getBool(h) {
             if (this.isBool(h)) {
                 return h
             }
             return this.isString(h) && h.toLowerCase() === 'true'
-        },
-
-        /**
-         * Get attribute value if exists
-         * @param {*} el     Element
-         * @param {*} attr   Attribute name
-         * @returns 
-         */
-        getAttr: function (el, attr) {
-            return el.hasAttribute(attr) ? el.getAttribute(attr) : ""
-        },
+        }
 
         /**
          * check if the type of variable is object.
          * @param {*} h The input data
          * @returns 
          */
-        isObj: function (h) {
+        isObj(h) {
             return h !== null && typeof h === 'object'
-        },
+        }
 
         /**
          * check if the type of variable is function.
          * @param {*} h The input data
          * @returns 
          */
-        isFunc: function (h) {
+        isFunc(h) {
             return this.isDef(h) && typeof h === 'function'
-        },
+        }
 
         /**
          * replace all a to b in a string data.
@@ -108,9 +153,9 @@
          * @param {string} b Replace with
          * @returns 
          */
-        replaceAll: function (h, a, b) {
+        replaceAll(h, a, b) {
             return h.split(a).join(b)
-        },
+        }
 
         /**
          * run a callback using argument is safe mode.
@@ -118,27 +163,25 @@
          * @param {*}         argc Function arguments
          * @returns 
          */
-        lunchFunc: function (func, argc) {
-            if ( argc === void 0 ) argc = null;
-
+        lunchFunc(func, argc = null) {
             return this.isFunc(func) ? argc !== null ? func(argc) : func() : null
-        },
+        }
 
         /**
          * check if the type of variable is number.
          * @param {*} h The input data
          * @returns 
          */
-        isNum: function (h) {
+        isNum(h) {
             return this.isDef(h) && Number.isNaN(Number(h))
-        },
+        }
 
         /**
          * check if the value of variable is empty.
          * @param {*} h The input data
          * @returns 
          */
-        isEmpty: function (h) {
+        isEmpty(h) {
             if (this.isString(h)) {
                 return h === ''
             } else if (this.isArr(h)) {
@@ -147,24 +190,24 @@
                 return this.objSize(h) === 0
             }
             return false
-        },
+        }
 
         /**
          * check if the value of variable is null.
          * @param {*} h The input data
          * @returns 
          */
-        isNull: function (h) {
+        isNull(h) {
             return h == null
-        },
+        }
 
         /**
          * get the object length
          * @param {object} h The object
          * @returns The object length/size
          */
-        objSize: function (h) {
-            var size = 0, key;
+        objSize(h) {
+            let size = 0, key;
             if (!this.isDef(h) || !this.isObj(h)) {
                 return size
             }
@@ -174,7 +217,7 @@
                 }
             }
             return size
-        },
+        }
 
         /**
          * split just one time in string.
@@ -182,10 +225,10 @@
          * @param {string} delim  The delim for split
          * @returns 
          */
-        splitOnce: function (string, delim) {
-            var components = string.split(delim);
+        splitOnce(string, delim) {
+            let components = string.split(delim);
             return [components.shift(), components.join(delim)]
-        },
+        }
 
         /**
          * split just one time in string from end.
@@ -193,35 +236,36 @@
          * @param {string} delim  The delim for split
          * @returns
          */
-        splitOnceEnd: function (string, delim) {
-            var components = string.split(delim);
+        splitOnceEnd(string, delim) {
+            let components = string.split(delim);
             return [components.slice(0, components.length - 1).join(delim), components.pop()]
-        },
+        }
         
         /**
          * check if the type of variable is array.
          * @param {*} h The input data
          * @returns 
          */
-        isArr: function (h) {
+        isArr(h) {
             return this.isDef(h) && Array.isArray(h)
-        },
+        }
 
         /**
          * convert data to string
          * @param {*} h 
          * @returns 
          */
-        getString: function (h) {
-            return this.isDef(h) ? this.isString(h) ? h : h.toString() : ''
-        },
+        getString(h) {
+            if (typeof h === 'undefined') return ''
+            return this.isString(h) ? h : h.toString()
+        }
 
         /**
          * check if string is query
          * @param {string} q The input string
          * @returns 
          */
-        isQuery: function (q) {
+        isQuery(q) {
             if (!this.isString(q)) {
                 return false
             }
@@ -229,22 +273,22 @@
                 q = '?' + q;
             }
             return (new RegExp(/\?.+(=|).*/g)).test(q)
-        },
+        }
 
         /**
          * get all values and names of query.
          * @param {string} q The query string without "?"
          * @returns 
          */
-        getQuery: function (q) {
+        getQuery(q) {
             if (!this.isQuery(q)) {
                 return {}
             }
-            var qa = q.split('&'),
+            let qa = q.split('&'),
                 output = {};
-            for (var i in qa) {
-                if (!qa.hasOwnProperty(i)) { continue }
-                var query    = qa[i],
+            for (let i in qa) {
+                if (!qa.hasOwnProperty(i)) continue
+                let query    = qa[i],
                     q_parse  = this.splitOnce(query, '='),
                     q_len    = query.split('=').length,
                     needle   = this.getString(q_parse[0]);
@@ -252,14 +296,14 @@
                     continue
                 }
                 if (q_len >= 2) {
-                    var val        = this.getString(q_parse[1]);
+                    let val        = this.getString(q_parse[1]);
                     output[needle] = decodeURIComponent(val);
                 } else {
                     output[needle] = null;
                 }
             }
             return output
-        },
+        }
         
         /**
          * convert object to query string.
@@ -267,26 +311,24 @@
          * @param {boolean} encode_uri  Encode uri component status
          * @returns 
          */
-        toQuery: function (q, encode_uri) {
-            if ( encode_uri === void 0 ) encode_uri = false;
-
+        toQuery(q, encode_uri = false) {
             if (!this.isDef(q) || !this.isObj(q)) {
                 return ''
             }
-            var collector = [];
-            for (var i in q) {
-                if (!q.hasOwnProperty(i) || q[i] === undefined) { continue }
-                var data_val = q[i];
+            let collector = [];
+            for (let i in q) {
+                if (!q.hasOwnProperty(i) || q[i] === undefined) continue
+                let data_val = q[i];
                 if (this.isNull(data_val)) {
                     collector.push(i);
                 } else {
-                    var data_str    = this.getString(data_val),
+                    let data_str    = this.getString(data_val),
                         data_encode = encode_uri ? encodeURIComponent(data_str) : data_str;
                     collector.push(i + '=' + data_encode);
                 }
             }
             return collector.join('&')
-        },
+        }
 
         /**
          * get length of all "q" in "t".
@@ -294,40 +336,40 @@
          * @param {string} q The input char/string
          * @returns 
          */
-        lenOfChar: function (t, q) {
+        lenOfChar(t, q) {
             if (!t.includes(q)) {
                 return 0
             }
-            return t.split('').filter(function (i) { return i === q; }).length
-        },
+            return t.split('').filter(i => i === q).length
+        }
 
         /**
          * validation a hash for query exists.
          * @param {string} q The hash string
          * @returns 
          */
-        isTrueHash: function (q) {
+        isTrueHash(q) {
             if (!this.isString(q)) {
                 return false
             }
             if (q.includes('?')) {
-                var spt = this.splitOnce(q, '?'),
+                let spt = this.splitOnce(q, '?'),
                     que = spt[1];
                 return this.isEmpty(que) || this.isQuery(que)
             }
             return true
-        },
+        }
 
         /**
          * get hash value and query string.
          * @param {string} q The hash string
          * @returns 
          */
-        getTrueHash: function (q) {
+        getTrueHash(q) {
             if (!this.isString(q)) {
                 return ['', '']
             }
-            var emp = [q, ''];
+            let emp = [q, ''];
             if (!this.isTrueHash(q)) {
                 return emp
             }
@@ -335,57 +377,203 @@
                 return this.splitOnce(q, '?')
             }
             return emp
-        },
+        }
 
         /**
          * get the value of window hash.
          * @returns 
          */
-        getWinHash: function () {
-            var hsh = window.location.hash;
-            return hsh.startsWith('#') ? hsh.slice(1) : hsh
-        },
+        getWinHash() {
+            let hash = '',
+                win  = this.getWindow(),
+                hsh  = this.#__conf('getHashCallback');
+            if (this.isFunc(hsh)) {
+                hash = this.lunchFunc(hsh);
+            } else {
+                if (typeof win.location !== 'undefined' &&
+                    typeof win.location.hash !== 'undefined') {
+                    hash = win.location.hash;
+                } else {
+                    this.err(message.win_problem);
+                }
+            }
+            // convert to string
+            hash = this.getString(hash);
+            // apply filters
+            let fil = this.#__conf('getHashFilter');
+            if (this.isFunc(fil)) {
+                hash = this.lunchFunc(fil, hash);
+            }
+            // convert again to string
+            hash = this.getString(hash);
+            return hash.startsWith('#') ? hash.slice(1) : hash
+        }
 
         /**
          * set the window hash.
          * @param {string} q Hash value
          */
-        setWinHash: function (q) {
-            window.location.hash = q;
-        },
+        setWinHash(q) {
+            let handle = this.#__conf('setHashCallback'),
+                filter = this.#__conf('setHashFilter'),
+                win    = this.getWindow();
+            if (this.isFunc(filter)) {
+                q = this.lunchFunc(filter, q);
+            }
+            q = this.getString(q);
+            if (this.isFunc(handle)) {
+                this.lunchFunc(handle, q);
+            } else {
+                if (typeof win.location !== 'undefined' &&
+                    typeof win.location.hash !== 'undefined') {
+                    win.location.hash = q;
+                } else {
+                    this.err(message.win_problem);
+                }
+            }
+        }
 
         /**
          * create object of values.
          */
-        createObjVal: function (names, value) {
+        createObjVal(names, value) {
             if (this.isString(names) && !this.isEmpty(names)) {
                 names = [names];
             }
             if (!this.isArr(names)) {
                 return {}
             }
-            names = names.filter(function (i) { return i !== ''; });
+            names = names.filter(i => i !== '');
             if (this.isEmpty(names)) {
                 return {}
             }
-            var fetch = {};
-            for (var i in names) {
-                if (!names.hasOwnProperty(i)) { continue }
+            let fetch = {};
+            for (let i in names) {
+                if (!names.hasOwnProperty(i)) continue
                 fetch[names[i]] = value;
             }
             return fetch
-        },
+        }
 
         /**
          * check if the parameter/argument is a valid query value type.
          * @param n The input value
          * @returns {*|boolean}
          */
-        isQueParOk: function (n) {
+        isQueParOk(n) {
             return this.isString(n) || this.isNull(n) || n === undefined || this.isNum(n)
         }
 
-    };
+        /**
+         * get window location href.
+         * @returns {*}
+         */
+        getHref() {
+            let href = '',
+                win  = this.getWindow(),
+                hsh  = this.#__conf('getHrefCallback');
+            if (this.isFunc(hsh)) {
+                href = this.lunchFunc(hsh);
+            } else {
+                if (typeof win.location !== 'undefined' &&
+                    typeof win.location.href !== 'undefined') {
+                    href = win.location.href;
+                } else {
+                    this.err(message.win_problem);
+                }
+            }
+            // convert to string
+            return this.getString(href)
+        }
+
+        /**
+         * get window master.
+         * @returns {Window|string|*}
+         */
+        getWindow() {
+            return this.#__conf('window') || window
+        }
+
+        /**
+         * the default error handle.
+         * @param message    The message of error.
+         * @param force_log  The force logger.
+         */
+        err(message, force_log = false) {
+            if (force_log || this.#__conf('log') === true) {
+                throw new Error(info.name + " -> " + message)
+            }
+        }
+
+    }
+
+    // component main class
+
+    class HashComponent {
+        /**
+         * @type    {Readonly<{}>}
+         * @private
+         */
+        #_conf     = vars.emptyObj
+
+        /**
+         * @type    {Readonly<{}>}
+         * @private
+         */
+        #_def_conf = vars.emptyObj
+
+        /**
+         * @type    {null|HashHelper}
+         */
+        _h         = null
+
+        /**
+         * main constructor.
+         * @param default_options
+         * @param options
+         */
+        constructor(default_options = {}, options = {}) {
+            this.#_def_conf  = typeof default_options === 'object' ? default_options : {};
+            this.#_conf      = typeof options === 'object' ? Object.assign(this.#_def_conf, options) : this.#_def_conf;
+            this._h          = new HashHelper(this.#_conf);
+        }
+
+        /**
+         * get a config value for other methods.
+         *
+         * @param   name    The name of config.
+         * @param   def     The default value of config.
+         * @returns {string|*}
+         */
+        __g_conf(name = '', def = '') {
+            if ('' === name) return this.#_conf
+            return typeof this.#_conf[name] !== 'undefined' ? this.#_conf[name] : def
+        }
+
+        /**
+         * set config and settings into Hash.js.
+         *
+         * @param   config  The config settings.
+         * @returns {HashComponent}
+         */
+        config(config = {}) {
+            this.#_conf = Object.assign(this.#_conf, config);
+            this.#_conf = Object.assign(this.#_def_conf, this.#_conf);
+            this._h.__config(this.#_conf);
+
+            return this
+        }
+
+        /**
+         * reset all configs.
+         */
+        resetConfig() {
+            this.#_conf = this.#_def_conf;
+            this._h.__config(this.#_conf);
+
+            return this
+        }
+    }
 
     var getMethod = {
         
@@ -394,9 +582,8 @@
          * @param {*} n
          * @returns string
          */
-        get: function (n) {
-
-            return helper.getWinHash()
+        get: function (n = {}) {
+            return this._h.getWinHash()
         },
 
         /**
@@ -404,10 +591,9 @@
          * @param {*} n
          * @returns string
          */
-        getValue: function (n) {
-
-            var wh = helper.getWinHash();
-            return helper.isEmpty(wh) ? '' : helper.getTrueHash(wh)[0]
+        getValue: function (n = {}) {
+            let wh = this._h.getWinHash();
+            return this._h.isEmpty(wh) ? '' : this._h.getTrueHash(wh)[0]
         },
 
         /**
@@ -415,33 +601,31 @@
          * @param {string|array} n
          * @returns object
          */
-        getQuery: function (n) {
-            if ( n === void 0 ) n = [];
-
-            if (helper.isString(n)) {
+        getQuery: function (n = []) {
+            if (this._h.isString(n)) {
                 n = [n];
             }
-            if (!helper.isArr(n)) {
+            if (!this._h.isArr(n)) {
                 return {}
             }
-            n       = n.filter(function (i) { return i !== ''; });
-            var emp = n.length === 1 ? undefined : helper.createObjVal(n, undefined),
-                wh  = helper.getWinHash();
-            if (helper.isEmpty(wh)) {
+            n       = n.filter(i => i !== '');
+            let emp = n.length === 1 ? undefined : this._h.createObjVal(n, undefined),
+                wh  = this._h.getWinHash();
+            if (this._h.isEmpty(wh)) {
                 return emp
             }
-            var hsh_que = helper.getTrueHash(wh)[1];
-            if (helper.isEmpty(hsh_que) || !helper.isQuery(hsh_que)) {
+            let hsh_que = this._h.getTrueHash(wh)[1];
+            if (this._h.isEmpty(hsh_que) || !this._h.isQuery(hsh_que)) {
                 return emp
             }
-            var que = helper.getQuery(hsh_que);
+            let que = this._h.getQuery(hsh_que);
             if (n.length === 1) {
                 return que.hasOwnProperty(n[0]) ? que[n[0]] : emp
             } else if (n.length !== 0) {
-                var ans = {};
-                for (var i in n) {
+                let ans = {};
+                for (let i in n) {
                     if (n.hasOwnProperty(i)) {
-                        var v  = n[i];
+                        let v  = n[i];
                         ans[v] = que.hasOwnProperty(v) ? que[v] : undefined;
                     }
                 }
@@ -459,18 +643,16 @@
          * @param {string} n
          * @returns boolean
          */
-        add: function (n) {
-            if ( n === void 0 ) n = '';
-
-            if (!helper.isString(n) || helper.isEmpty(n)) {
+        add: function (n = '') {
+            if (!this._h.isString(n) || this._h.isEmpty(n)) {
                 return false
             }
-            var wh = helper.getWinHash();
-            if (helper.isEmpty(wh)) {
-                helper.setWinHash(n);
+            let wh = this._h.getWinHash();
+            if (this._h.isEmpty(wh)) {
+                this._h.setWinHash(n);
                 return true
             }
-            helper.setWinHash(wh + n);
+            this._h.setWinHash(wh + n);
             return true
         },
 
@@ -479,26 +661,24 @@
          * @param {string} n
          * @returns boolean
          */
-        addValue: function (n) {
-            if ( n === void 0 ) n = '';
-
-            if (!helper.isString(n) || helper.isEmpty(n)) {
+        addValue: function (n = '') {
+            if (!this._h.isString(n) || this._h.isEmpty(n)) {
                 return false
             }
             if (n.includes('?')) {
-                n = helper.replaceAll(n, '?', encodeURIComponent('?'));
+                n = this._h.replaceAll(n, '?', encodeURIComponent('?'));
             }
-            var wh      = helper.getWinHash(),
-                hash    = helper.getTrueHash(wh),
+            let wh      = this._h.getWinHash(),
+                hash    = this._h.getTrueHash(wh),
                 hsh_val = hash[0],
                 hsh_que = hash[1];
-            if (!helper.isEmpty(hsh_val)) {
+            if (!this._h.isEmpty(hsh_val)) {
                 n = hsh_val + n;
             }
-            if (!helper.isEmpty(hsh_que)) {
+            if (!this._h.isEmpty(hsh_que)) {
                 n += '?' + hsh_que;
             }
-            helper.setWinHash(n);
+            this._h.setWinHash(n);
             return true
         },
 
@@ -507,26 +687,24 @@
          * @param {*} n
          * @returns boolean
          */
-        addQuery: function (n) {
-            if ( n === void 0 ) n = {};
-
-            if (!helper.isObj(n) || n.length === 0) {
+        addQuery: function (n = {}) {
+            if (!this._h.isObj(n) || n.length === 0) {
                 return false
             }
-            var wh      = helper.getWinHash(),
-                hash    = helper.getTrueHash(wh),
+            let wh      = this._h.getWinHash(),
+                hash    = this._h.getTrueHash(wh),
                 hsh_val = hash[0],
                 hsh_que = hash[1],
                 vl      = '';
-            if (!helper.isEmpty(hsh_que)) {
-                var oq  = helper.getQuery(hsh_que);
+            if (!this._h.isEmpty(hsh_que)) {
+                let oq  = this._h.getQuery(hsh_que);
                 n       = Object.assign(oq, n);
             }
-            if (!helper.isEmpty(hsh_val)) {
+            if (!this._h.isEmpty(hsh_val)) {
                 vl += hsh_val;
             }
-            vl += '?' + helper.toQuery(n);
-            helper.setWinHash(vl);
+            vl += '?' + this._h.toQuery(n);
+            this._h.setWinHash(vl);
             return true
         }
 
@@ -539,15 +717,14 @@
          * @param {boolean} n
          * @returns boolean
          */
-        clear: function (n) {
-            if ( n === void 0 ) n = true;
-
-            if (!helper.isBool(n)) {
+        clear: function (n = true) {
+            if (!this._h.isBool(n)) {
                 return false
             }
-            helper.setWinHash('');
             if (n) {
-                history.pushState(null, null, window.location.href.split('#')[0]);
+                history.pushState(null, null, this._h.getHref().split('#')[0]);
+            } else {
+                this._h.setWinHash('');
             }
             return true
         },
@@ -557,20 +734,20 @@
          * @returns boolean
          */
         clearValue: function () {
-            var wh = helper.getWinHash();
-            if (helper.isEmpty(wh)) {
+            let wh = this._h.getWinHash();
+            if (this._h.isEmpty(wh)) {
                 return true
             }
-            if (!helper.isTrueHash(wh)) {
+            if (!this._h.isTrueHash(wh)) {
                 return false
             }
-            var wg = helper.getTrueHash(wh),
+            let wg = this._h.getTrueHash(wh),
                 wv = wg[0],
                 wq = wg[1];
-            if (helper.isEmpty(wv)) {
+            if (this._h.isEmpty(wv)) {
                 return true
             }
-            helper.setWinHash(helper.isEmpty(wq) ? '' : '?' + wq);
+            this._h.setWinHash(this._h.isEmpty(wq) ? '' : '?' + wq);
             return true
         },
 
@@ -579,45 +756,23 @@
          * @returns boolean
          */
         clearQuery: function () {
-            var wh = helper.getWinHash();
-            if (helper.isEmpty(wh)) {
+            let wh = this._h.getWinHash();
+            if (this._h.isEmpty(wh)) {
                 return true
             }
-            if (!helper.isTrueHash(wh)) {
+            if (!this._h.isTrueHash(wh)) {
                 return false
             }
-            var wg = helper.getTrueHash(wh),
+            let wg = this._h.getTrueHash(wh),
                 wv = wg[0],
                 wq = wg[1];
-            if (helper.isEmpty(wq)) {
+            if (this._h.isEmpty(wq)) {
                 return true
             }
-            helper.setWinHash(wv);
+            this._h.setWinHash(wv);
             return true
         }
 
-    };
-
-    var configMethod = {
-
-        /**
-         * set config and settings into Hash.js.
-         *
-         * @param   config  The config settings.
-         * @returns {HashComponent}
-         */
-        config: function (config) {
-
-            this.confing = Object.assign(this.default_config, this.confing);
-            return this
-        }
-
-    };
-
-    // blank variables for use in return of functions
-    var vars = {
-        emptyObj: Object.freeze({}),
-        emptyFunc: function() {}
     };
 
     var eventMethod = {
@@ -628,29 +783,31 @@
          * @param {*} func   The function/callback
          * @returns
          */
-        event: function (e, func) {
-            if ( func === void 0 ) func = function() {};
-
-            if (!helper.isDef(e) || !helper.isString(e)) {
+        event: function (e, func = function() {}) {
+            if (!this._h.isDef(e) || !this._h.isString(e)) {
                 return
             }
-            var event   = e.toLowerCase(),
-                evs     = event.split(',');
-            func    = helper.isDef(func) && helper.isFunc(func) ? func : vars.emptyFunc;
-            for (var i in evs) {
-                if (!evs.hasOwnProperty(i)) {
-                    continue
-                }
-                var current_ev = helper.replaceAll(evs[i], ' ', '');
+            let event   = e.toLowerCase(),
+                evs     = event.split(','),
+                wn      = this._h.getWindow();
+            func    = this._h.isDef(func) && this._h.isFunc(func) ? func : vars.emptyFunc;
+            // check addEventListener based on window
+            if (typeof wn.addEventListener === 'undefined') {
+                this._h.err(message.event_und);
+                return
+            }
+            for (let i in evs) {
+                if (!evs.hasOwnProperty(i)) continue
+                let current_ev = this._h.replaceAll(evs[i], ' ', '');
                 switch (current_ev) {
                     case 'change' :
-                        window.addEventListener('hashchange', func);
+                        wn.addEventListener('hashchange', func);
                         break;
                     case 'load' :
-                        window.addEventListener('load', func);
+                        wn.addEventListener('load', func);
                         break;
                     case 'ready' :
-                        helper.lunchFunc(func);
+                        this._h.lunchFunc(func);
                         break;
                 }
             }
@@ -665,22 +822,20 @@
          * @param {string|array} n
          * @returns boolean
          */
-        haveValue: function (n) {
-            if ( n === void 0 ) n = '';
-
-            if (helper.isString(n)) {
+        haveValue: function (n = '') {
+            if (this._h.isString(n)) {
                 n = [n];
             }
-            if (!helper.isArr(n)) {
+            if (!this._h.isArr(n)) {
                 return false
             }
-            var wv = this.getValue();
-            n      = n.filter(function (i) { return i !== ''; });
-            if (helper.isEmpty(n)) {
-                return !helper.isEmpty(wv)
+            let wv = this.getValue();
+            n      = n.filter(i => i !== '');
+            if (this._h.isEmpty(n)) {
+                return !this._h.isEmpty(wv)
             }
-            for (var i in n) {
-                if (!n.hasOwnProperty(i)) { continue }
+            for (let i in n) {
+                if (!n.hasOwnProperty(i)) continue
                 if (!wv.includes(n[i])) {
                     return false
                 }
@@ -693,26 +848,24 @@
          * @param {string|array} n
          * @retuens boolean
          */
-        haveQuery: function (n) {
-            if ( n === void 0 ) n = [];
-
-            if (helper.isString(n)) {
+        haveQuery: function (n = []) {
+            if (this._h.isString(n)) {
                 n = [n];
             }
-            if (!helper.isArr(n)) {
+            if (!this._h.isArr(n)) {
                 return false
             }
-            var wh = helper.getWinHash(),
-                wq = helper.getTrueHash(wh)[1];
+            let wh = this._h.getWinHash(),
+                wq = this._h.getTrueHash(wh)[1];
             if (n.length === 0) {
-                return !helper.isEmpty(wq)
+                return !this._h.isEmpty(wq)
             }
-            if (!helper.isQuery(wq)) {
+            if (!this._h.isQuery(wq)) {
                 return false
             }
-            var que = helper.getQuery(wq);
-            for (var i in n) {
-                if (!n.hasOwnProperty(i)) { continue }
+            let que = this._h.getQuery(wq);
+            for (let i in n) {
+                if (!n.hasOwnProperty(i)) continue
                 if (!que.hasOwnProperty(n[i])) {
                     return false
                 }
@@ -725,22 +878,20 @@
          * @param {string|array} n
          * @returns boolean
          */
-        have: function (n) {
-            if ( n === void 0 ) n = '';
-
-            if (helper.isString(n)) {
+        have: function (n = '') {
+            if (this._h.isString(n)) {
                 n = [n];
             }
-            if (!helper.isArr(n)) {
+            if (!this._h.isArr(n)) {
                 return false
             }
-            var wh = helper.getWinHash();
-            n      = n.filter(function (i) { return i !== ''; });
-            if (helper.isEmpty(n)) {
-                return !helper.isEmpty(wh)
+            let wh = this._h.getWinHash();
+            n      = n.filter(i => i !== '');
+            if (this._h.isEmpty(n)) {
+                return !this._h.isEmpty(wh)
             }
-            for (var i in n) {
-                if (!n.hasOwnProperty(i)) { continue }
+            for (let i in n) {
+                if (!n.hasOwnProperty(i)) continue
                 if (!wh.includes(n[i])) {
                     return false
                 }
@@ -748,11 +899,6 @@
             return true
         }
         
-    };
-
-    // Hash main information of library such as versions.
-    var info = {
-        version : '1.7.1'
     };
 
     var infoMethod = {
@@ -763,7 +909,9 @@
          */
         info: function () {
             return {
-                version : info.version 
+                version : info.version ,
+                name: info.name ,
+                module: info.module 
             }
         }
         
@@ -777,7 +925,7 @@
          * @returns boolean
          */
         is: function (n) {
-            return helper.isString(n) && helper.getWinHash() === n
+            return this._h.isString(n) && this._h.getWinHash() === n
         },
 
         /**
@@ -786,7 +934,7 @@
          * @return boolean
          */
         isValue: function (n) {
-            return helper.isString(n) && this.getValue() === n
+            return this._h.isString(n) && this.getValue() === n
         },
 
         /**
@@ -796,7 +944,7 @@
          * @returns boolean
          */
         isQuery: function (n, e) {
-            if (!helper.isString(n) || helper.isEmpty(n) || !helper.isQueParOk(e)) {
+            if (!this._h.isString(n) || this._h.isEmpty(n) || !this._h.isQueParOk(e)) {
                 return false
             }
             return this.getQuery(n) === e
@@ -805,7 +953,7 @@
     };
 
     // main lock variables
-    var locked     = false,
+    let locked     = false,
         force_lock = false;
 
     var lockMethod = {
@@ -815,10 +963,8 @@
          * @param {object} n
          * @returns boolean
          */
-        isLocked: function (n) {
-            if ( n === void 0 ) n = {};
-
-            if (!helper.isDef(n) || !helper.isObj(n)) {
+        isLocked: function (n = {}) {
+            if (!this._h.isDef(n) || !this._h.isObj(n)) {
                 return false
             }
             return locked
@@ -829,10 +975,8 @@
          * @param {object} n
          * @returns boolean
          */
-        unLock: function (n) {
-            if ( n === void 0 ) n = {};
-
-            if (!helper.isDef(n) || !helper.isObj(n)) {
+        unLock: function (n = {}) {
+            if (!this._h.isDef(n) || !this._h.isObj(n)) {
                 return false
             }
             if (locked && !force_lock) {
@@ -847,22 +991,24 @@
          * @param {object} n
          * @returns boolean
          */
-        lock: function (n) {
-            if ( n === void 0 ) n = {};
-
-            if (locked || !helper.isDef(n) || !helper.isObj(n)) {
+        lock: function (n = {}) {
+            if (locked || !this._h.isDef(n) || !this._h.isObj(n)) {
                 return false
             }
-            var is_force = 'force' in n ? helper.getBool(n.force) : false;
-            locked       = true;
-            force_lock   = is_force;
-            var wh     = helper.getWinHash();
-            window.onhashchange = function() {
-                if (locked) {
-                    helper.setWinHash(wh);
-                }
-            };
-            return true
+            force_lock   = this._h.getBool(n.force || false);
+            const wh     = this._h.getWinHash(),
+                  th     = this,
+                  wn     = this._h.getWindow();
+            if (typeof wn.onhashchange !== 'undefined') {
+                wn.onhashchange = function() {
+                    if (locked) {
+                        th._h.setWinHash(wh);
+                    }
+                };
+                locked = true;
+                return true
+            }
+            return false
         }
 
     };
@@ -876,27 +1022,27 @@
          * @returns boolean
          */
         updateQuery: function (n, e) {
-            if (!helper.isString(n) || !helper.isQueParOk(e)) {
+            if (!this._h.isString(n) || !this._h.isQueParOk(e)) {
                 return false
             }
             if (e === undefined) {
                 return false
             }
-            var wh      = helper.getWinHash(),
-                hash    = helper.getTrueHash(wh),
+            let wh      = this._h.getWinHash(),
+                hash    = this._h.getTrueHash(wh),
                 hsh_val = hash[0],
                 hsh_que = hash[1],
                 vl      = '',
                 cl      = {},
                 ch      = 0;
-            if (helper.isEmpty(hsh_que)) {
+            if (this._h.isEmpty(hsh_que)) {
                 return false
             }
-            if (!helper.isEmpty(hsh_val)) {
+            if (!this._h.isEmpty(hsh_val)) {
                 vl += hsh_val;
             }
-            var que = helper.getQuery(hsh_que);
-            for (var i in que) {
+            let que = this._h.getQuery(hsh_que);
+            for (let i in que) {
                 if (!que.hasOwnProperty(i)) {
                     continue
                 }
@@ -907,8 +1053,8 @@
                     cl[i] = que[i];
                 }
             }
-            vl += '?' + helper.toQuery(cl);
-            helper.setWinHash(vl);
+            vl += '?' + this._h.toQuery(cl);
+            this._h.setWinHash(vl);
             return ch !== 0
         }
         
@@ -921,28 +1067,26 @@
          * @param {string|array} n The words/chars list
          * @returns boolean
          */
-        remove: function (n) {
-            if ( n === void 0 ) n = [];
-
-            if (helper.isString(n) && !helper.isEmpty(n)) {
+        remove: function (n = []) {
+            if (this._h.isString(n) && !this._h.isEmpty(n)) {
                 n = [n];
             }
-            if (!helper.isArr(n) || n.length === 0) {
+            if (!this._h.isArr(n) || n.length === 0) {
                 return false
             }
-            var wh = helper.getWinHash();
-            if (helper.isEmpty(wh)) {
+            let wh = this._h.getWinHash();
+            if (this._h.isEmpty(wh)) {
                 return false
             }
-            for (var i in n) {
+            for (let i in n) {
                 if (!n.hasOwnProperty(i)) {
                     continue
                 }
-                var vl = n[i];
-                if (helper.getWinHash().includes(vl)) {
-                    helper.setWinHash(
-                        helper.replaceAll(
-                            helper.getWinHash(), vl, ''
+                let vl = n[i];
+                if (this._h.getWinHash().includes(vl)) {
+                    this._h.setWinHash(
+                        this._h.replaceAll(
+                            this._h.getWinHash(), vl, ''
                         )
                     );
                 }
@@ -955,37 +1099,35 @@
          * @param {string|array} n The words list
          * @returns boolean
          */
-        removeValue: function (n) {
-            if ( n === void 0 ) n = [];
-
-            if (helper.isString(n) && !helper.isEmpty(n)) {
+        removeValue: function (n = []) {
+            if (this._h.isString(n) && !this._h.isEmpty(n)) {
                 n = [n];
             }
-            if (!helper.isArr(n) || n.length === 0) {
+            if (!this._h.isArr(n) || n.length === 0) {
                 return false
             }
-            var wh      = helper.getWinHash(),
-                hash    = helper.getTrueHash(wh),
+            let wh      = this._h.getWinHash(),
+                hash    = this._h.getTrueHash(wh),
                 hsh_val = hash[0],
                 hsh_que = hash[1],
                 vt      = '';
-            if (helper.isEmpty(wh) || helper.isEmpty(hsh_val)) {
+            if (this._h.isEmpty(wh) || this._h.isEmpty(hsh_val)) {
                 return false
             }
-            for (var i in n) {
+            for (let i in n) {
                 if (!n.hasOwnProperty(i)) {
                     continue
                 }
-                var vl = n[i];
+                let vl = n[i];
                 if (hsh_val.includes(vl)) {
-                    hsh_val = helper.replaceAll(hsh_val, vl, '');
+                    hsh_val = this._h.replaceAll(hsh_val, vl, '');
                 }
             }
             vt += hsh_val;
-            if (!helper.isEmpty(hsh_que)) {
+            if (!this._h.isEmpty(hsh_que)) {
                 vt += '?' + hsh_que;
             }
-            helper.setWinHash(vt);
+            this._h.setWinHash(vt);
             return true
         },
 
@@ -994,26 +1136,24 @@
          * @param {string|array} n
          * @returns boolean
          */
-        removeQuery: function (n) {
-            if ( n === void 0 ) n = [];
-
-            if (helper.isString(n) && !helper.isEmpty(n)) {
+        removeQuery: function (n = []) {
+            if (this._h.isString(n) && !this._h.isEmpty(n)) {
                 n = [n];
             }
-            if (!helper.isArr(n) || n.length === 0) {
+            if (!this._h.isArr(n) || n.length === 0) {
                 return false
             }
-            var wh      = helper.getWinHash(),
-                hash    = helper.getTrueHash(wh),
+            let wh      = this._h.getWinHash(),
+                hash    = this._h.getTrueHash(wh),
                 hsh_val = hash[0],
                 hsh_que = hash[1],
                 vt      = '',
                 cl      = {};
-            if (helper.isEmpty(wh) || helper.isEmpty(hsh_que)) {
+            if (this._h.isEmpty(wh) || this._h.isEmpty(hsh_que)) {
                 return false;
             }
-            var que = helper.getQuery(hsh_que);
-            for (var i in que) {
+            let que = this._h.getQuery(hsh_que);
+            for (let i in que) {
                 if (!que.hasOwnProperty(i)) {
                     continue
                 }
@@ -1021,13 +1161,13 @@
                     cl[i] = que[i];
                 }
             }
-            if (!helper.isEmpty(hsh_val)) {
+            if (!this._h.isEmpty(hsh_val)) {
                 vt += hsh_val;
             }
-            if (helper.objSize(cl) !== 0) {
-                vt += '?' + helper.toQuery(cl);
+            if (this._h.objSize(cl) !== 0) {
+                vt += '?' + this._h.toQuery(cl);
             }
-            helper.setWinHash(vt);
+            this._h.setWinHash(vt);
             return true
         }
         
@@ -1040,13 +1180,11 @@
          * @param {string} n
          * @returns boolean
          */
-        set: function (n) {
-            if ( n === void 0 ) n = '';
-
-            if (!helper.isString(n) || helper.isEmpty(n)) {
+        set: function (n = '') {
+            if (!this._h.isString(n) || this._h.isEmpty(n)) {
                 return false
             }
-            helper.setWinHash(n);
+            this._h.setWinHash(n);
             return true
         },
 
@@ -1055,22 +1193,20 @@
          * @param {string} n
          * @returns boolean
          */
-        setValue: function (n) {
-            if ( n === void 0 ) n = '';
-
-            if (!helper.isString(n) || helper.isEmpty(n)) {
+        setValue: function (n = '') {
+            if (!this._h.isString(n) || this._h.isEmpty(n)) {
                 return false
             }
             if (n.includes('?')) {
-                n = helper.replaceAll(n, '?', encodeURIComponent('?'));
+                n = this._h.replaceAll(n, '?', encodeURIComponent('?'));
             }
-            var wh      = helper.getWinHash(),
-                hsh_que = helper.getTrueHash(wh)[1];
-            if (helper.isEmpty(wh) || helper.isEmpty(hsh_que)) {
-                helper.setWinHash(n);
+            let wh      = this._h.getWinHash(),
+                hsh_que = this._h.getTrueHash(wh)[1];
+            if (this._h.isEmpty(wh) || this._h.isEmpty(hsh_que)) {
+                this._h.setWinHash(n);
                 return true
             }
-            helper.setWinHash(n + '?' + hsh_que);
+            this._h.setWinHash(n + '?' + hsh_que);
             return true
         },
 
@@ -1079,20 +1215,18 @@
          * @param {object} n
          * @returns boolean
          */
-        setQuery: function (n) {
-            if ( n === void 0 ) n = {};
-
-            if (!helper.isObj(n) || n.length === 0) {
+        setQuery: function (n = {}) {
+            if (!this._h.isObj(n) || n.length === 0) {
                 return false
             }
-            var wh   = helper.getWinHash(),
-                hash = helper.getTrueHash(wh)[0],
-                aq   = helper.toQuery(n);
-            if (helper.isEmpty(wh) || helper.isEmpty(hash)) {
-                helper.setWinHash('?' + aq);
+            let wh   = this._h.getWinHash(),
+                hash = this._h.getTrueHash(wh)[0],
+                aq   = this._h.toQuery(n);
+            if (this._h.isEmpty(wh) || this._h.isEmpty(hash)) {
+                this._h.setWinHash('?' + aq);
                 return true
             }
-            helper.setWinHash(hash + '?' + aq);
+            this._h.setWinHash(hash + '?' + aq);
             return true
         }
         
@@ -1105,7 +1239,6 @@
     HashComponent.prototype.clear       = clearMethod.clear;
     HashComponent.prototype.clearValue  = clearMethod.clearValue;
     HashComponent.prototype.clearQuery  = clearMethod.clearQuery;
-    HashComponent.prototype.config      = configMethod.config;
     HashComponent.prototype.event       = eventMethod.event;
     HashComponent.prototype.get         = getMethod.get;
     HashComponent.prototype.getValue    = getMethod.getValue;
@@ -1128,8 +1261,19 @@
     HashComponent.prototype.setValue    = setMethod.setValue;
     HashComponent.prototype.setQuery    = setMethod.setQuery;
 
+    // default configs
+    const default_configs = {
+        getHashCallback: null,
+        setHashCallback: null,
+        getHashFilter: null,
+        setHashFilter: null,
+        getHrefCallback: null,
+        window: null,
+        log: true
+    };
+
     // define all hash components into main handle
-    var Hash = new HashComponent();
+    const Hash = new HashComponent(default_configs);
 
     return Hash;
 
