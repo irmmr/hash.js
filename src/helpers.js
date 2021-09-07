@@ -1,5 +1,7 @@
 // define main helpers handle
 import vars from "./vars";
+import info from "./info";
+import message from "./message";
 
 export default class HashHelper {
     /**
@@ -353,11 +355,17 @@ export default class HashHelper {
      */
     getWinHash() {
         let hash = '',
+            win  = this.getWindow(),
             hsh  = this.#__conf('getHashCallback')
         if (this.isFunc(hsh)) {
             hash = this.lunchFunc(hsh)
         } else {
-            hash = window.location.hash
+            if (typeof win.location !== 'undefined' &&
+                typeof win.location.hash !== 'undefined') {
+                hash = win.location.hash
+            } else {
+                this.err(message.win_problem)
+            }
         }
         // convert to string
         hash = this.getString(hash)
@@ -377,7 +385,8 @@ export default class HashHelper {
      */
     setWinHash(q) {
         let handle = this.#__conf('setHashCallback'),
-            filter = this.#__conf('setHashFilter')
+            filter = this.#__conf('setHashFilter'),
+            win    = this.getWindow()
         if (this.isFunc(filter)) {
             q = this.lunchFunc(filter, q)
         }
@@ -385,7 +394,12 @@ export default class HashHelper {
         if (this.isFunc(handle)) {
             this.lunchFunc(handle, q)
         } else {
-            window.location.hash = q
+            if (typeof win.location !== 'undefined' &&
+                typeof win.location.hash !== 'undefined') {
+                win.location.hash = q
+            } else {
+                this.err(message.win_problem)
+            }
         }
     }
 
@@ -418,6 +432,47 @@ export default class HashHelper {
      */
     isQueParOk(n) {
         return this.isString(n) || this.isNull(n) || n === undefined || this.isNum(n)
+    }
+
+    /**
+     * get window location href.
+     * @returns {*}
+     */
+    getHref() {
+        let href = '',
+            win  = this.getWindow(),
+            hsh  = this.#__conf('getHrefCallback')
+        if (this.isFunc(hsh)) {
+            href = this.lunchFunc(hsh)
+        } else {
+            if (typeof win.location !== 'undefined' &&
+                typeof win.location.href !== 'undefined') {
+                href = win.location.href
+            } else {
+                this.err(message.win_problem)
+            }
+        }
+        // convert to string
+        return this.getString(href)
+    }
+
+    /**
+     * get window master.
+     * @returns {Window|string|*}
+     */
+    getWindow() {
+        return this.#__conf('window') || window
+    }
+
+    /**
+     * the default error handle.
+     * @param message    The message of error.
+     * @param force_log  The force logger.
+     */
+    err(message, force_log = false) {
+        if (force_log || this.#__conf('log') === true) {
+            throw new Error(info.name + " -> " + message)
+        }
     }
 
 }
