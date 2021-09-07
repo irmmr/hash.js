@@ -1,5 +1,5 @@
-import helper from "../helpers"
 import vars from "../vars";
+import message from "../message";
 
 export default {
 
@@ -14,19 +14,23 @@ export default {
             return
         }
         let event   = e.toLowerCase(),
-            evs     = event.split(',')
+            evs     = event.split(','),
+            wn      = this._h.getWindow()
         func    = this._h.isDef(func) && this._h.isFunc(func) ? func : vars.emptyFunc
+        // check addEventListener based on window
+        if (typeof wn.addEventListener === 'undefined') {
+            this._h.err(message.event_und)
+            return
+        }
         for (let i in evs) {
-            if (!evs.hasOwnProperty(i)) {
-                continue
-            }
+            if (!evs.hasOwnProperty(i)) continue
             let current_ev = this._h.replaceAll(evs[i], ' ', '')
             switch (current_ev) {
                 case 'change' :
-                    window.addEventListener('hashchange', func);
+                    wn.addEventListener('hashchange', func);
                     break;
                 case 'load' :
-                    window.addEventListener('load', func);
+                    wn.addEventListener('load', func);
                     break;
                 case 'ready' :
                     this._h.lunchFunc(func);

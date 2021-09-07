@@ -41,17 +41,20 @@ export default {
         if (locked || !this._h.isDef(n) || !this._h.isObj(n)) {
             return false
         }
-        let is_force = 'force' in n ? this._h.getBool(n.force) : false
-        locked       = true
-        force_lock   = is_force
+        force_lock   = this._h.getBool(n.force || false)
         const wh     = this._h.getWinHash(),
-              th     = this
-        window.onhashchange = function() {
-            if (locked) {
-                th._h.setWinHash(wh)
+              th     = this,
+              wn     = this._h.getWindow()
+        if (typeof wn.onhashchange !== 'undefined') {
+            wn.onhashchange = function() {
+                if (locked) {
+                    th._h.setWinHash(wh)
+                }
             }
+            locked = true
+            return true
         }
-        return true
+        return false
     }
 
 }

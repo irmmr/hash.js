@@ -10,7 +10,7 @@ export default {
             return false
         }
         if (n) {
-            history.pushState(null, null, window.location.href.split('#')[0])
+            history.pushState(null, null, this._h.getHref().split('#')[0])
         } else {
             this._h.setWinHash('')
         }
