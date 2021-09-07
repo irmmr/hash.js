@@ -8,7 +8,9 @@ export default {
      */
     info: function () {
         return {
-            version : info.version || '?'
+            version : info.version || '?',
+            name: info.name || '?',
+            module: info.module || '?'
         }
     }
     
