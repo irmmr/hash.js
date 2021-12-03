@@ -1,17 +1,14 @@
 import info from "../info";
+import HashComponent from "../component"
 
-export default {
-
-    /**
-     * Hash Info component.
-     * @returns
-     */
-    info: function () {
-        return {
-            version : info.version || '?',
-            name: info.name || '?',
-            module: info.module || '?'
-        }
+/**
+ * Hash Info component.
+ * @returns
+ */
+HashComponent.info = () => {
+    return {
+        version : info.version || '?',
+        name: info.name || '?',
+        module: info.module || '?'
     }
-    
 }

@@ -1,60 +1,64 @@
-import helper from "../helpers";
+import HashComponent from "../component"
+import {getTrueHash, getWinHash, isEmpty, isObj, isString, replaceAll, setWinHash, toQuery} from "../helpers.js"
 
-export default {
+/**
+ * set the page hash.
+ * @param {string} n
+ * @returns boolean
+ */
+HashComponent.set = (n = '') => {
+    if (!isString(n) || isEmpty(n)) {
+        return false
+    }
 
-    /**
-     * set the page hash.
-     * @param {string} n
-     * @returns boolean
-     */
-    set: function (n = '') {
-        if (!this._h.isString(n) || this._h.isEmpty(n)) {
-            return false
-        }
-        this._h.setWinHash(n)
-        return true
-    },
+    setWinHash(n)
+    return true
+}
 
-    /**
-     * set a value to location hash.
-     * @param {string} n
-     * @returns boolean
-     */
-    setValue: function (n = '') {
-        if (!this._h.isString(n) || this._h.isEmpty(n)) {
-            return false
-        }
-        if (n.includes('?')) {
-            n = this._h.replaceAll(n, '?', encodeURIComponent('?'))
-        }
-        let wh      = this._h.getWinHash(),
-            hsh_que = this._h.getTrueHash(wh)[1]
-        if (this._h.isEmpty(wh) || this._h.isEmpty(hsh_que)) {
-            this._h.setWinHash(n)
-            return true
-        }
-        this._h.setWinHash(n + '?' + hsh_que)
-        return true
-    },
+/**
+ * set a value to location hash.
+ * @param {string} n
+ * @returns boolean
+ */
+HashComponent.setValue = (n = '') => {
+    if (!isString(n) || isEmpty(n)) {
+        return false
+    }
 
-    /**
-     * set a query to location hash.
-     * @param {object} n
-     * @returns boolean
-     */
-    setQuery: function (n = {}) {
-        if (!this._h.isObj(n) || n.length === 0) {
-            return false
-        }
-        let wh   = this._h.getWinHash(),
-            hash = this._h.getTrueHash(wh)[0],
-            aq   = this._h.toQuery(n)
-        if (this._h.isEmpty(wh) || this._h.isEmpty(hash)) {
-            this._h.setWinHash('?' + aq)
-            return true
-        }
-        this._h.setWinHash(hash + '?' + aq)
+    if (n.includes('?')) {
+        n = replaceAll(n, '?', encodeURIComponent('?'))
+    }
+
+    let wh      = getWinHash(),
+        hsh_que = getTrueHash(wh)[1]
+
+    if (isEmpty(wh) || isEmpty(hsh_que)) {
+        setWinHash(n)
         return true
     }
-    
+
+    setWinHash(n + '?' + hsh_que)
+    return true
+}
+
+/**
+ * set a query to location hash.
+ * @param {object} n
+ * @returns boolean
+ */
+HashComponent.setQuery = (n = {}) => {
+    if (!isObj(n) || n.length === 0) {
+        return false
+    }
+    let wh   = getWinHash(),
+        hash = getTrueHash(wh)[0],
+        aq   = toQuery(n)
+
+    if (isEmpty(wh) || isEmpty(hash)) {
+        setWinHash('?' + aq)
+        return true
+    }
+
+    setWinHash(hash + '?' + aq)
+    return true
 }

@@ -1,64 +1,75 @@
-export default {
+import HashComponent from "../component"
+import {getHref, getTrueHash, getWinHash, isBool, isEmpty, isTrueHash, setWinHash} from "../helpers.js"
 
-    /**
-     * clear the page hash.
-     * @param {boolean} n
-     * @returns boolean
-     */
-    clear: function (n = true) {
-        if (!this._h.isBool(n)) {
-            return false
-        }
-        if (n) {
-            history.pushState(null, null, this._h.getHref().split('#')[0])
-        } else {
-            this._h.setWinHash('')
-        }
-        return true
-    },
+/**
+ * clear the page hash.
+ * @param {boolean} n
+ * @returns boolean
+ */
+HashComponent.clear = (n = true) => {
+    if (!isBool(n)) {
+        return false
+    }
 
-    /**
-     * clear hash value from location hash.
-     * @returns boolean
-     */
-    clearValue: function () {
-        let wh = this._h.getWinHash()
-        if (this._h.isEmpty(wh)) {
-            return true
-        }
-        if (!this._h.isTrueHash(wh)) {
-            return false
-        }
-        let wg = this._h.getTrueHash(wh),
-            wv = wg[0],
-            wq = wg[1]
-        if (this._h.isEmpty(wv)) {
-            return true
-        }
-        this._h.setWinHash(this._h.isEmpty(wq) ? '' : '?' + wq)
-        return true
-    },
+    if (n) {
+        history.pushState(null, null, getHref().split('#')[0])
+    } else {
+        setWinHash('')
+    }
 
-    /**
-     * clear hash query from location hash.
-     * @returns boolean
-     */
-    clearQuery: function () {
-        let wh = this._h.getWinHash()
-        if (this._h.isEmpty(wh)) {
-            return true
-        }
-        if (!this._h.isTrueHash(wh)) {
-            return false
-        }
-        let wg = this._h.getTrueHash(wh),
-            wv = wg[0],
-            wq = wg[1]
-        if (this._h.isEmpty(wq)) {
-            return true
-        }
-        this._h.setWinHash(wv)
+    return true
+}
+
+/**
+ * clear hash value from location hash.
+ * @returns boolean
+ */
+HashComponent.clearValue = () => {
+    let wh = getWinHash()
+
+    if (isEmpty(wh)) {
         return true
     }
 
+    if (!isTrueHash(wh)) {
+        return false
+    }
+
+    let wg = getTrueHash(wh),
+        wv = wg[0],
+        wq = wg[1]
+
+    if (isEmpty(wv)) {
+        return true
+    }
+
+    setWinHash(isEmpty(wq) ? '' : '?' + wq)
+    return true
+}
+
+/**
+ * clear hash query from location hash.
+ * @returns boolean
+ */
+HashComponent.clearQuery = () => {
+    let wh = getWinHash()
+
+    if (isEmpty(wh)) {
+        return true
+    }
+
+    if (!isTrueHash(wh)) {
+        return false
+    }
+
+    let wg = getTrueHash(wh),
+        wv = wg[0],
+        wq = wg[1]
+
+    if (isEmpty(wq)) {
+        return true
+    }
+
+    setWinHash(wv)
+    return true
 }

@@ -1,17 +1,6 @@
-import HashComponent from './component'
+import core from "./core.js"
 
-// default configs
-const default_configs = {
-    getHashCallback: null,
-    setHashCallback: null,
-    getHashFilter: null,
-    setHashFilter: null,
-    getHrefCallback: null,
-    window: null,
-    log: true
+export default {
+    config: core.config.instance,
+    ...core.components
 }
-
-// define all hash components into main handle
-const Hash = new HashComponent(default_configs)
-
-export default Hash

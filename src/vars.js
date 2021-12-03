@@ -1,5 +1,3 @@
-// blank variables for use in return of functions
-export default {
-    emptyObj: Object.freeze({}),
-    emptyFunc: function() {}
-}
+export const empty_object = Object.freeze({})
+
+export const empty_func   = () => {}
