@@ -10,19 +10,13 @@ const default_configs = {
     log: true
 }
 
-export default class HashConfig {
-
-    /**
-     * Configs holder
-     * @type {Readonly<{}>}
-     */
-    static configs = default_configs
+class HashConfig {
 
     /**
      * Get all default configs
      * @returns {{log: boolean, setHashCallback: null, window: null, getHashFilter: null, setHashFilter: null, getHashCallback: null, getHrefCallback: null}}
      */
-    static defaults = () => {
+    static defaults() {
         return default_configs
     }
 
@@ -40,14 +34,14 @@ export default class HashConfig {
     /**
      * Clear all configs
      */
-    static clear = () => {
+    static clear() {
         HashConfig.configs = empty_object
     }
 
     /**
      * Reset configs into defaults
      */
-    static reset = () => {
+    static reset() {
         HashConfig.configs = default_configs
     }
 
@@ -56,7 +50,7 @@ export default class HashConfig {
      * @param name
      * @returns {boolean}
      */
-    static has = (name) => {
+    static has(name) {
         return typeof HashConfig.configs === 'object' && name in HashConfig.configs
     }
 
@@ -64,7 +58,7 @@ export default class HashConfig {
      * Define config
      * @param options
      */
-    static define = (options) => {
+    static define(options) {
         if (typeof options !== 'object') {
             return
         }
@@ -76,7 +70,7 @@ export default class HashConfig {
      * Set config
      * @param options
      */
-    static set = (options) => {
+    static set(options) {
         if (typeof options !== 'object') {
             return
         }
@@ -90,7 +84,7 @@ export default class HashConfig {
      * @param def
      * @returns {string|Readonly<{}>|*}
      */
-    static get = (name = null, def = '') => {
+    static get(name = null, def = '') {
         if (null == name) {
             return HashConfig.configs
         }
@@ -103,3 +97,8 @@ export default class HashConfig {
     }
 
 }
+
+// set configs value
+HashConfig.configs = default_configs
+
+export default HashConfig
