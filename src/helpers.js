@@ -1,6 +1,7 @@
-import info from "./info"
-import message from "./message"
+import info from "./info.js"
+import message from "./message.js"
 import {default as conf} from "./config.js"
+import {and_symbol, equ_symbol, que_symbol} from "./vars.js"
 
 /**
  * check if the variable is defined.
@@ -8,7 +9,7 @@ import {default as conf} from "./config.js"
  * @returns {boolean}
  */
 export function isDef(h) {
-    return typeof h !== undefined && h !== null
+    return typeof h !== 'undefined' && h !== null
 }
 
 /**
@@ -17,7 +18,7 @@ export function isDef(h) {
  * @returns
  */
 export function isUnDef(h) {
-    return typeof h === undefined || h === null
+    return typeof h === 'undefined' || h === null
 }
 
 /**
@@ -48,7 +49,8 @@ export function getBool(h) {
         return h
     }
 
-    return isString(h) && h.toLowerCase() === 'true'
+    return (isString(h) && h.toLowerCase() === 'true') ||
+        (isNum(h) && h === 1)
 }
 
 /**
@@ -57,7 +59,7 @@ export function getBool(h) {
  * @returns
  */
 export function isObj(h) {
-    return h !== null && typeof h === 'object'
+    return h !== null && typeof h === 'object' && h.constructor === Object
 }
 
 /**
@@ -83,11 +85,17 @@ export function replaceAll(h, a, b) {
 /**
  * run a callback using argument is safe mode.
  * @param {function}  func Function name
- * @param {*}         argc Function arguments
  * @returns
  */
-export function lunchFunc(func, argc = null) {
-    return isFunc(func) ? argc !== null ? func(argc) : func() : null
+export function lunchFunc(func) {
+    let args = Array.prototype.slice.call(arguments).slice(1)
+
+    if (isFunc(func)) {
+        let th = {func, args}
+        return args.length !== 0 ? func.call(th, args) : func.call(th)
+    }
+
+    return null
 }
 
 /**
@@ -96,6 +104,15 @@ export function lunchFunc(func, argc = null) {
  * @returns
  */
 export function isNum(h) {
+    return h !== null && !isNaN(h) && typeof h === 'number'
+}
+
+/**
+ * check if data is numeric.
+ * @param {*} h The input data
+ * @returns
+ */
+export function isNumeric(h) {
     return isDef(h) && !isNaN(Number(h))
 }
 
@@ -105,7 +122,9 @@ export function isNum(h) {
  * @returns
  */
 export function isEmpty(h) {
-    if (isString(h)) {
+    if (isUnDef(h)) {
+        return true
+    } else if (isString(h)) {
         return h === ''
     } else if (isArr(h)) {
         return h.length === 0
@@ -131,19 +150,11 @@ export function isNull(h) {
  * @returns The object length/size
  */
 export function objSize(h) {
-    let size = 0, key
-
     if (!isDef(h) || !isObj(h)) {
-        return size
+        return 0
     }
 
-    for (key in h) {
-        if (h.hasOwnProperty(key)) {
-            size ++
-        }
-    }
-
-    return size
+    return Object.entries(h).length || 0
 }
 
 /**
@@ -196,11 +207,7 @@ export function isQuery(q) {
         return false
     }
 
-    if (!q.startsWith('?')) {
-        q = '?' + q
-    }
-
-    return (new RegExp(/\?.+(=|).*/g)).test(q)
+    return (new RegExp('.+(=|).*', 'g')).test(q)
 }
 
 /**
@@ -209,37 +216,41 @@ export function isQuery(q) {
  * @returns
  */
 export function getQuery(q) {
-    if (!isQuery(q)) {
+    if (!isQuery(q) || isEmpty(q)) {
         return {}
     }
 
-    let qa     = q.split('&'),
-        output = {}, i
+    let equ_sym = conf.get('equSymbol', equ_symbol),
+        and_sym = conf.get('andSymbol', and_symbol)
 
-    for (i in qa) {
-        if (!qa.hasOwnProperty(i)) continue
+    let qa     = q.split(and_sym),
+        output = {}
 
-        let query    = qa[i],
-            q_parse  = splitOnce(query, '='),
-            q_len    = query.split('=').length,
-            needle   = getString(q_parse[0])
-
+    qa.forEach((query, i) => {
         if (isEmpty(query)) {
-            continue
+            return {}
         }
 
-        if (q_len >= 2) {
-            let val     = getString(q_parse[1])
+        let parse   = splitOnce(query, equ_sym),
+            len     = query.split(equ_sym).length,
+            name    = getString(parse[0])
+
+        if (isEmpty(name)) {
+            return {}
+        }
+
+        if (len >= 2) {
+            let value = getString(parse[1])
 
             try {
-                val = decodeURIComponent(val)
+                value = decodeURIComponent(value)
             } catch (e) {}
 
-            output[needle] = val
+            output[name] = value
         } else {
-            output[needle] = null
+            output[name] = null
         }
-    }
+    })
 
     return output
 }
@@ -251,27 +262,31 @@ export function getQuery(q) {
  * @returns
  */
 export function toQuery(q, encode_uri = false) {
-    if (!isObj(q)) {
+    q = filterQueEntry(q)
+
+    if (isEmpty(q)) {
         return ''
     }
 
-    let collector = [], i
+    let collector   = [],
+        equ_sym     = conf.get('equSymbol', equ_symbol),
+        and_sym     = conf.get('andSymbol', and_symbol)
 
-    for (i in q) {
-        if (!q.hasOwnProperty(i) || q[i] === undefined) continue
-
-        let data_val = q[i]
-
-        if (isNull(data_val)) {
-            collector.push(i)
-        } else {
-            let data_str    = getString(data_val),
-                data_encode = encode_uri ? encodeURIComponent(data_str) : data_str
-            collector.push(i + '=' + data_encode)
+    objForeach(q, ([name, value]) => {
+        if (value === undefined) {
+            return
         }
-    }
 
-    return collector.join('&')
+        if (isNull(value)) {
+            collector.push(name)
+        } else {
+            let data_str    = getString(value),
+                data_encode = encode_uri ? encodeURIComponent(data_str) : data_str
+            collector.push(name + equ_sym + data_encode)
+        }
+    })
+
+    return collector.join(and_sym)
 }
 
 /**
@@ -281,6 +296,10 @@ export function toQuery(q, encode_uri = false) {
  * @returns
  */
 export function lenOfChar(t, q) {
+    if (!isString(t) || !isString(q)) {
+        return 0
+    }
+
     return !t.includes(q) ? 0 : t.split('').filter(i => i === q).length
 }
 
@@ -290,12 +309,14 @@ export function lenOfChar(t, q) {
  * @returns
  */
 export function isTrueHash(q) {
-    if (!isString(q)) {
+    if (!isString(q) || isEmpty(q)) {
         return false
     }
 
-    if (q.includes('?')) {
-        let spt = splitOnce(q, '?'),
+    let que_sym = conf.get('queSymbol', que_symbol)
+
+    if (q.includes(que_sym)) {
+        let spt = splitOnce(q, que_sym),
             que = spt[1]
 
         return isEmpty(que) || isQuery(que)
@@ -310,7 +331,7 @@ export function isTrueHash(q) {
  * @returns
  */
 export function getTrueHash(q) {
-    if (!isString(q)) {
+    if (!isString(q) || isEmpty(q)) {
         return ['', '']
     }
 
@@ -320,8 +341,10 @@ export function getTrueHash(q) {
         return emp
     }
 
-    if (q.includes('?')) {
-        return splitOnce(q, '?')
+    let que_sym = conf.get('queSymbol', que_symbol)
+
+    if (q.includes(que_sym)) {
+        return splitOnce(q, que_sym)
     }
 
     return emp
@@ -339,11 +362,10 @@ export function getWinHash() {
     if (isFunc(hsh)) {
         hash = lunchFunc(hsh)
     } else {
-        if (typeof win.location !== 'undefined' &&
-            typeof win.location.hash !== 'undefined') {
+        try {
             hash = win.location.hash
-        } else {
-            err(message.win_problem)
+        } catch (e) {
+            err([message.win_problem, e])
         }
     }
 
@@ -381,13 +403,10 @@ export function setWinHash(q) {
     if (isFunc(handle)) {
         lunchFunc(handle, q)
     } else {
-        if (typeof win.location !== 'undefined' &&
-            typeof win.location.hash !== 'undefined') {
-
+        try {
             win.location.hash = q
-
-        } else {
-            err(message.win_problem)
+        } catch (e) {
+            err([message.win_problem, e])
         }
     }
 
@@ -442,13 +461,10 @@ export function getHref() {
     if (isFunc(hsh)) {
         href = lunchFunc(hsh)
     } else {
-        if (typeof win.location !== 'undefined' &&
-            typeof win.location.href !== 'undefined') {
-
+        try {
             href = win.location.href
-
-        } else {
-            err(message.win_problem)
+        } catch (e) {
+            err([message.win_problem, e])
         }
     }
 
@@ -466,11 +482,294 @@ export function getWindow() {
 
 /**
  * the default error handle.
- * @param message    The message of error.
- * @param force_log  The force logger.
+ * @param messages    The message of error.
+ * @param force_log   The force logger.
  */
-export function err(message, force_log = false) {
+export function err(messages, force_log = false) {
+    messages = toArray(messages)
+
+    let message = messages.join(', ')
     if (force_log || conf.get('log') === true) {
-        throw new Error(info.name + " -> " + message)
+        throw new Error(`(${info.name}) ${message}`)
     }
+}
+
+/**
+ * filter all queries.
+ * @param queries
+ * @returns {{}|[string, any][]}
+ */
+export function filterQueEntry(queries) {
+    if (!isObj(queries)) {
+        return {}
+    }
+
+    return objFilter(queries, q => {
+        let key     = q[0],
+            value   = q[1]
+        return isString(key) && !isEmpty(key) && isQueParOk(value)
+    })
+}
+
+/**
+ * get hash value as string
+ * @param wh
+ * @returns {*}
+ */
+export function getHashValue(wh) {
+    return getTrueHash(wh)[0]
+}
+
+/**
+ * get hash query as string
+ * @param wh
+ * @returns {*}
+ */
+export function getHashQuery(wh) {
+    return getTrueHash(wh)[1]
+}
+
+/**
+ * set multiple window hash.
+ * @param options
+ */
+export function setEvHash(options = {}) {
+    let value = '',
+        query = {},
+        wh      = getWinHash(),
+        parse   = getTrueHash(wh),
+        cu_val  = parse[0],
+        cu_que  = getQuery(parse[1])
+
+    let que_sym = conf.get('queSymbol', que_symbol)
+
+    if ('value' in options) {
+        let v = options.value
+        value = getString(v)
+
+        if (value.includes(que_sym)) {
+            value = replaceAll(value, que_sym, encodeURIComponent(que_sym))
+        }
+    } else {
+        value = cu_val
+    }
+
+    if ('query' in options) {
+        let q     = options.query,
+            entry = q.entry || {},
+            type  = q.type || 'merge'
+
+        if (isObj(entry)) {
+            entry   = filterQueEntry(entry)
+
+            if (type === 'merge' && !isEmpty(entry)) {
+                query = Object.assign(cu_que, entry)
+            } else if (type === 'define') {
+                query = entry
+            }
+        }
+    } else {
+        query = cu_que
+    }
+
+    // enter hash using string type
+    if ('string' in options) {
+        let str = '',
+            sv = parse[0],
+            sq = parse[1]
+
+        if (typeof options.string.value !== 'undefined') {
+            sv = options.string.value
+        }
+
+        if (typeof options.string.query !== 'undefined') {
+            sq = options.string.query
+        }
+
+        str = sv
+        if (!isEmpty(sq)) {
+            str += que_sym + sq
+        }
+
+        setWinHash(str)
+        return
+    }
+
+    let entry = value
+
+    if (!isEmpty(query)) {
+        entry += que_sym + toQuery(query)
+    }
+
+    setWinHash(entry)
+}
+
+/**
+ * convert data to array.
+ * @param data
+ * @param filter
+ * @returns {*[]|*[]}
+ */
+export function toArray(data, filter = true) {
+    data = isArr(data) ? data : [data]
+
+    if (filter) {
+        data = data.filter(d => !isEmpty(d))
+    }
+
+    return data
+}
+
+/**
+ * object for each function.
+ * @param obj
+ * @param callback
+ */
+export function objForeach(obj, callback) {
+    Object.entries(obj).forEach(callback)
+}
+
+/**
+ * object filter action.
+ * @param obj
+ * @param callback
+ * @returns {{[p: string]: unknown}|{}}
+ */
+export function objFilter(obj, callback) {
+    return Object.fromEntries(Object.entries(obj).filter(callback))
+}
+
+/**
+ * object map action.
+ * @param obj
+ * @param callback
+ * @returns {{}|{[p: string]: any}}
+ */
+export function objMap(obj, callback) {
+    let cl = {}, k
+
+    if (!isFunc(callback)) {
+        return obj
+    }
+
+    for (k in obj) {
+        let key = k,
+            val = obj[key],
+            c   = callback(k, val)
+
+        if (isArr(c) && c.length === 2) {
+            key = c[0]
+            val = c[1]
+        }
+
+        cl[key] = val
+    }
+
+    return cl
+}
+
+/**
+ * parse key-value string of options.
+ * you must enter escaped '%2C' instead of ',' for entry data.
+ * @param {string} data
+ * @param {boolean} multiple
+ * @returns {{}}
+ */
+export function parseKv(data, multiple = true) {
+    if (!isString(data)) {
+        return {}
+    }
+
+    data        = data.trim()
+    let loop    = multiple ? data.split(',') : [data],
+        cl      = {}
+
+    loop.forEach(i => {
+        let kv  = splitOnce(i.trim(), ':'),
+            k   = unescape(kv[0]),
+            v   = unescape(kv[1])
+
+        if (!isEmpty(k)) {
+            cl[k] = v
+        }
+    })
+
+    return cl
+}
+
+/**
+ * insert string data.
+ * @param data
+ * @param index
+ * @param insert
+ * @returns {string|*}
+ */
+export function insertStr(data, insert, index) {
+    if (!isString(data)) {
+        return data
+    }
+
+    if (isString(index)) {
+        index = index.trim()
+
+        if (index === '-') {
+            index = data.length
+        }
+
+        index = Number(index)
+    }
+
+    if (!isNum(index)) {
+        return data
+    }
+
+    if (index < 0) {
+        index = data.length + index
+    }
+
+    if (index > 0) {
+        return data.substring(0, index) + insert + data.substr(index)
+    }
+
+    return insert + data;
+}
+
+/**
+ * Convert key->value data to object for queries
+ * objective data.
+ * @param data
+ * @param value
+ * @returns {object|false}
+ */
+export function toObjQue(data, value) {
+    if (isObj(data)) {
+        return data
+    }
+
+    if (isString(data) && isQueParOk(value) && !isEmpty(data)) {
+        let d   = {}
+        d[data] = value
+
+        return d
+    }
+
+    return false
+}
+
+/**
+ * Get hash-value from url address.
+ * @param url
+ * @returns {string}
+ */
+export function getUrlHash(url) {
+    return splitOnce(url, '#')[1] || ''
+}
+
+/**
+ * Check for data if instanceof RegExp.
+ * @param data
+ * @returns {boolean}
+ */
+export function isRegExp(data) {
+    return data instanceof RegExp
 }
