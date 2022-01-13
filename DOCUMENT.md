@@ -30,7 +30,6 @@ Older components that were available in older versions are now deprecated.
 
 [view doc ->](doc/DIRECT.md)
 
-<hr>
 
 ## Event/On
 This function are for adding listeners to the page hash.
@@ -55,8 +54,6 @@ Hash.on('change', ([e, ch]) => {
 })
 ```
 
-<hr>
-
 ## info
 This function is for getting package/library information.
 
@@ -68,7 +65,3 @@ This function is for getting package/library information.
 ```javascript
 Hash.info()
 ```
-
-<hr>
-
-
