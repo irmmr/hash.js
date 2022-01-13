@@ -38,7 +38,7 @@ Otherwise, you must use the following commands to test the items:
 # install test packages
 npm install
 
-# test last published version.
+# test last published version
 npm test
 
 # test last changed file
@@ -56,7 +56,7 @@ import Hash from '@irmmr/hash.js'
 Hash.info()
 
 // use Hash.js event
-Hash.event(listener, () => {
+Hash.on(listener, () => {
     // ...
 })
 ```
@@ -176,4 +176,3 @@ Hash.q.set('page', 1)       // page's hash => '#hey-value?page=1'
 // set 'e' query                (query string component)
 Hash.q.str.set('ev=12')     // page's hash => '#hey-value?ev=12'
 ```
-View the full document: [Document](/doc/DOCUMENT.md)
