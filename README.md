@@ -22,7 +22,7 @@ Or use the built-in version of this library separately.
 ```
 You can also use with: `jsdelivr`:
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@irmmr/hash.js@1.7.3"></script>
+<script src="https://cdn.jsdelivr.net/npm/@irmmr/hash.js@1.7.4"></script>
 ```
 
 # Document
