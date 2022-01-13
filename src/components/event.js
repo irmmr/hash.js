@@ -1,50 +1,60 @@
-import {empty_func} from "../vars"
-import message from "../message"
-import HashComponent from "../component"
-import {err, getWindow, isDef, isFunc, isString, lunchFunc, replaceAll} from "../helpers.js"
+import {empty_func} from "../vars.js"
+import message from "../message.js"
+import HashComponent from "../component.js"
+import {err, getUrlHash, getWindow, isEmpty, isFunc, isString, lunchFunc, replaceAll} from "../helpers.js"
 
 /**
  * Hash Event component.
- * @param {string} e The listeners
- * @param {*} func   The function/callback
- * @returns
+ * @param {string} type The listeners
+ * @param {function} listener   The function/callback
+ * @returns HashComponent
  */
-HashComponent.event = (e, func = function() {}) => {
-    if (!isDef(e) || !isString(e)) {
-        return
+HashComponent.event = HashComponent.on = (type, listener = empty_func) => {
+    let cp = HashComponent
+
+    if (!isString(type)) {
+        return cp
     }
 
-    let event   = e.toLowerCase(),
-        evs     = event.split(','),
+    let evs     = replaceAll(type, ',', ' '),
         wn      = getWindow()
 
-    func        = isDef(func) && isFunc(func) ? func : empty_func
+    listener    = isFunc(listener) ? listener : empty_func
 
     // check addEventListener based on window
     if (typeof wn.addEventListener === 'undefined') {
         err(message.event_und)
-        return
+        return cp
     }
 
-    for (let i in evs) {
-        if (!evs.hasOwnProperty(i)) continue
+    let split = evs.split(' ').filter(e => !isEmpty(e)),
+        event = []
 
-        let current_ev = replaceAll(evs[i], ' ', '')
-
-        switch (current_ev) {
-            case 'change' :
-                wn.addEventListener('hashchange', func);
-                break;
-            case 'load' :
-                wn.addEventListener('load', func);
-                break;
-            case 'ready' :
-                lunchFunc(func);
-                break;
-            default :
-                // nothing to do
-                break;
+    split.forEach(i => {
+        if (!event.includes(i)) {
+            event.push(i)
         }
-    }
-}
+    })
 
+    event.forEach(e => {
+        switch (e) {
+            case 'change':
+                wn.addEventListener('hashchange', e => {
+                    let newHash = getUrlHash(e.newURL || ''),
+                        oldHash = getUrlHash(e.oldURL || '')
+                    lunchFunc(listener, e, {oldHash, newHash})
+                })
+                break
+
+            case 'load':
+                wn.addEventListener('load', listener)
+                break
+
+            case 'ready':
+                lunchFunc(listener)
+                break
+        }
+    })
+
+    return cp
+}
