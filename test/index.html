@@ -1,147 +1,71 @@
-<!-- This file just used for testing hash.s using browser console. -->
-<!-- For showing console use : F12 -->
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Hash.js Test</title>
-        <meta charset="utf-8">
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;800&display=swap" rel="stylesheet"> 
-        <link rel="stylesheet" href="./test.css">
-        <link rel="shourtcut icon" href="./../logo/logo.png">
-    </head>
-    <body>
-        <section class="main-container">
-            <div class="top-container">
-                <img src="./../logo/logo.png">
-                <h3>Hash.js</h3>
-                <span>Test and check the library</span>
-            </div>
-            <div class="bt-container">
-                
-                <!--Loop-->
-                <div class="l-loop" id="yjsggf783">
-                    <div class="f-l"><i># </i>Clearing the location hash using <code>.clear()</code></div>
-                    <div class="l-l" id="ap_yjsggf783">WAITING</div>
-                </div>
-                <!--Loop-->
-                <div class="l-loop" id="fghhdf83">
-                    <div class="f-l"><i># </i>Getting the version using <code>.info().version</code></div>
-                    <div class="l-l" id="ap_fghhdf83">WAITING</div>
-                </div>
-                <!--Loop-->
-                <div class="l-loop" id="ffgerhjfg">
-                    <div class="f-l"><i># </i>Removing some parts / words of hash using <code>.remove(['a', 'b'])</code></div>
-                    <div class="l-l" id="ap_ffgerhjfg">WAITING</div>
-                </div>
-                <!--Loop-->
-                <div class="l-loop" id="ffgggjhrhg">
-                    <div class="f-l"><i># </i>Removing some parts / words of hash <b>value</b> using <code>.removeValue(['a', 'b'])</code></div>
-                    <div class="l-l" id="ap_ffgggjhrhg">WAITING</div>
-                </div>
-                <!--Loop-->
-                <div class="l-loop" id="bhtyre4g">
-                    <div class="f-l"><i># </i>Removing some queries of hash <b>query</b> using <code>.removeQuery(['c', 'd'])</code></div>
-                    <div class="l-l" id="ap_bhtyre4g">WAITING</div>
-                </div>
-                <!--Loop-->
-                <div class="l-loop" id="bdggrtyhd">
-                    <div class="f-l"><i># </i>Checking for any hash exists using <code>.have(...|a)</code></div>
-                    <div class="l-l" id="ap_bdggrtyhd">WAITING</div>
-                </div>
-                <!--Loop-->
-                <div class="l-loop", id="fkljri4fg">
-                    <div class="f-l"><i># </i>Checking for any hash exists for <b>value</b> using <code>.haveValue(...|a)</code></div>
-                    <div class="l-l" id="ap_fkljri4fg">WAITING</div>
-                </div>
-                <!--Loop-->
-                <div class="l-loop" id="sf43hg657g">
-                    <div class="f-l"><i># </i>Checking for any hash exists for <b>query</b> using <code>.haveQuery(...|b)</code></div>
-                    <div class="l-l" id="ap_sf43hg657g">WAITING</div>
-                </div>
-                <!--Loop-->
-                <div class="l-loop" id="iuyf8yoig">
-                    <div class="f-l"><i># </i>Clearing the hash <b>value</b> using <code>.clearValue()</code></div>
-                    <div class="l-l" id="ap_iuyf8yoig">WAITING</div>
-                </div>
-                <!--Loop-->
-                <div class="l-loop" id="kjsdhyuew">
-                    <div class="f-l"><i># </i>Clearing the hash <b>query</b> using <code>.clearQuery()</code></div>
-                    <div class="l-l" id="ap_kjsdhyuew">WAITING</div>
-                </div>
-                <!--Loop-->
-                <div class="l-loop" id="dkshihi4">
-                    <div class="f-l"><i># </i>Getting the hash using <code>.get()</code></div>
-                    <div class="l-l" id="ap_dkshihi4">WAITING</div>
-                </div>
-                <!--Loop-->
-                <div class="l-loop" id="kufyii4ld">
-                    <div class="f-l"><i># </i>Getting the hash <b>value</b> using <code>.getValue()</code></div>
-                    <div class="l-l" id="ap_kufyii4ld">WAITING</div>
-                </div>
-                <!--Loop-->
-                <div class="l-loop" id="kgo8jdllk">
-                    <div class="f-l"><i># </i>Getting the hash <b>query</b> using <code>.getQuery(...|a|[a, b])</code></div>
-                    <div class="l-l" id="ap_kgo8jdllk">WAITING</div>
-                </div>
-                <!--Loop-->
-                <div class="l-loop" id="dsfhkhikd">
-                    <div class="f-l"><i># </i>Setting the hash using <code>.set(a)</code></div>
-                    <div class="l-l" id="ap_dsfhkhikd">WAITING</div>
-                </div>
-                <!--Loop-->
-                <div class="l-loop" id="kijhvgyud">
-                    <div class="f-l"><i># </i>Setting the hash <b>value</b> using <code>.setValue(a)</code></div>
-                    <div class="l-l" id="ap_kijhvgyud">WAITING</div>
-                </div>
-                <!--Loop-->
-                <div class="l-loop" id="fkhdkikt4">
-                    <div class="f-l"><i># </i>Setting the hash <b>query</b> using <code>.setQuery({a:b,...})</code></div>
-                    <div class="l-l" id="ap_fkhdkikt4">WAITING</div>
-                </div>
-                <!--Loop-->
-                <div class="l-loop" id="lkjdshfny">
-                    <div class="f-l"><i># </i>Adding the hash using <code>.add(a)</code></div>
-                    <div class="l-l" id="ap_lkjdshfny">WAITING</div>
-                </div>
-                <!--Loop-->
-                <div class="l-loop" id="dsfiirtef">
-                    <div class="f-l"><i># </i>Adding the hash <b>value</b> using <code>.addValue(a)</code></div>
-                    <div class="l-l" id="ap_dsfiirtef">WAITING</div>
-                </div>
-                <!--Loop-->
-                <div class="l-loop" id="slkjlfdjji">
-                    <div class="f-l"><i># </i>Adding the hash <b>query</b> using <code>.addQuery({a:b,...})</code></div>
-                    <div class="l-l" id="ap_slkjlfdjji">WAITING</div>
-                </div>
-                <!--Loop-->
-                <div class="l-loop" id="dsij43igfh">
-                    <div class="f-l"><i># </i>Updating the hash <b>query</b> using <code>.updateQuery(a, b)</code></div>
-                    <div class="l-l" id="ap_dsij43igfh">WAITING</div>
-                </div>
-                <!--Loop-->
-                <div class="l-loop" id="djfosdufou">
-                    <div class="f-l"><i># </i>Checking the value of hash using <code>.is(a)</code></div>
-                    <div class="l-l" id="ap_djfosdufou">WAITING</div>
-                </div>
-                <!--Loop-->
-                <div class="l-loop" id="gfdhgdfhdfg">
-                    <div class="f-l"><i># </i>Checking the value of hash <b>value</b> using <code>.isValue(a)</code></div>
-                    <div class="l-l" id="ap_gfdhgdfhdfg">WAITING</div>
-                </div>
-                <!--Loop-->
-                <div class="l-loop" id="sdfkgietyr">
-                    <div class="f-l"><i># </i>Checking the value of hash <b>query</b> using <code>.isQuery(a, b)</code></div>
-                    <div class="l-l" id="ap_sdfkgietyr">WAITING</div>
-                </div>
+<head>
+    <meta charset="utf-8" />
+    <title>Hash.js test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shourtcut icon" href="../logo/hashjs-hashtag.png">
+    <link rel="stylesheet" href="https://unpkg.com/mocha/mocha.css">
+</head>
+<body>
+<div id="mocha"></div>
 
-                <br> <br>
+<script src="https://unpkg.com/chai/chai.js"></script>
+<script src="https://unpkg.com/mocha/mocha.js"></script>
 
-                <div class="all-changes" id="all_changes"></div>
+<script class="mocha-init">
+    window.Hash_Assert  = chai.assert || {};
+    window.Hash_s       = function (str) {
+        // window.location.hash = str;
+        history.pushState(
+            null,
+            null,
+            window.location.href.split('#')[0] + '#' + str
+        );
+    };
+    window.Hash_g       = function (d = false) {
+        let h = window.location.hash.slice(1);
+        return d ? decodeURIComponent(h) : h;
+    };
+    window.Hash_c       = function () {
+        history.pushState(
+            null,
+            null,
+            window.location.href.split('#')[0]
+        );
+    };
+    window.Mocha_delay = function (interval) {
+        return it('automatic delay', function (done) {
+            setTimeout(function () {
+                done();
+            }, interval * 1000);
+        }).timeout(interval * 1000 + 100);
+    };
+    window.Mocha_sec = 0.6;
 
-            </div>
-        </section>
-        <!-- JavaScripts file -->
-        <script src="./../dist/hash.js?v=1.6.3"></script>
-        <script src="./test.js?v=1.0"></script>
-    </body>
+    mocha.setup('bdd');
+    mocha.checkLeaks();
+</script>
+
+<!-- Add Hash.js -->
+<script id="hash" src="./../dist/hash.js"></script>
+<script>
+    Hash.config({
+        setHashCallback: function ([v]) {
+            window.Hash_s(v);
+        }
+    });
+</script>
+
+<!-- Hash.js test files -->
+<script data-test-files src="./test.helpers.js"></script>
+<script data-test-files src="./test.cp.main.js"></script>
+<script data-test-files src="./test.cp.value.js"></script>
+<script data-test-files src="./test.cp.query.js"></script>
+<script data-test-files src="./test.cp.query.str.js"></script>
+
+<script class="mocha-exec">
+    mocha.run();
+</script>
+</body>
 </html>
