@@ -36,7 +36,7 @@ You can test this library in the browser online. [view ->](https://irmmr.github.
 Otherwise, you must use the following commands to test the items:
 ```shell
 # install test packages
-npm install
+npm run build
 
 # test last published version
 npm test
