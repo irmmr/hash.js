@@ -8,3 +8,4 @@ dist/*.gz
 .vscode
 package-lock.json
 todo.md
+todo
