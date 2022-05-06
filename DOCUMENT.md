@@ -2,10 +2,12 @@
 The document includes all the functions that you can use with this package.
 
 ## Main components
-The document will be completed soon.
+The main components that controls hole hash value and query as string and relates to other parts of the hash.
 ```
 Hash.NAME
 ```
+[view ->](doc/MAIN.md)
+
 
 ## Value components
 The document will be completed soon.
