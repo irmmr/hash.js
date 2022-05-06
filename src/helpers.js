@@ -1,7 +1,7 @@
-import info from "./info.js"
-import message from "./message.js"
-import {default as conf} from "./config.js"
-import {and_symbol, equ_symbol, que_symbol} from "./vars.js"
+import info from "./info.js";
+import message from "./message.js";
+import {default as conf} from "./config.js";
+import {and_symbol, equ_symbol, que_symbol} from "./vars.js";
 
 /**
  * check if the variable is defined.
@@ -9,7 +9,7 @@ import {and_symbol, equ_symbol, que_symbol} from "./vars.js"
  * @returns {boolean}
  */
 export function isDef(h) {
-    return typeof h !== 'undefined' && h !== null
+    return typeof h !== 'undefined' && h !== null;
 }
 
 /**
@@ -18,7 +18,7 @@ export function isDef(h) {
  * @returns
  */
 export function isUnDef(h) {
-    return typeof h === 'undefined' || h === null
+    return typeof h === 'undefined' || h === null;
 }
 
 /**
@@ -27,7 +27,7 @@ export function isUnDef(h) {
  * @returns
  */
 export function isString(h) {
-    return typeof h === 'string'
+    return typeof h === 'string';
 }
 
 /**
@@ -36,7 +36,7 @@ export function isString(h) {
  * @returns
  */
 export function isBool(h) {
-    return typeof h === 'boolean'
+    return typeof h === 'boolean';
 }
 
 /**
@@ -46,11 +46,11 @@ export function isBool(h) {
  */
 export function getBool(h) {
     if (isBool(h)) {
-        return h
+        return h;
     }
 
     return (isString(h) && h.toLowerCase() === 'true') ||
-        (isNum(h) && h === 1)
+        (isNum(h) && h === 1);
 }
 
 /**
@@ -59,7 +59,7 @@ export function getBool(h) {
  * @returns
  */
 export function isObj(h) {
-    return h !== null && typeof h === 'object' && h.constructor === Object
+    return h !== null && typeof h === 'object' && h.constructor === Object;
 }
 
 /**
@@ -68,7 +68,7 @@ export function isObj(h) {
  * @returns
  */
 export function isFunc(h) {
-    return typeof h === 'function'
+    return typeof h === 'function';
 }
 
 /**
@@ -79,7 +79,7 @@ export function isFunc(h) {
  * @returns
  */
 export function replaceAll(h, a, b) {
-    return h.split(a).join(b)
+    return h.split(a).join(b);
 }
 
 /**
@@ -88,14 +88,14 @@ export function replaceAll(h, a, b) {
  * @returns
  */
 export function lunchFunc(func) {
-    let args = Array.prototype.slice.call(arguments).slice(1)
+    let args = Array.prototype.slice.call(arguments).slice(1);
 
     if (isFunc(func)) {
-        let th = {func, args}
-        return args.length !== 0 ? func.call(th, args) : func.call(th)
+        let th = {func, args};
+        return args.length !== 0 ? func.call(th, args) : func.call(th);
     }
 
-    return null
+    return null;
 }
 
 /**
@@ -104,7 +104,7 @@ export function lunchFunc(func) {
  * @returns
  */
 export function isNum(h) {
-    return h !== null && !isNaN(h) && typeof h === 'number'
+    return h !== null && !isNaN(h) && typeof h === 'number';
 }
 
 /**
@@ -113,7 +113,7 @@ export function isNum(h) {
  * @returns
  */
 export function isNumeric(h) {
-    return isDef(h) && !isNaN(Number(h))
+    return isDef(h) && !isNaN(Number(h));
 }
 
 /**
@@ -123,16 +123,16 @@ export function isNumeric(h) {
  */
 export function isEmpty(h) {
     if (isUnDef(h)) {
-        return true
+        return true;
     } else if (isString(h)) {
-        return h === ''
+        return h === '';
     } else if (isArr(h)) {
-        return h.length === 0
+        return h.length === 0;
     } else if (isObj(h)) {
-        return objSize(h) === 0
+        return objSize(h) === 0;
     }
 
-    return false
+    return false;
 }
 
 /**
@@ -141,7 +141,7 @@ export function isEmpty(h) {
  * @returns
  */
 export function isNull(h) {
-    return h == null
+    return h == null;
 }
 
 /**
@@ -151,10 +151,10 @@ export function isNull(h) {
  */
 export function objSize(h) {
     if (!isDef(h) || !isObj(h)) {
-        return 0
+        return 0;
     }
 
-    return Object.entries(h).length || 0
+    return Object.entries(h).length || 0;
 }
 
 /**
@@ -164,8 +164,8 @@ export function objSize(h) {
  * @returns
  */
 export function splitOnce(string, delim) {
-    let components = string.split(delim)
-    return [components.shift(), components.join(delim)]
+    let components = string.split(delim);
+    return [components.shift(), components.join(delim)];
 }
 
 /**
@@ -175,8 +175,8 @@ export function splitOnce(string, delim) {
  * @returns
  */
 export function splitOnceEnd(string, delim) {
-    let components = string.split(delim)
-    return [components.slice(0, components.length - 1).join(delim), components.pop()]
+    let components = string.split(delim);
+    return [components.slice(0, components.length - 1).join(delim), components.pop()];
 }
 
 /**
@@ -185,7 +185,7 @@ export function splitOnceEnd(string, delim) {
  * @returns
  */
 export function isArr(h) {
-    return isDef(h) && Array.isArray(h)
+    return isDef(h) && Array.isArray(h);
 }
 
 /**
@@ -194,7 +194,7 @@ export function isArr(h) {
  * @returns
  */
 export function getString(h) {
-    return isString(h) ? h : h.toString()
+    return isString(h) ? h : h.toString();
 }
 
 /**
@@ -204,10 +204,10 @@ export function getString(h) {
  */
 export function isQuery(q) {
     if (!isString(q)) {
-        return false
+        return false;
     }
 
-    return (new RegExp('.+(=|).*', 'g')).test(q)
+    return (new RegExp('.+(=|).*', 'g')).test(q);
 }
 
 /**
@@ -217,42 +217,42 @@ export function isQuery(q) {
  */
 export function getQuery(q) {
     if (!isQuery(q) || isEmpty(q)) {
-        return {}
+        return {};
     }
 
-    let equ_sym = conf.get('equSymbol', equ_symbol),
-        and_sym = conf.get('andSymbol', and_symbol)
+    let equalSymbol = conf.get('equSymbol', equ_symbol);
+    let andSymbol   = conf.get('andSymbol', and_symbol);
 
-    let qa     = q.split(and_sym),
-        output = {}
+    let queryParse  = q.split(andSymbol);
+    let output      = {};
 
-    qa.forEach((query, i) => {
+    queryParse.forEach((query, i) => {
         if (isEmpty(query)) {
-            return {}
+            return {};
         }
 
-        let parse   = splitOnce(query, equ_sym),
-            len     = query.split(equ_sym).length,
-            name    = getString(parse[0])
+        let parse   = splitOnce(query, equalSymbol);
+        let len     = query.split(equalSymbol).length;
+        let name    = getString(parse[0]);
 
         if (isEmpty(name)) {
-            return {}
+            return {};
         }
 
         if (len >= 2) {
-            let value = getString(parse[1])
+            let value = getString(parse[1]);
 
             try {
-                value = decodeURIComponent(value)
+                value = decodeURIComponent(value);
             } catch (e) {}
 
-            output[name] = value
+            output[name] = value;
         } else {
-            output[name] = null
+            output[name] = null;
         }
     })
 
-    return output
+    return output;
 }
 
 /**
@@ -262,31 +262,32 @@ export function getQuery(q) {
  * @returns
  */
 export function toQuery(q, encode_uri = false) {
-    q = filterQueEntry(q)
+    q = filterQueEntry(q);
 
     if (isEmpty(q)) {
-        return ''
+        return '';
     }
 
-    let collector   = [],
-        equ_sym     = conf.get('equSymbol', equ_symbol),
-        and_sym     = conf.get('andSymbol', and_symbol)
+    let collector     = [];
+    let equSymbol     = conf.get('equSymbol', equ_symbol);
+    let andSymbol     = conf.get('andSymbol', and_symbol);
 
     objForeach(q, ([name, value]) => {
         if (value === undefined) {
-            return
+            return;
         }
 
         if (isNull(value)) {
-            collector.push(name)
+            collector.push(name);
         } else {
-            let data_str    = getString(value),
-                data_encode = encode_uri ? encodeURIComponent(data_str) : data_str
-            collector.push(name + equ_sym + data_encode)
+            let dataString  = getString(value);
+            let dataEncode  = encode_uri ? encodeURIComponent(dataString) : dataString;
+
+            collector.push(name + equSymbol + dataEncode);
         }
     })
 
-    return collector.join(and_sym)
+    return collector.join(andSymbol);
 }
 
 /**
@@ -297,10 +298,10 @@ export function toQuery(q, encode_uri = false) {
  */
 export function lenOfChar(t, q) {
     if (!isString(t) || !isString(q)) {
-        return 0
+        return 0;
     }
 
-    return !t.includes(q) ? 0 : t.split('').filter(i => i === q).length
+    return !t.includes(q) ? 0 : t.split('').filter(i => i === q).length;
 }
 
 /**
@@ -310,19 +311,19 @@ export function lenOfChar(t, q) {
  */
 export function isTrueHash(q) {
     if (!isString(q) || isEmpty(q)) {
-        return false
+        return false;
     }
 
-    let que_sym = conf.get('queSymbol', que_symbol)
+    let queSymbol = conf.get('queSymbol', que_symbol);
 
-    if (q.includes(que_sym)) {
-        let spt = splitOnce(q, que_sym),
-            que = spt[1]
+    if (q.includes(queSymbol)) {
+        let queryParse  = splitOnce(q, queSymbol);
+        let query       = queryParse[1];
 
-        return isEmpty(que) || isQuery(que)
+        return isEmpty(query) || isQuery(query);
     }
 
-    return true
+    return true;
 }
 
 /**
@@ -332,22 +333,22 @@ export function isTrueHash(q) {
  */
 export function getTrueHash(q) {
     if (!isString(q) || isEmpty(q)) {
-        return ['', '']
+        return ['', ''];
     }
 
-    let emp = [q, '']
+    let empty = [q, ''];
 
     if (!isTrueHash(q)) {
-        return emp
+        return empty;
     }
 
-    let que_sym = conf.get('queSymbol', que_symbol)
+    let queSymbol = conf.get('queSymbol', que_symbol);
 
-    if (q.includes(que_sym)) {
-        return splitOnce(q, que_sym)
+    if (q.includes(queSymbol)) {
+        return splitOnce(q, queSymbol);
     }
 
-    return emp
+    return empty;
 }
 
 /**
@@ -355,34 +356,34 @@ export function getTrueHash(q) {
  * @returns
  */
 export function getWinHash() {
-    let hash = '',
-        win  = getWindow(),
-        hsh  = conf.get('getHashCallback')
+    let hash        = '';
+    let win         = getWindow();
+    let getHash     = conf.get('getHashCallback');
 
-    if (isFunc(hsh)) {
-        hash = lunchFunc(hsh)
+    if (isFunc(getHash)) {
+        hash = lunchFunc(getHash);
     } else {
         try {
-            hash = win.location.hash
+            hash = win.location.hash;
         } catch (e) {
-            err([message.win_problem, e])
+            err([message.win_problem, e]);
         }
     }
 
     // convert to string
-    hash = getString(hash)
+    hash = getString(hash);
 
     // apply filters
-    let fil = conf.get('getHashFilter')
+    let hashFilter = conf.get('getHashFilter');
 
-    if (isFunc(fil)) {
-        hash = lunchFunc(fil, hash)
+    if (isFunc(hashFilter)) {
+        hash = lunchFunc(hashFilter, hash);
     }
 
     // convert again to string
-    hash = getString(hash)
+    hash = getString(hash);
 
-    return hash.startsWith('#') ? hash.slice(1) : hash
+    return hash.startsWith('#') ? hash.slice(1) : hash;
 }
 
 /**
@@ -390,26 +391,25 @@ export function getWinHash() {
  * @param {string} q Hash value
  */
 export function setWinHash(q) {
-    let handle = conf.get('setHashCallback'),
-        filter = conf.get('setHashFilter'),
-        win    = getWindow()
+    let setHash     = conf.get('setHashCallback');
+    let setFilter   = conf.get('setHashFilter');
+    let win         = getWindow();
 
-    if (isFunc(filter)) {
-        q = lunchFunc(filter, q)
+    if (isFunc(setFilter)) {
+        q = lunchFunc(setFilter, q);
     }
 
-    q = getString(q)
+    q = getString(q);
 
-    if (isFunc(handle)) {
-        lunchFunc(handle, q)
+    if (isFunc(setHash)) {
+        lunchFunc(setHash, q);
     } else {
         try {
-            win.location.hash = q
+            win.location.hash = q;
         } catch (e) {
-            err([message.win_problem, e])
+            err([message.win_problem, e]);
         }
     }
-
 }
 
 /**
@@ -417,27 +417,29 @@ export function setWinHash(q) {
  */
 export function createObjVal(names, value) {
     if (isString(names) && !isEmpty(names)) {
-        names = [names]
+        names = [names];
     }
 
     if (!isArr(names)) {
-        return {}
+        return {};
     }
 
-    names = names.filter(i => i !== '')
+    // remove empty items
+    names = names.filter(i => i !== '');
 
     if (isEmpty(names)) {
-        return {}
+        return {};
     }
 
-    let fetch = {}, i
+    let fetch = {};
 
-    for (i in names) {
-        if (!names.hasOwnProperty(i)) continue
-        fetch[names[i]] = value
+    for (let i in names) {
+        if (names.hasOwnProperty(i)) {
+            fetch[names[i]] = value;
+        }
     }
 
-    return fetch
+    return fetch;
 }
 
 /**
@@ -446,7 +448,7 @@ export function createObjVal(names, value) {
  * @returns {*|boolean}
  */
 export function isQueParOk(n) {
-    return isString(n) || isNull(n) || n === undefined || isNum(n)
+    return isString(n) || isNull(n) || n === undefined || isNum(n);
 }
 
 /**
@@ -454,22 +456,22 @@ export function isQueParOk(n) {
  * @returns {*}
  */
 export function getHref() {
-    let href = '',
-        win  = getWindow(),
-        hsh  = conf.get('getHrefCallback')
+    let href        = '';
+    let win         = getWindow();
+    let getHref     = conf.get('getHrefCallback');
 
-    if (isFunc(hsh)) {
-        href = lunchFunc(hsh)
+    if (isFunc(getHref)) {
+        href = lunchFunc(getHref);
     } else {
         try {
-            href = win.location.href
+            href = win.location.href;
         } catch (e) {
-            err([message.win_problem, e])
+            err([message.win_problem, e]);
         }
     }
 
     // convert to string
-    return getString(href)
+    return getString(href);
 }
 
 /**
@@ -477,7 +479,7 @@ export function getHref() {
  * @returns {Window|string|*}
  */
 export function getWindow() {
-    return conf.get('window') || window
+    return conf.get('window') || window;
 }
 
 /**
@@ -486,11 +488,12 @@ export function getWindow() {
  * @param force_log   The force logger.
  */
 export function err(messages, force_log = false) {
-    messages = toArray(messages)
+    messages = toArray(messages);
 
-    let message = messages.join(', ')
+    let message = messages.join(', ');
+
     if (force_log || conf.get('log') === true) {
-        throw new Error(`(${info.name}) ${message}`)
+        throw new Error(`(${info.name}) ${message}`);
     }
 }
 
@@ -501,14 +504,15 @@ export function err(messages, force_log = false) {
  */
 export function filterQueEntry(queries) {
     if (!isObj(queries)) {
-        return {}
+        return {};
     }
 
     return objFilter(queries, q => {
-        let key     = q[0],
-            value   = q[1]
-        return isString(key) && !isEmpty(key) && isQueParOk(value)
-    })
+        let key     = q[0];
+        let value   = q[1];
+
+        return isString(key) && !isEmpty(key) && isQueParOk(value);
+    });
 }
 
 /**
@@ -517,7 +521,7 @@ export function filterQueEntry(queries) {
  * @returns {*}
  */
 export function getHashValue(wh) {
-    return getTrueHash(wh)[0]
+    return getTrueHash(wh)[0];
 }
 
 /**
@@ -526,7 +530,7 @@ export function getHashValue(wh) {
  * @returns {*}
  */
 export function getHashQuery(wh) {
-    return getTrueHash(wh)[1]
+    return getTrueHash(wh)[1];
 }
 
 /**
@@ -534,74 +538,98 @@ export function getHashQuery(wh) {
  * @param options
  */
 export function setEvHash(options = {}) {
-    let value = '',
-        query = {},
-        wh      = getWinHash(),
-        parse   = getTrueHash(wh),
-        cu_val  = parse[0],
-        cu_que  = getQuery(parse[1])
+    // value is first part of any hash: #value?...
+    // in the first we should init value for set any hash
+    let value       = '';
 
-    let que_sym = conf.get('queSymbol', que_symbol)
+    // query is second part of hash: #...?query
+    // this one should enter as a key:value object
+    let query       = {};
 
+    // get the current window hash as string
+    let hash        = getWinHash();
+
+    // trying to parse hash into 2 parts, value and query
+    let parse       = getTrueHash(hash);
+
+    // get first part of parsed hash as value
+    let hashValue   = parse[0];
+
+    // get first part of parsed hash as query and convert it to object
+    let hashQuery   = getQuery(parse[1]);
+
+    // get query symbol with configs
+    let queSymbol = conf.get('queSymbol', que_symbol);
+
+    // checking for appending "value"
+    // if it's defined replace it and else use old value
     if ('value' in options) {
-        let v = options.value
-        value = getString(v)
+        let val = options.value;
+        value = getString(val);
 
-        if (value.includes(que_sym)) {
-            value = replaceAll(value, que_sym, encodeURIComponent(que_sym))
+        // encoding all query symbols with "URIComponent" to prevent parsing errors
+        if (value.includes(queSymbol)) {
+            value = replaceAll(value, queSymbol, encodeURIComponent(queSymbol));
         }
     } else {
-        value = cu_val
+        value = hashValue;
     }
 
+    // check for appending "query"
+    // if it's defined replace it and else use old query
     if ('query' in options) {
-        let q     = options.query,
-            entry = q.entry || {},
-            type  = q.type || 'merge'
+        let que     = options.query;
+        let entry   = que.entry || {};
+        let type    = que.type || 'merge';
 
         if (isObj(entry)) {
-            entry   = filterQueEntry(entry)
+            entry   = filterQueEntry(entry);
 
             if (type === 'merge' && !isEmpty(entry)) {
-                query = Object.assign(cu_que, entry)
+                query = Object.assign(hashQuery, entry);
             } else if (type === 'define') {
-                query = entry
+                query = entry;
             }
         }
     } else {
-        query = cu_que
+        query = hashQuery;
     }
 
-    // enter hash using string type
+    // setting hash as string
+    // it works as a standalone part
     if ('string' in options) {
-        let str = '',
-            sv = parse[0],
-            sq = parse[1]
+        let str      = '';
+
+        // old query and value
+        let valueStr = parse[0];
+        let queryStr = parse[1];
 
         if (typeof options.string.value !== 'undefined') {
-            sv = options.string.value
+            valueStr = options.string.value;
         }
 
         if (typeof options.string.query !== 'undefined') {
-            sq = options.string.query
+            queryStr = options.string.query;
         }
 
-        str = sv
-        if (!isEmpty(sq)) {
-            str += que_sym + sq
+        str = valueStr;
+
+        if (!isEmpty(queryStr)) {
+            str += queSymbol + queryStr;
         }
 
-        setWinHash(str)
-        return
+        setWinHash(str);
+
+        return;
     }
 
-    let entry = value
+    let entry = value;
 
     if (!isEmpty(query)) {
-        entry += que_sym + toQuery(query)
+        entry += queSymbol + toQuery(query);
     }
 
-    setWinHash(entry)
+    setWinHash(entry);
 }
 
 /**
@@ -611,13 +639,13 @@ export function setEvHash(options = {}) {
  * @returns {*[]|*[]}
  */
 export function toArray(data, filter = true) {
-    data = isArr(data) ? data : [data]
+    data = isArr(data) ? data : [data];
 
     if (filter) {
-        data = data.filter(d => !isEmpty(d))
+        data = data.filter(d => !isEmpty(d));
     }
 
-    return data
+    return data;
 }
 
 /**
@@ -626,7 +654,7 @@ export function toArray(data, filter = true) {
  * @param callback
  */
 export function objForeach(obj, callback) {
-    Object.entries(obj).forEach(callback)
+    Object.entries(obj).forEach(callback);
 }
 
 /**
@@ -636,7 +664,7 @@ export function objForeach(obj, callback) {
  * @returns {{[p: string]: unknown}|{}}
  */
 export function objFilter(obj, callback) {
-    return Object.fromEntries(Object.entries(obj).filter(callback))
+    return Object.fromEntries(Object.entries(obj).filter(callback));
 }
 
 /**
@@ -646,26 +674,26 @@ export function objFilter(obj, callback) {
  * @returns {{}|{[p: string]: any}}
  */
 export function objMap(obj, callback) {
-    let cl = {}, k
+    let fetch = {};
 
     if (!isFunc(callback)) {
-        return obj
+        return obj;
     }
 
-    for (k in obj) {
-        let key = k,
-            val = obj[key],
-            c   = callback(k, val)
+    for (let k in obj) {
+        let key         = k;
+        let value       = obj[key];
+        let collect     = callback(k, value);
 
-        if (isArr(c) && c.length === 2) {
-            key = c[0]
-            val = c[1]
+        if (isArr(collect) && collect.length === 2) {
+            key = collect[0];
+            value = collect[1];
         }
 
-        cl[key] = val
+        fetch[key] = value;
     }
 
-    return cl
+    return fetch;
 }
 
 /**
@@ -677,24 +705,24 @@ export function objMap(obj, callback) {
  */
 export function parseKv(data, multiple = true) {
     if (!isString(data)) {
-        return {}
+        return {};
     }
 
-    data        = data.trim()
-    let loop    = multiple ? data.split(',') : [data],
-        cl      = {}
+    data        = data.trim();
+    let loop    = multiple ? data.split(',') : [data];
+    let fetch   = {};
 
     loop.forEach(i => {
-        let kv  = splitOnce(i.trim(), ':'),
-            k   = unescape(kv[0]),
-            v   = unescape(kv[1])
+        let parse   = splitOnce(i.trim(), ':');
+        let key     = decodeURIComponent(parse[0]);
+        let value   = decodeURIComponent(parse[1]);
 
-        if (!isEmpty(k)) {
-            cl[k] = v
+        if (!isEmpty(key)) {
+            fetch[key] = value;
         }
-    })
+    });
 
-    return cl
+    return fetch;
 }
 
 /**
@@ -706,29 +734,29 @@ export function parseKv(data, multiple = true) {
  */
 export function insertStr(data, insert, index) {
     if (!isString(data)) {
-        return data
+        return data;
     }
 
     if (isString(index)) {
-        index = index.trim()
+        index = index.trim();
 
         if (index === '-') {
-            index = data.length
+            index = data.length;
         }
 
-        index = Number(index)
+        index = Number(index);
     }
 
     if (!isNum(index)) {
-        return data
+        return data;
     }
 
     if (index < 0) {
-        index = data.length + index
+        index = data.length + index;
     }
 
     if (index > 0) {
-        return data.substring(0, index) + insert + data.substr(index)
+        return data.substring(0, index) + insert + data.substring(index);
     }
 
     return insert + data;
@@ -743,17 +771,17 @@ export function insertStr(data, insert, index) {
  */
 export function toObjQue(data, value) {
     if (isObj(data)) {
-        return data
+        return data;
     }
 
     if (isString(data) && isQueParOk(value) && !isEmpty(data)) {
-        let d   = {}
-        d[data] = value
+        let obj   = {};
+        obj[data] = value;
 
-        return d
+        return obj;
     }
 
-    return false
+    return false;
 }
 
 /**
@@ -762,7 +790,7 @@ export function toObjQue(data, value) {
  * @returns {string}
  */
 export function getUrlHash(url) {
-    return splitOnce(url, '#')[1] || ''
+    return splitOnce(url, '#')[1] || '';
 }
 
 /**
@@ -771,5 +799,5 @@ export function getUrlHash(url) {
  * @returns {boolean}
  */
 export function isRegExp(data) {
-    return data instanceof RegExp
+    return data instanceof RegExp;
 }
