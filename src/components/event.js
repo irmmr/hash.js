@@ -1,60 +1,67 @@
-import {empty_func} from "../vars.js"
-import message from "../message.js"
-import HashComponent from "../component.js"
-import {err, getUrlHash, getWindow, isEmpty, isFunc, isString, lunchFunc, replaceAll} from "../helpers.js"
+import {empty_func} from "../vars.js";
+import message from "../message.js";
+import HashComponent from "../component.js";
+import {err, getUrlHash, getWindow, isEmpty, isFunc, isString, lunchFunc, replaceAll} from "../helpers.js";
 
 /**
  * Hash Event component.
- * @param {string} type The listeners
- * @param {function} listener   The function/callback
+ *
+ * @param {string}      listener    The listener(s)
+ * @param {function}    callback    The function/callback
  * @returns HashComponent
  */
-HashComponent.event = HashComponent.on = (type, listener = empty_func) => {
-    let cp = HashComponent
+HashComponent.event = HashComponent.on = (listener, callback = empty_func) => {
+    let cp = HashComponent;
 
-    if (!isString(type)) {
-        return cp
+    if (!isString(listener)) {
+        return cp;
     }
 
-    let evs     = replaceAll(type, ',', ' '),
-        wn      = getWindow()
+    let listeners   = replaceAll(listener, ',', ' ');
+    let win         = getWindow();
 
-    listener    = isFunc(listener) ? listener : empty_func
+    callback    = isFunc(callback) ? callback : empty_func;
 
     // check addEventListener based on window
-    if (typeof wn.addEventListener === 'undefined') {
-        err(message.event_und)
-        return cp
+    if (typeof win.addEventListener === 'undefined') {
+        err(message.event_und);
+
+        return cp;
     }
 
-    let split = evs.split(' ').filter(e => !isEmpty(e)),
-        event = []
+    let events  = listeners.split(' ').filter(e => !isEmpty(e));
+    let fetch   = []
 
-    split.forEach(i => {
-        if (!event.includes(i)) {
-            event.push(i)
+    // instead of [...new Set(array)]
+    events.forEach(i => {
+        if (!fetch.includes(i)) {
+            fetch.push(i);
         }
-    })
+    });
 
-    event.forEach(e => {
-        switch (e) {
+    fetch.forEach(name => {
+        switch (name) {
             case 'change':
-                wn.addEventListener('hashchange', e => {
-                    let newHash = getUrlHash(e.newURL || ''),
-                        oldHash = getUrlHash(e.oldURL || '')
-                    lunchFunc(listener, e, {oldHash, newHash})
-                })
-                break
+                win.addEventListener('hashchange', e => {
+                    let newHash = getUrlHash(e.newURL || '');
+                    let oldHash = getUrlHash(e.oldURL || '');
+
+                    lunchFunc(callback, e, {oldHash, newHash});
+                });
+
+                break;
 
             case 'load':
-                wn.addEventListener('load', listener)
-                break
+                win.addEventListener('load', callback);
+
+                break;
 
             case 'ready':
-                lunchFunc(listener)
-                break
-        }
-    })
+                lunchFunc(callback);
 
-    return cp
+                break;
+        }
+    });
+
+    return cp;
 }

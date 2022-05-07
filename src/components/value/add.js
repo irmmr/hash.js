@@ -1,4 +1,4 @@
-import {HashCpValue} from "../holder.js"
+import {HashCpValue} from "../holder.js";
 import {
     getBool,
     getHashValue,
@@ -9,7 +9,7 @@ import {
     parseKv,
     replaceAll,
     setEvHash
-} from "../../helpers.js"
+} from "../../helpers.js";
 
 /**
  * add a string to value.
@@ -21,63 +21,63 @@ HashCpValue.add = (value, options = {
     position: 'after',
     multiple: false
 }) => {
-    let cp = HashCpValue
+    let cp = HashCpValue;
 
     if (!isString(value) || isEmpty(value)) {
-        return cp
+        return cp;
     }
 
-    let wh      = getWinHash(),
-        v       = getHashValue(wh),
-        entry   = ''
+    let hash        = getWinHash();
+    let hashValue   = getHashValue(hash);
+    let entry       = '';
 
     // parse position options
     if (isString(options)) {
-        options = {position: options}
+        options = {position: options};
     }
 
-    let position = options.position || 'after',
-        multiple = getBool(options.multiple || false)
+    let position = options.position || 'after';
+    let multiple = getBool(options.multiple || false);
 
     if (isEmpty(position) || !isString(position)) {
-        position = 'after'
+        position = 'after';
     }
 
-    let pos = parseKv(position, false)
+    let posParse = parseKv(position, false);
 
-    if ('after' in pos) {
-        let a_pos = pos.after
+    if ('after' in posParse) {
+        let posAfter = posParse.after;
 
-        if (isEmpty(a_pos)) {
-            entry = v + value
+        if (isEmpty(posAfter)) {
+            entry = hashValue + value;
         } else {
             if (multiple) {
-                entry = replaceAll(v, a_pos, a_pos + value)
+                entry = replaceAll(hashValue, posAfter, posAfter + value);
             } else {
-                entry = v.replace(a_pos, a_pos + value)
+                entry = hashValue.replace(posAfter, posAfter + value);
             }
         }
-    } else if ('before' in pos) {
-        let b_pos = pos.before
+    } else if ('before' in posParse) {
+        let posBefore = posParse.before;
 
-        if (isEmpty(b_pos)) {
-            entry = value + v
+        if (isEmpty(posBefore)) {
+            entry = value + hashValue;
         } else {
             if (multiple) {
-                entry = replaceAll(v, b_pos, value + b_pos)
+                entry = replaceAll(hashValue, posBefore, value + posBefore);
             } else {
-                entry = v.replace(b_pos, value + b_pos)
+                entry = hashValue.replace(posBefore, value + posBefore);
             }
         }
-    } else if ('index' in pos) {
-        entry = insertStr(v, value, pos.index)
+    } else if ('index' in posParse) {
+        entry = insertStr(hashValue, value, posParse.index);
     }
 
     if (!isEmpty(entry)) {
         setEvHash({
             value: entry
-        })
+        });
     }
 
-    return cp
+    return cp;
 }

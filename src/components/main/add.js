@@ -1,64 +1,71 @@
-import HashComponent from "../../component.js"
-import {getBool, getWinHash, insertStr, isEmpty, isString, parseKv, replaceAll, setWinHash} from "../../helpers.js"
+import HashComponent from "../../component.js";
+import {getBool, getWinHash, insertStr, isEmpty, isString, parseKv, replaceAll, setWinHash} from "../../helpers.js";
 
 /**
  * add a string to location hash.
- * @param {string} value
- * @param {object|string} options
+ *
+ * @param   {string}        value       entry value to add
+ * @param   {object|string} options     adding options
  * @returns HashComponent
  */
 HashComponent.add = (value, options = {
     position: 'after',
     multiple: false
 }) => {
-    let cp = HashComponent
+    let cp = HashComponent;
 
     if (!isString(value) || isEmpty(value)) {
-        return cp
+        return cp;
     }
 
-    let wh      = getWinHash(),
-        entry   = ''
+    let hash        = getWinHash();
+    let entry       = '';
 
     // parse position options
     if (isString(options)) {
-        options = {position: options}
+        options = {position: options};
     }
 
-    let position = options.position || 'after',
-        multiple = getBool(options.multiple || false)
+    let position = options.position || 'after';
+    let multiple = getBool(options.multiple || false);
 
     if (isEmpty(position) || !isString(position)) {
-        position = 'after'
+        position = 'after';
     }
 
-    let pos = parseKv(position, false)
+    let parsePosition = parseKv(position, false);
 
-    if ('after' in pos) {
-        let a_pos = pos.after
+    if ('after' in parsePosition) {
+        let posAfter = parsePosition.after;
 
-        if (isEmpty(a_pos)) {
-            entry = wh + value
+        if (isEmpty(posAfter)) {
+            entry = hash + value;
         } else {
-            entry = multiple ? replaceAll(wh, a_pos, a_pos + value)
-                : wh.replace(a_pos, a_pos + value)
+            if (multiple) {
+                entry = replaceAll(hash, posAfter, posAfter + value);
+            } else {
+                entry = hash.replace(posAfter, posAfter + value);
+            }
         }
-    } else if ('before' in pos) {
-        let b_pos = pos.before
+    } else if ('before' in parsePosition) {
+        let posBefore = parsePosition.before;
 
-        if (isEmpty(b_pos)) {
-            entry = value + wh
+        if (isEmpty(posBefore)) {
+            entry = value + hash;
         } else {
-            entry = multiple ? replaceAll(wh, b_pos, value + b_pos)
-                : wh.replace(b_pos, value + b_pos)
+            if (multiple) {
+                entry = replaceAll(hash, posBefore, value + posBefore);
+            } else {
+                entry = hash.replace(posBefore, value + posBefore);
+            }
         }
-    } else if ('index' in pos) {
-        entry = insertStr(wh, value, pos.index)
+    } else if ('index' in parsePosition) {
+        entry = insertStr(hash, value, parsePosition.index);
     }
 
     if (!isEmpty(entry)) {
-        setWinHash(entry)
+        setWinHash(entry);
     }
 
-    return cp
+    return cp;
 }

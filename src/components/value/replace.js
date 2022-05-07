@@ -1,5 +1,5 @@
-import {HashCpValue} from "../holder.js"
-import {getHashValue, getWinHash, isEmpty, isRegExp, isString, setEvHash} from "../../helpers.js"
+import {HashCpValue} from "../holder.js";
+import {getHashValue, getWinHash, isEmpty, isRegExp, isString, setEvHash} from "../../helpers.js";
 
 /**
  * replace hash value string.
@@ -8,24 +8,24 @@ import {getHashValue, getWinHash, isEmpty, isRegExp, isString, setEvHash} from "
  * @returns HashCpValue
  */
 HashCpValue.replace = (from, to) => {
-    let cp = HashCpValue
+    let cp = HashCpValue;
 
     if (!isString(to) || (!isString(from) && !isRegExp(from))) {
-        return cp
+        return cp;
     }
 
-    let wh      = getWinHash(),
-        value   = getHashValue(wh)
+    let hash        = getWinHash();
+    let hashValue   = getHashValue(hash);
 
-    if (isEmpty(value)) {
-        return cp
+    if (isEmpty(hashValue)) {
+        return cp;
     }
 
     setEvHash({
         string: {
-            value: value.replace(from, to)
+            value: hashValue.replace(from, to)
         }
-    })
+    });
 
-    return cp
+    return cp;
 }

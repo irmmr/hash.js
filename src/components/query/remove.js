@@ -1,5 +1,5 @@
-import {HashCpQuery} from "../holder.js"
-import {isEmpty, objFilter, toArray} from "../../helpers.js"
+import {HashCpQuery} from "../holder.js";
+import {isEmpty, objFilter, toArray} from "../../helpers.js";
 
 /**
  * remove some parts of hash query.
@@ -7,27 +7,28 @@ import {isEmpty, objFilter, toArray} from "../../helpers.js"
  * @returns HashCpValue
  */
 HashCpQuery.remove = (name = []) => {
-    let cp = HashCpQuery
+    let cp = HashCpQuery;
 
-    name = toArray(name)
+    name = toArray(name);
+
     if (isEmpty(name)) {
-        return cp
+        return cp;
     }
 
-    let que     = cp.get(),
-        entry   = que
+    let query   = cp.get();
+    let entry   = query;
 
-    if (isEmpty(que)) {
-        return cp
+    if (isEmpty(query)) {
+        return cp;
     }
 
-    entry = objFilter(entry, ([k, v]) => {
-        return !name.includes(k)
-    })
+    entry = objFilter(entry, ([key, value]) => {
+        return !name.includes(key);
+    });
 
-    if (que !== entry) {
-        cp.define(entry)
+    if (query !== entry) {
+        cp.define(entry);
     }
 
-    return cp
+    return cp;
 }

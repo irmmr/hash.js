@@ -6,5 +6,5 @@ import {getHashQuery, getWinHash} from "../../../helpers.js";
  * @returns HashCpQueryStr
  */
 HashCpQueryStr.get = () => {
-    return getHashQuery(getWinHash())
+    return getHashQuery(getWinHash());
 }

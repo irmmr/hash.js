@@ -1,5 +1,5 @@
-import {HashCpQueryStr} from "../../holder.js"
-import {isString, setEvHash} from "../../../helpers.js"
+import {HashCpQueryStr} from "../../holder.js";
+import {isString, setEvHash} from "../../../helpers.js";
 
 /**
  * set query string.
@@ -7,17 +7,17 @@ import {isString, setEvHash} from "../../../helpers.js"
  * @returns {HashCpQueryStr}
  */
 HashCpQueryStr.set = (string) => {
-    let cp = HashCpQueryStr
+    let cp = HashCpQueryStr;
 
     if (!isString(string)) {
-        return cp
+        return cp;
     }
 
     setEvHash({
         string: {
             query: string
         }
-    })
+    });
 
-    return cp
+    return cp;
 }

@@ -1,5 +1,5 @@
-import info from "../info.js"
-import HashComponent from "../component.js"
+import info from "../info.js";
+import HashComponent from "../component.js";
 
 /**
  * Hash Info component.

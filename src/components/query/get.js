@@ -1,4 +1,4 @@
-import {HashCpQuery} from "../holder.js"
+import {HashCpQuery} from "../holder.js";
 import {
     createObjVal,
     getHashQuery,
@@ -7,54 +7,53 @@ import {
     isArr,
     isEmpty, isQuery,
     toArray
-} from "../../helpers.js"
+} from "../../helpers.js";
 
 /**
  * get the location hash query.
- * @param {string|array} que
+ * @param {string|array} queries
  * @returns object
  */
-HashCpQuery.get = (que = []) => {
-    que = toArray(que)
-    if (!isArr(que)) {
-        return {}
+HashCpQuery.get = (queries = []) => {
+    queries = toArray(queries);
+
+    if (!isArr(queries)) {
+        return {};
     }
 
-    que = que.filter(i => i !== '')
+    let empty   = queries.length === 1 ? undefined : createObjVal(queries, undefined);
+    let hash    = getWinHash();
 
-    let emp = que.length === 1 ? undefined : createObjVal(que, undefined),
-        wh  = getWinHash()
-
-    if (isEmpty(wh)) {
-        return emp
+    if (isEmpty(hash)) {
+        return empty;
     }
 
-    let hsh_que = getHashQuery(wh)
+    let hashQuery = getHashQuery(hash);
 
-    if (isEmpty(hsh_que) || !isQuery(hsh_que)) {
-        return emp
+    if (isEmpty(hashQuery) || !isQuery(hashQuery)) {
+        return empty;
     }
 
-    let q   = getQuery(hsh_que),
-        len = que.length
+    let query   = getQuery(hashQuery);
+    let len     = queries.length;
 
     if (len === 0) {
-        return q
+        return query;
     }
 
     if (len === 1) {
-        let fe = que[0]
-        return q.hasOwnProperty(fe) ? q[fe] : emp
+        let firstQuery = queries[0];
+        return query.hasOwnProperty(firstQuery) ? query[firstQuery] : empty;
     }
 
-    let ans = {}, i
+    let fetch = {};
 
-    for (i in que) {
-        if (que.hasOwnProperty(i)) {
-            let v  = que[i]
-            ans[v] = q.hasOwnProperty(v) ? q[v] : undefined
+    for (let i in queries) {
+        if (queries.hasOwnProperty(i)) {
+            let value  = queries[i];
+            fetch[value] = query.hasOwnProperty(value) ? query[value] : undefined;
         }
     }
 
-    return ans
+    return fetch;
 }

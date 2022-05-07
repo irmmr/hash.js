@@ -1,5 +1,5 @@
-import {HashCpValue} from "../holder.js"
-import {isString, setEvHash} from "../../helpers.js"
+import {HashCpValue} from "../holder.js";
+import {isString, setEvHash} from "../../helpers.js";
 
 /**
  * set value
@@ -7,15 +7,15 @@ import {isString, setEvHash} from "../../helpers.js"
  * @returns HashCpValue
  */
 HashCpValue.set = (value) => {
-    let cp = HashCpValue
+    let cp = HashCpValue;
 
     if (!isString(value)) {
-        return cp
+        return cp;
     }
 
     setEvHash({
         value
-    })
+    });
 
-    return cp
+    return cp;
 }

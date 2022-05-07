@@ -1,5 +1,5 @@
-import {HashCpValue} from "../holder.js"
-import {isArr, isEmpty, toArray} from "../../helpers.js"
+import {HashCpValue} from "../holder.js";
+import {isArr, isEmpty, toArray} from "../../helpers.js";
 
 /**
  * check for location hash value.
@@ -7,24 +7,25 @@ import {isArr, isEmpty, toArray} from "../../helpers.js"
  * @returns boolean
  */
 HashCpValue.have = (data = '') => {
-    data = toArray(data)
+    data = toArray(data);
+
     if (!isArr(data)) {
-        return false
+        return false;
     }
 
-    let wv = HashCpValue.get()
+    let hashValue = HashCpValue.get();
 
     if (isEmpty(data)) {
-        return !isEmpty(wv)
+        return !isEmpty(hashValue);
     }
 
     for (let i in data) {
-        if (!data.hasOwnProperty(i)) continue
+        if (!data.hasOwnProperty(i)) continue;
 
-        if (!wv.includes(data[i])) {
-            return false
+        if (!hashValue.includes(data[i])) {
+            return false;
         }
     }
 
-    return true
+    return true;
 }

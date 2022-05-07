@@ -1,5 +1,5 @@
-import {HashCpQuery} from "../holder.js"
-import {isEmpty, isObj, isQueParOk, isString, objFilter, toObjQue} from "../../helpers.js"
+import {HashCpQuery} from "../holder.js";
+import {isEmpty, isObj, objFilter, toObjQue} from "../../helpers.js";
 
 /**
  * update query.
@@ -8,19 +8,20 @@ import {isEmpty, isObj, isQueParOk, isString, objFilter, toObjQue} from "../../h
  * @returns {HashCpQuery}
  */
 HashCpQuery.update = (data, value = null) => {
-    let cp = HashCpQuery
+    let cp = HashCpQuery;
 
-    data = toObjQue(data, value)
+    data = toObjQue(data, value);
 
     if (!data || !isObj(data) || !cp.have()) {
-        return cp
+        return cp;
     }
 
     data = objFilter(data, d => {
-        let n = d[0],
-            v = d[1]
-        return v !== undefined && cp.have(n)
-    })
+        let name    = d[0];
+        let value   = d[1];
 
-    return isEmpty(data) ? cp : cp.set(data)
+        return value !== undefined && cp.have(name);
+    });
+
+    return isEmpty(data) ? cp : cp.set(data);
 }
