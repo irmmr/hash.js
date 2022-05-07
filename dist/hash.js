@@ -1,10 +1,9 @@
 /**
- * HashJs javascript library v1.7.4
- * Copyright (c) 2022 irmmr
+ * HashJs v1.7.5
+ * Copyright (c) 2022 Irmmr
  * MIT License
  *
- * (umd - main)
- * https://github.com/irmmr/hash.js
+ * https://github.com/irmmr/hash.js [umd - main]
  */
 
 (function (global, factory) {
@@ -24,37 +23,43 @@
     /**
      * (configs helper)
      * object check.
-     * @param item
+     *
+     * @param   item
      * @returns {boolean}
      */
-    function _isObj(item) {
-        return (item && typeof item === 'object' && item.constructor === Object)
-    }
+    var _isObj = function (item) { return (item && typeof item === 'object' && item.constructor === Object); };
 
     /**
      * (configs helper)
      * Deep merge two objects.
-     * @param target
-     * @param source
+     *
+     * @param   {object}    target
+     * @param   {object}    source
      * @returns {object}
      */
-    function _deepMerge(target, source) {
+    var _deepMerge = function (target, source) {
         var obj, obj$1;
 
-        if (_isObj(target) && _isObj(source)) {
-            for (var key in source) {
-                if (_isObj(source[key])) {
-                    if (!target[key]) { Object.assign(target, ( obj = {}, obj[key] = {}, obj )); }
-                    _deepMerge(target[key], source[key]);
-                } else {
-                    Object.assign(target, ( obj$1 = {}, obj$1[key] = source[key], obj$1 ));
-                }
+        if (!_isObj(target) || !_isObj(source)) {
+            return target;
+        }
+
+        for (var key in source) {
+            if (_isObj(source[key])) {
+                if (!target[key]) { Object.assign(target, ( obj = {}, obj[key] = {}, obj )); }
+
+                _deepMerge(target[key], source[key]);
+            } else {
+                Object.assign(target, ( obj$1 = {}, obj$1[key] = source[key], obj$1 ));
             }
         }
 
-        return target
-    }
+        return target;
+    };
 
+    /**
+     * HashConfig class.
+     */
     var HashConfig = function HashConfig () {};
 
     HashConfig.defaults = function defaults () {
@@ -77,7 +82,7 @@
 
     /**
      * Instance call with set options
-     * @param options
+     * @param   {object}    options
      * @returns {HashConfig}
      */
     HashConfig.instance = function instance (options) {
@@ -85,7 +90,7 @@
 
         HashConfig.set(options);
 
-        return HashConfig
+        return HashConfig;
     };
 
     /**
@@ -104,20 +109,22 @@
 
     /**
      * Check for config
-     * @param name
+     *
+     * @param   {string}name
      * @returns {boolean}
      */
     HashConfig.has = function has (name) {
-        return typeof HashConfig.configs === 'object' && name in HashConfig.configs
+        return typeof HashConfig.configs === 'object' && name in HashConfig.configs;
     };
 
     /**
      * Define config
-     * @param options
+     *
+     * @param {object} options
      */
     HashConfig.define = function define (options) {
         if (typeof options !== 'object') {
-            return
+            return;
         }
 
         HashConfig.configs = options;
@@ -129,7 +136,7 @@
      */
     HashConfig.set = function set (options) {
         if (typeof options !== 'object') {
-            return
+            return;
         }
 
         var configs = HashConfig.configs;
@@ -138,8 +145,9 @@
 
     /**
      * Get config
-     * @param name
-     * @param def
+     *
+     * @param   {string}name
+     * @param   {*}     def
      * @returns {string|Readonly<{}>|*}
      */
     HashConfig.get = function get (name, def) {
@@ -149,39 +157,43 @@
         var configs = HashConfig.configs;
 
         if (null == name) {
-            return configs
+            return configs;
         }
 
-        var exp = name.toString().trim().split('.'), i;
+        var exp = name.toString().trim().split('.');
+        var i;
 
         if (exp.length === 1) {
             if (HashConfig.has(name)) {
-                return configs[name]
+                return configs[name];
             }
         } else {
-            var val = configs,
-                find= false;
+            var val = configs;
+            var find= false;
 
             for (i in exp) {
-                if (!exp.hasOwnProperty(i)) { continue }
+                if (!exp.hasOwnProperty(i)) { continue; }
 
                 if (typeof val[exp[i]] !== 'undefined') {
                     find= true;
                     val = val[exp[i]];
                 } else {
                     find= false;
-                    break
+                    break;
                 }
             }
 
-            if (find) { return val }
+            if (find) {
+                return val;
+            }
         }
 
-        return def
+        return def;
     };
 
     /**
      * Get config helpers.
+     *
      * @returns {{isObj: (function(*)), deepMerge: (function(*, *): *)}}
      */
     HashConfig.h = {
@@ -189,7 +201,11 @@
         deepMerge: _deepMerge
     };
 
-    // set configs value
+    /**
+     * Main config holder.
+     *
+     * @type {{andSymbol: string, log: boolean, setHashCallback: null, window: null, queSymbol: string, getHashFilter: null, setHashFilter: null, equSymbol: string, getHashCallback: null, getHrefCallback: null}}
+     */
     HashConfig.configs = HashConfig.defaults();
 
     var HashComponent = function HashComponent () {};
@@ -198,7 +214,7 @@
     var info = {
         name: 'HashJs',
         module: 'Hash',
-        version : '1.7.4'
+        version : '1.7.5'
     };
 
     var message = {
@@ -212,7 +228,7 @@
      * @returns {boolean}
      */
     function isDef(h) {
-        return typeof h !== 'undefined' && h !== null
+        return typeof h !== 'undefined' && h !== null;
     }
 
     /**
@@ -221,7 +237,7 @@
      * @returns
      */
     function isUnDef(h) {
-        return typeof h === 'undefined' || h === null
+        return typeof h === 'undefined' || h === null;
     }
 
     /**
@@ -230,7 +246,7 @@
      * @returns
      */
     function isString(h) {
-        return typeof h === 'string'
+        return typeof h === 'string';
     }
 
     /**
@@ -239,7 +255,7 @@
      * @returns
      */
     function isBool(h) {
-        return typeof h === 'boolean'
+        return typeof h === 'boolean';
     }
 
     /**
@@ -249,11 +265,11 @@
      */
     function getBool(h) {
         if (isBool(h)) {
-            return h
+            return h;
         }
 
         return (isString(h) && h.toLowerCase() === 'true') ||
-            (isNum(h) && h === 1)
+            (isNum(h) && h === 1);
     }
 
     /**
@@ -262,7 +278,7 @@
      * @returns
      */
     function isObj(h) {
-        return h !== null && typeof h === 'object' && h.constructor === Object
+        return h !== null && typeof h === 'object' && h.constructor === Object;
     }
 
     /**
@@ -271,7 +287,7 @@
      * @returns
      */
     function isFunc(h) {
-        return typeof h === 'function'
+        return typeof h === 'function';
     }
 
     /**
@@ -282,7 +298,7 @@
      * @returns
      */
     function replaceAll(h, a, b) {
-        return h.split(a).join(b)
+        return h.split(a).join(b);
     }
 
     /**
@@ -295,10 +311,10 @@
 
         if (isFunc(func)) {
             var th = {func: func, args: args};
-            return args.length !== 0 ? func.call(th, args) : func.call(th)
+            return args.length !== 0 ? func.call(th, args) : func.call(th);
         }
 
-        return null
+        return null;
     }
 
     /**
@@ -307,7 +323,7 @@
      * @returns
      */
     function isNum(h) {
-        return h !== null && !isNaN(h) && typeof h === 'number'
+        return h !== null && !isNaN(h) && typeof h === 'number';
     }
 
     /**
@@ -316,7 +332,7 @@
      * @returns
      */
     function isNumeric(h) {
-        return isDef(h) && !isNaN(Number(h))
+        return isDef(h) && !isNaN(Number(h));
     }
 
     /**
@@ -326,16 +342,16 @@
      */
     function isEmpty(h) {
         if (isUnDef(h)) {
-            return true
+            return true;
         } else if (isString(h)) {
-            return h === ''
+            return h === '';
         } else if (isArr(h)) {
-            return h.length === 0
+            return h.length === 0;
         } else if (isObj(h)) {
-            return objSize(h) === 0
+            return objSize(h) === 0;
         }
 
-        return false
+        return false;
     }
 
     /**
@@ -344,7 +360,7 @@
      * @returns
      */
     function isNull(h) {
-        return h == null
+        return h == null;
     }
 
     /**
@@ -354,10 +370,10 @@
      */
     function objSize(h) {
         if (!isDef(h) || !isObj(h)) {
-            return 0
+            return 0;
         }
 
-        return Object.entries(h).length || 0
+        return Object.entries(h).length || 0;
     }
 
     /**
@@ -368,7 +384,7 @@
      */
     function splitOnce(string, delim) {
         var components = string.split(delim);
-        return [components.shift(), components.join(delim)]
+        return [components.shift(), components.join(delim)];
     }
 
     /**
@@ -379,7 +395,7 @@
      */
     function splitOnceEnd(string, delim) {
         var components = string.split(delim);
-        return [components.slice(0, components.length - 1).join(delim), components.pop()]
+        return [components.slice(0, components.length - 1).join(delim), components.pop()];
     }
 
     /**
@@ -388,7 +404,7 @@
      * @returns
      */
     function isArr(h) {
-        return isDef(h) && Array.isArray(h)
+        return isDef(h) && Array.isArray(h);
     }
 
     /**
@@ -397,7 +413,7 @@
      * @returns
      */
     function getString(h) {
-        return isString(h) ? h : h.toString()
+        return isString(h) ? h : h.toString();
     }
 
     /**
@@ -407,10 +423,10 @@
      */
     function isQuery(q) {
         if (!isString(q)) {
-            return false
+            return false;
         }
 
-        return (new RegExp('.+(=|).*', 'g')).test(q)
+        return (new RegExp('.+(=|).*', 'g')).test(q);
     }
 
     /**
@@ -420,26 +436,26 @@
      */
     function getQuery(q) {
         if (!isQuery(q) || isEmpty(q)) {
-            return {}
+            return {};
         }
 
-        var equ_sym = HashConfig.get('equSymbol', equ_symbol),
-            and_sym = HashConfig.get('andSymbol', and_symbol);
+        var equalSymbol = HashConfig.get('equSymbol', equ_symbol);
+        var andSymbol   = HashConfig.get('andSymbol', and_symbol);
 
-        var qa     = q.split(and_sym),
-            output = {};
+        var queryParse  = q.split(andSymbol);
+        var output      = {};
 
-        qa.forEach(function (query, i) {
+        queryParse.forEach(function (query, i) {
             if (isEmpty(query)) {
-                return {}
+                return {};
             }
 
-            var parse   = splitOnce(query, equ_sym),
-                len     = query.split(equ_sym).length,
-                name    = getString(parse[0]);
+            var parse   = splitOnce(query, equalSymbol);
+            var len     = query.split(equalSymbol).length;
+            var name    = getString(parse[0]);
 
             if (isEmpty(name)) {
-                return {}
+                return {};
             }
 
             if (len >= 2) {
@@ -455,7 +471,7 @@
             }
         });
 
-        return output
+        return output;
     }
 
     /**
@@ -470,31 +486,32 @@
         q = filterQueEntry(q);
 
         if (isEmpty(q)) {
-            return ''
+            return '';
         }
 
-        var collector   = [],
-            equ_sym     = HashConfig.get('equSymbol', equ_symbol),
-            and_sym     = HashConfig.get('andSymbol', and_symbol);
+        var collector     = [];
+        var equSymbol     = HashConfig.get('equSymbol', equ_symbol);
+        var andSymbol     = HashConfig.get('andSymbol', and_symbol);
 
         objForeach(q, function (ref) {
             var name = ref[0];
             var value = ref[1];
 
             if (value === undefined) {
-                return
+                return;
             }
 
             if (isNull(value)) {
                 collector.push(name);
             } else {
-                var data_str    = getString(value),
-                    data_encode = encode_uri ? encodeURIComponent(data_str) : data_str;
-                collector.push(name + equ_sym + data_encode);
+                var dataString  = getString(value);
+                var dataEncode  = encode_uri ? encodeURIComponent(dataString) : dataString;
+
+                collector.push(name + equSymbol + dataEncode);
             }
         });
 
-        return collector.join(and_sym)
+        return collector.join(andSymbol);
     }
 
     /**
@@ -505,10 +522,10 @@
      */
     function lenOfChar(t, q) {
         if (!isString(t) || !isString(q)) {
-            return 0
+            return 0;
         }
 
-        return !t.includes(q) ? 0 : t.split('').filter(function (i) { return i === q; }).length
+        return !t.includes(q) ? 0 : t.split('').filter(function (i) { return i === q; }).length;
     }
 
     /**
@@ -518,19 +535,19 @@
      */
     function isTrueHash(q) {
         if (!isString(q) || isEmpty(q)) {
-            return false
+            return false;
         }
 
-        var que_sym = HashConfig.get('queSymbol', que_symbol);
+        var queSymbol = HashConfig.get('queSymbol', que_symbol);
 
-        if (q.includes(que_sym)) {
-            var spt = splitOnce(q, que_sym),
-                que = spt[1];
+        if (q.includes(queSymbol)) {
+            var queryParse  = splitOnce(q, queSymbol);
+            var query       = queryParse[1];
 
-            return isEmpty(que) || isQuery(que)
+            return isEmpty(query) || isQuery(query);
         }
 
-        return true
+        return true;
     }
 
     /**
@@ -540,22 +557,22 @@
      */
     function getTrueHash(q) {
         if (!isString(q) || isEmpty(q)) {
-            return ['', '']
+            return ['', ''];
         }
 
-        var emp = [q, ''];
+        var empty = [q, ''];
 
         if (!isTrueHash(q)) {
-            return emp
+            return empty;
         }
 
-        var que_sym = HashConfig.get('queSymbol', que_symbol);
+        var queSymbol = HashConfig.get('queSymbol', que_symbol);
 
-        if (q.includes(que_sym)) {
-            return splitOnce(q, que_sym)
+        if (q.includes(queSymbol)) {
+            return splitOnce(q, queSymbol);
         }
 
-        return emp
+        return empty;
     }
 
     /**
@@ -563,12 +580,12 @@
      * @returns
      */
     function getWinHash() {
-        var hash = '',
-            win  = getWindow(),
-            hsh  = HashConfig.get('getHashCallback');
+        var hash        = '';
+        var win         = getWindow();
+        var getHash     = HashConfig.get('getHashCallback');
 
-        if (isFunc(hsh)) {
-            hash = lunchFunc(hsh);
+        if (isFunc(getHash)) {
+            hash = lunchFunc(getHash);
         } else {
             try {
                 hash = win.location.hash;
@@ -581,16 +598,16 @@
         hash = getString(hash);
 
         // apply filters
-        var fil = HashConfig.get('getHashFilter');
+        var hashFilter = HashConfig.get('getHashFilter');
 
-        if (isFunc(fil)) {
-            hash = lunchFunc(fil, hash);
+        if (isFunc(hashFilter)) {
+            hash = lunchFunc(hashFilter, hash);
         }
 
         // convert again to string
         hash = getString(hash);
 
-        return hash.startsWith('#') ? hash.slice(1) : hash
+        return hash.startsWith('#') ? hash.slice(1) : hash;
     }
 
     /**
@@ -598,18 +615,18 @@
      * @param {string} q Hash value
      */
     function setWinHash(q) {
-        var handle = HashConfig.get('setHashCallback'),
-            filter = HashConfig.get('setHashFilter'),
-            win    = getWindow();
+        var setHash     = HashConfig.get('setHashCallback');
+        var setFilter   = HashConfig.get('setHashFilter');
+        var win         = getWindow();
 
-        if (isFunc(filter)) {
-            q = lunchFunc(filter, q);
+        if (isFunc(setFilter)) {
+            q = lunchFunc(setFilter, q);
         }
 
         q = getString(q);
 
-        if (isFunc(handle)) {
-            lunchFunc(handle, q);
+        if (isFunc(setHash)) {
+            lunchFunc(setHash, q);
         } else {
             try {
                 win.location.hash = q;
@@ -617,7 +634,6 @@
                 err([message.win_problem, e]);
             }
         }
-
     }
 
     /**
@@ -629,23 +645,25 @@
         }
 
         if (!isArr(names)) {
-            return {}
+            return {};
         }
 
+        // remove empty items
         names = names.filter(function (i) { return i !== ''; });
 
         if (isEmpty(names)) {
-            return {}
+            return {};
         }
 
-        var fetch = {}, i;
+        var fetch = {};
 
-        for (i in names) {
-            if (!names.hasOwnProperty(i)) { continue }
-            fetch[names[i]] = value;
+        for (var i in names) {
+            if (names.hasOwnProperty(i)) {
+                fetch[names[i]] = value;
+            }
         }
 
-        return fetch
+        return fetch;
     }
 
     /**
@@ -654,7 +672,7 @@
      * @returns {*|boolean}
      */
     function isQueParOk(n) {
-        return isString(n) || isNull(n) || n === undefined || isNum(n)
+        return isString(n) || isNull(n) || n === undefined || isNum(n);
     }
 
     /**
@@ -662,12 +680,12 @@
      * @returns {*}
      */
     function getHref() {
-        var href = '',
-            win  = getWindow(),
-            hsh  = HashConfig.get('getHrefCallback');
+        var href        = '';
+        var win         = getWindow();
+        var getHref     = HashConfig.get('getHrefCallback');
 
-        if (isFunc(hsh)) {
-            href = lunchFunc(hsh);
+        if (isFunc(getHref)) {
+            href = lunchFunc(getHref);
         } else {
             try {
                 href = win.location.href;
@@ -677,7 +695,7 @@
         }
 
         // convert to string
-        return getString(href)
+        return getString(href);
     }
 
     /**
@@ -685,7 +703,7 @@
      * @returns {Window|string|*}
      */
     function getWindow() {
-        return HashConfig.get('window') || window
+        return HashConfig.get('window') || window;
     }
 
     /**
@@ -699,8 +717,9 @@
         messages = toArray(messages);
 
         var message = messages.join(', ');
+
         if (force_log || HashConfig.get('log') === true) {
-            throw new Error(("(" + (info.name) + ") " + message))
+            throw new Error(("(" + (info.name) + ") " + message));
         }
     }
 
@@ -711,14 +730,15 @@
      */
     function filterQueEntry(queries) {
         if (!isObj(queries)) {
-            return {}
+            return {};
         }
 
         return objFilter(queries, function (q) {
-            var key     = q[0],
-                value   = q[1];
-            return isString(key) && !isEmpty(key) && isQueParOk(value)
-        })
+            var key     = q[0];
+            var value   = q[1];
+
+            return isString(key) && !isEmpty(key) && isQueParOk(value);
+        });
     }
 
     /**
@@ -727,7 +747,7 @@
      * @returns {*}
      */
     function getHashValue(wh) {
-        return getTrueHash(wh)[0]
+        return getTrueHash(wh)[0];
     }
 
     /**
@@ -736,7 +756,7 @@
      * @returns {*}
      */
     function getHashQuery(wh) {
-        return getTrueHash(wh)[1]
+        return getTrueHash(wh)[1];
     }
 
     /**
@@ -746,71 +766,95 @@
     function setEvHash(options) {
         if ( options === void 0 ) options = {};
 
-        var value = '',
-            query = {},
-            wh      = getWinHash(),
-            parse   = getTrueHash(wh),
-            cu_val  = parse[0],
-            cu_que  = getQuery(parse[1]);
+        // value is first part of any hash: #value?...
+        // in the first we should init value for set any hash
+        var value       = '';
 
-        var que_sym = HashConfig.get('queSymbol', que_symbol);
+        // query is second part of hash: #...?query
+        // this one should enter as a key:value object
+        var query       = {};
 
+        // get the current window hash as string
+        var hash        = getWinHash();
+
+        // trying to parse hash into 2 parts, value and query
+        var parse       = getTrueHash(hash);
+
+        // get first part of parsed hash as value
+        var hashValue   = parse[0];
+
+        // get first part of parsed hash as query and convert it to object
+        var hashQuery   = getQuery(parse[1]);
+
+        // get query symbol with configs
+        var queSymbol = HashConfig.get('queSymbol', que_symbol);
+
+        // checking for appending "value"
+        // if it's defined replace it and else use old value
         if ('value' in options) {
-            var v = options.value;
-            value = getString(v);
+            var val = options.value;
+            value = getString(val);
 
-            if (value.includes(que_sym)) {
-                value = replaceAll(value, que_sym, encodeURIComponent(que_sym));
+            // encoding all query symbols with "URIComponent" to prevent parsing errors
+            if (value.includes(queSymbol)) {
+                value = replaceAll(value, queSymbol, encodeURIComponent(queSymbol));
             }
         } else {
-            value = cu_val;
+            value = hashValue;
         }
 
+        // check for appending "query"
+        // if it's defined replace it and else use old query
         if ('query' in options) {
-            var q     = options.query,
-                entry$1 = q.entry || {},
-                type  = q.type || 'merge';
+            var que     = options.query;
+            var entry$1   = que.entry || {};
+            var type    = que.type || 'merge';
 
             if (isObj(entry$1)) {
                 entry$1   = filterQueEntry(entry$1);
 
                 if (type === 'merge' && !isEmpty(entry$1)) {
-                    query = Object.assign(cu_que, entry$1);
+                    query = Object.assign(hashQuery, entry$1);
                 } else if (type === 'define') {
                     query = entry$1;
                 }
             }
         } else {
-            query = cu_que;
+            query = hashQuery;
         }
 
-        // enter hash using string type
+        // setting hash as string
+        // it works as a standalone part
         if ('string' in options) {
-            var str = '',
-                sv = parse[0],
-                sq = parse[1];
+            var str      = '';
+
+            // old query and value
+            var valueStr = parse[0];
+            var queryStr = parse[1];
 
             if (typeof options.string.value !== 'undefined') {
-                sv = options.string.value;
+                valueStr = options.string.value;
             }
 
             if (typeof options.string.query !== 'undefined') {
-                sq = options.string.query;
+                queryStr = options.string.query;
             }
 
-            str = sv;
-            if (!isEmpty(sq)) {
-                str += que_sym + sq;
+            str = valueStr;
+
+            if (!isEmpty(queryStr)) {
+                str += queSymbol + queryStr;
             }
 
             setWinHash(str);
-            return
+
+            return;
         }
 
         var entry = value;
 
         if (!isEmpty(query)) {
-            entry += que_sym + toQuery(query);
+            entry += queSymbol + toQuery(query);
         }
 
         setWinHash(entry);
@@ -831,7 +875,7 @@
             data = data.filter(function (d) { return !isEmpty(d); });
         }
 
-        return data
+        return data;
     }
 
     /**
@@ -850,7 +894,7 @@
      * @returns {{[p: string]: unknown}|{}}
      */
     function objFilter(obj, callback) {
-        return Object.fromEntries(Object.entries(obj).filter(callback))
+        return Object.fromEntries(Object.entries(obj).filter(callback));
     }
 
     /**
@@ -860,26 +904,26 @@
      * @returns {{}|{[p: string]: any}}
      */
     function objMap(obj, callback) {
-        var cl = {}, k;
+        var fetch = {};
 
         if (!isFunc(callback)) {
-            return obj
+            return obj;
         }
 
-        for (k in obj) {
-            var key = k,
-                val = obj[key],
-                c   = callback(k, val);
+        for (var k in obj) {
+            var key         = k;
+            var value       = obj[key];
+            var collect     = callback(k, value);
 
-            if (isArr(c) && c.length === 2) {
-                key = c[0];
-                val = c[1];
+            if (isArr(collect) && collect.length === 2) {
+                key = collect[0];
+                value = collect[1];
             }
 
-            cl[key] = val;
+            fetch[key] = value;
         }
 
-        return cl
+        return fetch;
     }
 
     /**
@@ -893,24 +937,24 @@
         if ( multiple === void 0 ) multiple = true;
 
         if (!isString(data)) {
-            return {}
+            return {};
         }
 
         data        = data.trim();
-        var loop    = multiple ? data.split(',') : [data],
-            cl      = {};
+        var loop    = multiple ? data.split(',') : [data];
+        var fetch   = {};
 
         loop.forEach(function (i) {
-            var kv  = splitOnce(i.trim(), ':'),
-                k   = unescape(kv[0]),
-                v   = unescape(kv[1]);
+            var parse   = splitOnce(i.trim(), ':');
+            var key     = decodeURIComponent(parse[0]);
+            var value   = decodeURIComponent(parse[1]);
 
-            if (!isEmpty(k)) {
-                cl[k] = v;
+            if (!isEmpty(key)) {
+                fetch[key] = value;
             }
         });
 
-        return cl
+        return fetch;
     }
 
     /**
@@ -922,7 +966,7 @@
      */
     function insertStr(data, insert, index) {
         if (!isString(data)) {
-            return data
+            return data;
         }
 
         if (isString(index)) {
@@ -936,7 +980,7 @@
         }
 
         if (!isNum(index)) {
-            return data
+            return data;
         }
 
         if (index < 0) {
@@ -944,7 +988,7 @@
         }
 
         if (index > 0) {
-            return data.substring(0, index) + insert + data.substr(index)
+            return data.substring(0, index) + insert + data.substring(index);
         }
 
         return insert + data;
@@ -959,17 +1003,17 @@
      */
     function toObjQue(data, value) {
         if (isObj(data)) {
-            return data
+            return data;
         }
 
         if (isString(data) && isQueParOk(value) && !isEmpty(data)) {
-            var d   = {};
-            d[data] = value;
+            var obj   = {};
+            obj[data] = value;
 
-            return d
+            return obj;
         }
 
-        return false
+        return false;
     }
 
     /**
@@ -978,7 +1022,7 @@
      * @returns {string}
      */
     function getUrlHash(url) {
-        return splitOnce(url, '#')[1] || ''
+        return splitOnce(url, '#')[1] || '';
     }
 
     /**
@@ -987,7 +1031,7 @@
      * @returns {boolean}
      */
     function isRegExp(data) {
-        return data instanceof RegExp
+        return data instanceof RegExp;
     }
 
     var h = /*#__PURE__*/Object.freeze({
@@ -1037,6 +1081,9 @@
         getUrlHash: getUrlHash,
         isRegExp: isRegExp
     });
+
+    // All direct components are deprecated!!
+
 
     /* Add functions */
 
@@ -1543,8 +1590,9 @@
 
     /**
      * add a string to location hash.
-     * @param {string} value
-     * @param {object|string} options
+     *
+     * @param   {string}        value       entry value to add
+     * @param   {object|string} options     adding options
      * @returns HashComponent
      */
     HashComponent.add = function (value, options) {
@@ -1556,59 +1604,66 @@
         var cp = HashComponent;
 
         if (!isString(value) || isEmpty(value)) {
-            return cp
+            return cp;
         }
 
-        var wh      = getWinHash(),
-            entry   = '';
+        var hash        = getWinHash();
+        var entry       = '';
 
         // parse position options
         if (isString(options)) {
             options = {position: options};
         }
 
-        var position = options.position || 'after',
-            multiple = getBool(options.multiple || false);
+        var position = options.position || 'after';
+        var multiple = getBool(options.multiple || false);
 
         if (isEmpty(position) || !isString(position)) {
             position = 'after';
         }
 
-        var pos = parseKv(position, false);
+        var parsePosition = parseKv(position, false);
 
-        if ('after' in pos) {
-            var a_pos = pos.after;
+        if ('after' in parsePosition) {
+            var posAfter = parsePosition.after;
 
-            if (isEmpty(a_pos)) {
-                entry = wh + value;
+            if (isEmpty(posAfter)) {
+                entry = hash + value;
             } else {
-                entry = multiple ? replaceAll(wh, a_pos, a_pos + value)
-                    : wh.replace(a_pos, a_pos + value);
+                if (multiple) {
+                    entry = replaceAll(hash, posAfter, posAfter + value);
+                } else {
+                    entry = hash.replace(posAfter, posAfter + value);
+                }
             }
-        } else if ('before' in pos) {
-            var b_pos = pos.before;
+        } else if ('before' in parsePosition) {
+            var posBefore = parsePosition.before;
 
-            if (isEmpty(b_pos)) {
-                entry = value + wh;
+            if (isEmpty(posBefore)) {
+                entry = value + hash;
             } else {
-                entry = multiple ? replaceAll(wh, b_pos, value + b_pos)
-                    : wh.replace(b_pos, value + b_pos);
+                if (multiple) {
+                    entry = replaceAll(hash, posBefore, value + posBefore);
+                } else {
+                    entry = hash.replace(posBefore, value + posBefore);
+                }
             }
-        } else if ('index' in pos) {
-            entry = insertStr(wh, value, pos.index);
+        } else if ('index' in parsePosition) {
+            entry = insertStr(hash, value, parsePosition.index);
         }
 
         if (!isEmpty(entry)) {
             setWinHash(entry);
         }
 
-        return cp
+        return cp;
     };
 
     /**
      * clear the page hash.
+     *
+     * @param   {boolean}   push_state  remove '#' from hash or no?
      * @returns HashComponent
-     * @param push_state
      */
     HashComponent.clear = function (push_state) {
         if ( push_state === void 0 ) push_state = true;
@@ -1623,7 +1678,7 @@
             }
         }
 
-        return cp
+        return cp;
     };
 
     /**
@@ -1631,56 +1686,60 @@
      * @returns string
      */
     HashComponent.get = function () {
-        return getWinHash()
+        return getWinHash();
     };
 
     /**
      * check or searching for a string in hash.
-     * @param {string|array} data
+     *
+     * @param {string|array}    data    word(s)/string(s) to check in hash string
      * @returns boolean
      */
     HashComponent.have = function (data) {
         if ( data === void 0 ) data = '';
 
         data = toArray(data);
+
         if (!isArr(data)) {
-            return false
+            return false;
         }
 
-        var wh = getWinHash();
-        data   = data.filter(function (i) { return i !== ''; });
+        var hash    = getWinHash();
 
         if (isEmpty(data)) {
-            return !isEmpty(wh)
+            return !isEmpty(hash);
         }
 
         for (var i in data) {
-            if (!data.hasOwnProperty(i) || !wh.includes(data[i])) {
-                return false
+            if (!data.hasOwnProperty(i) || !hash.includes(data[i])) {
+                return false;
             }
         }
 
-        return true
+        return true;
     };
 
     /**
      * checking with equals in location hash.
+     * @param   {string}    data
      * @returns boolean
-     * @param data
      */
     HashComponent.is = function (data) {
-        return isString(data) && getWinHash() === data
+        return isString(data) && getWinHash() === data;
     };
 
-    var locked     = false,
-        force_lock = false;
+    // defined as 2 global variable in this section
+    // to save "locked" and "force_lock" status
+    var locked     = false;
+    var force_lock = false;
 
     /**
      * check if hash is locked.
+     *
      * @returns boolean
      */
     HashComponent.isLocked = function () {
-        return locked
+        return locked;
     };
 
     /**
@@ -1692,11 +1751,12 @@
             locked = false;
         }
 
-        return HashComponent
+        return HashComponent;
     };
 
     /**
-     * lock the page hash.
+     * Lock the page hash.
+     *
      * @param {object} options
      * @returns HashComponent
      */
@@ -1706,24 +1766,24 @@
         var cp = HashComponent;
 
         if (locked || !isObj(options)) {
-            return cp
+            return cp;
         }
 
-        force_lock   = getBool(options.force || false);
-        var wh     = getWinHash(),
-              wn     = getWindow();
+        force_lock      = getBool(options.force || false);
+        var hash      = getWinHash();
+        var win       = getWindow();
 
-        if (typeof wn.onhashchange !== 'undefined') {
-            wn.onhashchange = function () {
+        if (typeof win.onhashchange !== 'undefined') {
+            win.onhashchange = function () {
                 if (locked) {
-                    setWinHash(wh);
+                    setWinHash(hash);
                 }
             };
 
             locked = true;
         }
 
-        return cp
+        return cp;
     };
 
     /**
@@ -1737,32 +1797,33 @@
         var cp = HashComponent;
 
         values = toArray(values);
+
         if (isEmpty(values)) {
-            return cp
+            return cp;
         }
 
-        var wh      = getWinHash(),
-            entry   = wh;
+        var hash      = getWinHash();
+        var entry     = hash;
 
-        if (isEmpty(wh)) {
-            return cp
+        if (isEmpty(hash)) {
+            return cp;
         }
 
-        values.forEach(function (v) {
-            if (isString(v)) {
-                if (entry.includes(v)) {
-                    entry = replaceAll(entry, v, '');
+        values.forEach(function (val) {
+            if (isString(val)) {
+                if (entry.includes(val)) {
+                    entry = replaceAll(entry, val, '');
                 }
-            } else if (isRegExp(v)) {
-                entry = entry.replace(v, '');
+            } else if (isRegExp(val)) {
+                entry = entry.replace(val, '');
             }
         });
 
-        if (entry !== wh) {
+        if (entry !== hash) {
             setWinHash(entry);
         }
 
-        return cp
+        return cp;
     };
 
     /**
@@ -1776,12 +1837,12 @@
         var cp = HashComponent;
 
         if (!isString(value)) {
-            return cp
+            return cp;
         }
 
         setWinHash(value);
 
-        return cp
+        return cp;
     };
 
     /**
@@ -1794,70 +1855,77 @@
         var cp = HashComponent;
 
         if (!isString(to) || (!isString(from) && !isRegExp(from))) {
-            return cp
+            return cp;
         }
 
         setWinHash(getWinHash().replace(from, to));
 
-        return cp
+        return cp;
     };
 
     /**
      * Hash Event component.
-     * @param {string} type The listeners
-     * @param {function} listener   The function/callback
+     *
+     * @param {string}      listener    The listener(s)
+     * @param {function}    callback    The function/callback
      * @returns HashComponent
      */
-    HashComponent.event = HashComponent.on = function (type, listener) {
-        if ( listener === void 0 ) listener = empty_func;
+    HashComponent.event = HashComponent.on = function (listener, callback) {
+        if ( callback === void 0 ) callback = empty_func;
 
         var cp = HashComponent;
 
-        if (!isString(type)) {
-            return cp
+        if (!isString(listener)) {
+            return cp;
         }
 
-        var evs     = replaceAll(type, ',', ' '),
-            wn      = getWindow();
+        var listeners   = replaceAll(listener, ',', ' ');
+        var win         = getWindow();
 
-        listener    = isFunc(listener) ? listener : empty_func;
+        callback    = isFunc(callback) ? callback : empty_func;
 
         // check addEventListener based on window
-        if (typeof wn.addEventListener === 'undefined') {
+        if (typeof win.addEventListener === 'undefined') {
             err(message.event_und);
-            return cp
+
+            return cp;
         }
 
-        var split = evs.split(' ').filter(function (e) { return !isEmpty(e); }),
-            event = [];
+        var events  = listeners.split(' ').filter(function (e) { return !isEmpty(e); });
+        var fetch   = [];
 
-        split.forEach(function (i) {
-            if (!event.includes(i)) {
-                event.push(i);
+        // instead of [...new Set(array)]
+        events.forEach(function (i) {
+            if (!fetch.includes(i)) {
+                fetch.push(i);
             }
         });
 
-        event.forEach(function (e) {
-            switch (e) {
+        fetch.forEach(function (name) {
+            switch (name) {
                 case 'change':
-                    wn.addEventListener('hashchange', function (e) {
-                        var newHash = getUrlHash(e.newURL || ''),
-                            oldHash = getUrlHash(e.oldURL || '');
-                        lunchFunc(listener, e, {oldHash: oldHash, newHash: newHash});
+                    win.addEventListener('hashchange', function (e) {
+                        var newHash = getUrlHash(e.newURL || '');
+                        var oldHash = getUrlHash(e.oldURL || '');
+
+                        lunchFunc(callback, e, {oldHash: oldHash, newHash: newHash});
                     });
-                    break
+
+                    break;
 
                 case 'load':
-                    wn.addEventListener('load', listener);
-                    break
+                    win.addEventListener('load', callback);
+
+                    break;
 
                 case 'ready':
-                    lunchFunc(listener);
-                    break
+                    lunchFunc(callback);
+
+                    break;
             }
         });
 
-        return cp
+        return cp;
     };
 
     /**
@@ -1892,53 +1960,53 @@
         var cp = HashCpValue;
 
         if (!isString(value) || isEmpty(value)) {
-            return cp
+            return cp;
         }
 
-        var wh      = getWinHash(),
-            v       = getHashValue(wh),
-            entry   = '';
+        var hash        = getWinHash();
+        var hashValue   = getHashValue(hash);
+        var entry       = '';
 
         // parse position options
         if (isString(options)) {
             options = {position: options};
         }
 
-        var position = options.position || 'after',
-            multiple = getBool(options.multiple || false);
+        var position = options.position || 'after';
+        var multiple = getBool(options.multiple || false);
 
         if (isEmpty(position) || !isString(position)) {
             position = 'after';
         }
 
-        var pos = parseKv(position, false);
+        var posParse = parseKv(position, false);
 
-        if ('after' in pos) {
-            var a_pos = pos.after;
+        if ('after' in posParse) {
+            var posAfter = posParse.after;
 
-            if (isEmpty(a_pos)) {
-                entry = v + value;
+            if (isEmpty(posAfter)) {
+                entry = hashValue + value;
             } else {
                 if (multiple) {
-                    entry = replaceAll(v, a_pos, a_pos + value);
+                    entry = replaceAll(hashValue, posAfter, posAfter + value);
                 } else {
-                    entry = v.replace(a_pos, a_pos + value);
+                    entry = hashValue.replace(posAfter, posAfter + value);
                 }
             }
-        } else if ('before' in pos) {
-            var b_pos = pos.before;
+        } else if ('before' in posParse) {
+            var posBefore = posParse.before;
 
-            if (isEmpty(b_pos)) {
-                entry = value + v;
+            if (isEmpty(posBefore)) {
+                entry = value + hashValue;
             } else {
                 if (multiple) {
-                    entry = replaceAll(v, b_pos, value + b_pos);
+                    entry = replaceAll(hashValue, posBefore, value + posBefore);
                 } else {
-                    entry = v.replace(b_pos, value + b_pos);
+                    entry = hashValue.replace(posBefore, value + posBefore);
                 }
             }
-        } else if ('index' in pos) {
-            entry = insertStr(v, value, pos.index);
+        } else if ('index' in posParse) {
+            entry = insertStr(hashValue, value, posParse.index);
         }
 
         if (!isEmpty(entry)) {
@@ -1947,7 +2015,7 @@
             });
         }
 
-        return cp
+        return cp;
     };
 
     /**
@@ -1963,7 +2031,7 @@
             });
         }
 
-        return cp
+        return cp;
     };
 
     /**
@@ -1971,7 +2039,7 @@
      * @returns HashCpValue
      */
     HashCpValue.get = function () {
-        return getHashValue(getWinHash())
+        return getHashValue(getWinHash());
     };
 
     /**
@@ -1983,25 +2051,26 @@
         if ( data === void 0 ) data = '';
 
         data = toArray(data);
+
         if (!isArr(data)) {
-            return false
+            return false;
         }
 
-        var wv = HashCpValue.get();
+        var hashValue = HashCpValue.get();
 
         if (isEmpty(data)) {
-            return !isEmpty(wv)
+            return !isEmpty(hashValue);
         }
 
         for (var i in data) {
-            if (!data.hasOwnProperty(i)) { continue }
+            if (!data.hasOwnProperty(i)) { continue; }
 
-            if (!wv.includes(data[i])) {
-                return false
+            if (!hashValue.includes(data[i])) {
+                return false;
             }
         }
 
-        return true
+        return true;
     };
 
     /**
@@ -2010,7 +2079,7 @@
      * @param data
      */
     HashCpValue.is = function (data) {
-        return isString(data) && HashCpValue.get() === data
+        return isString(data) && HashCpValue.get() === data;
     };
 
     /**
@@ -2022,14 +2091,14 @@
         var cp = HashCpValue;
 
         if (!isString(value)) {
-            return cp
+            return cp;
         }
 
         setEvHash({
             value: value
         });
 
-        return cp
+        return cp;
     };
 
     /**
@@ -2042,23 +2111,23 @@
         var cp = HashCpValue;
 
         if (!isString(to) || (!isString(from) && !isRegExp(from))) {
-            return cp
+            return cp;
         }
 
-        var wh      = getWinHash(),
-            value   = getHashValue(wh);
+        var hash        = getWinHash();
+        var hashValue   = getHashValue(hash);
 
-        if (isEmpty(value)) {
-            return cp
+        if (isEmpty(hashValue)) {
+            return cp;
         }
 
         setEvHash({
             string: {
-                value: value.replace(from, to)
+                value: hashValue.replace(from, to)
             }
         });
 
-        return cp
+        return cp;
     };
 
     /**
@@ -2072,39 +2141,44 @@
         var cp = HashCpValue;
 
         values = toArray(values);
+
         if (isEmpty(values)) {
-            return cp
+            return cp;
         }
 
-        var wh      = getWinHash(),
-            wv      = getHashValue(wh),
-            entry   = wv;
+        var hash        = getWinHash();
+        var hashValue   = getHashValue(hash);
+        var entry       = hashValue;
 
-        if (isEmpty(wv)) {
-            return cp
+        if (isEmpty(hashValue)) {
+            return cp;
         }
 
-        values.forEach(function (v) {
-            if (isString(v)) {
-                if (entry.includes(v)) {
-                    entry = replaceAll(entry, v, '');
+        values.forEach(function (value) {
+            if (isString(value)) {
+                if (entry.includes(value)) {
+                    entry = replaceAll(entry, value, '');
                 }
-            } else if (isRegExp(v)) {
-                entry = entry.replace(v, '');
+            } else if (isRegExp(value)) {
+                entry = entry.replace(value, '');
             }
         });
 
-        if (entry !== wv) {
+        if (entry !== hashValue) {
             setEvHash({
                 value: entry
             });
         }
 
-        return cp
+        return cp;
     };
 
-    HashComponent.value = HashCpValue;
-    HashComponent.v     = HashCpValue;
+    /**
+     * Value components
+     *
+     * @type {HashCpValue}
+     */
+    HashComponent.value = HashComponent.v = HashCpValue;
 
     /**
      * add query.
@@ -2118,32 +2192,33 @@
         var cp  = HashCpQuery;
 
         data = toObjQue(data, value);
+
         if (!data || !isObj(data)) {
-            return cp
+            return cp;
         }
 
-        var que = cp.get();
+        var query = cp.get();
 
-        if (!isEmpty(que)) {
+        if (!isEmpty(query)) {
             data = objFilter(data, function (ref) {
-                var n = ref[0];
+                var name = ref[0];
                 ref[1];
 
-                return !que.hasOwnProperty(n)
+                return !query.hasOwnProperty(name);
             });
         }
 
         if (isEmpty(data)) {
-            return cp
+            return cp;
         }
 
         setEvHash({
             query: {
-                entry: Object.assign(que, data)
+                entry: Object.assign(query, data)
             }
         });
 
-        return cp
+        return cp;
     };
 
     /**
@@ -2151,21 +2226,22 @@
      * @returns HashCpQuery
      */
     HashCpQuery.clear = function () {
-        var cp = HashCpQuery,
-            wh = getWinHash(),
-            wv = getHashValue(wh);
+        var cp = HashCpQuery;
+
+        var hash        = getWinHash();
+        var hashValue   = getHashValue(hash);
 
         if (!cp.have()) {
-            return cp
+            return cp;
         }
 
-        if (!isEmpty(wv)) {
-            setWinHash(wv);
+        if (!isEmpty(hashValue)) {
+            setWinHash(hashValue);
         } else {
             setWinHash('');
         }
 
-        return cp
+        return cp;
     };
 
     /**
@@ -2177,7 +2253,7 @@
         var cp    = HashCpQuery;
 
         if (!isObj(data)) {
-            return cp
+            return cp;
         }
 
         setEvHash({
@@ -2187,59 +2263,58 @@
             }
         });
 
-        return cp
+        return cp;
     };
 
     /**
      * get the location hash query.
-     * @param {string|array} que
+     * @param {string|array} queries
      * @returns object
      */
-    HashCpQuery.get = function (que) {
-        if ( que === void 0 ) que = [];
+    HashCpQuery.get = function (queries) {
+        if ( queries === void 0 ) queries = [];
 
-        que = toArray(que);
-        if (!isArr(que)) {
-            return {}
+        queries = toArray(queries);
+
+        if (!isArr(queries)) {
+            return {};
         }
 
-        que = que.filter(function (i) { return i !== ''; });
+        var empty   = queries.length === 1 ? undefined : createObjVal(queries, undefined);
+        var hash    = getWinHash();
 
-        var emp = que.length === 1 ? undefined : createObjVal(que, undefined),
-            wh  = getWinHash();
-
-        if (isEmpty(wh)) {
-            return emp
+        if (isEmpty(hash)) {
+            return empty;
         }
 
-        var hsh_que = getHashQuery(wh);
+        var hashQuery = getHashQuery(hash);
 
-        if (isEmpty(hsh_que) || !isQuery(hsh_que)) {
-            return emp
+        if (isEmpty(hashQuery) || !isQuery(hashQuery)) {
+            return empty;
         }
 
-        var q   = getQuery(hsh_que),
-            len = que.length;
+        var query   = getQuery(hashQuery);
+        var len     = queries.length;
 
         if (len === 0) {
-            return q
+            return query;
         }
 
         if (len === 1) {
-            var fe = que[0];
-            return q.hasOwnProperty(fe) ? q[fe] : emp
+            var firstQuery = queries[0];
+            return query.hasOwnProperty(firstQuery) ? query[firstQuery] : empty;
         }
 
-        var ans = {}, i;
+        var fetch = {};
 
-        for (i in que) {
-            if (que.hasOwnProperty(i)) {
-                var v  = que[i];
-                ans[v] = q.hasOwnProperty(v) ? q[v] : undefined;
+        for (var i in queries) {
+            if (queries.hasOwnProperty(i)) {
+                var value  = queries[i];
+                fetch[value] = query.hasOwnProperty(value) ? query[value] : undefined;
             }
         }
 
-        return ans
+        return fetch;
     };
 
     /**
@@ -2251,23 +2326,24 @@
         if ( data === void 0 ) data = '';
 
         data = toArray(data);
+
         if (!isArr(data)) {
-            return false
+            return false;
         }
 
-        var q  = HashCpQuery.get();
+        var query  = HashCpQuery.get();
 
         if (isEmpty(data)) {
-            return !isEmpty(q)
+            return !isEmpty(query);
         }
 
         for (var i in data) {
-            if (!data.hasOwnProperty(i) || !q.hasOwnProperty(data[i])) {
-                return false
+            if (!data.hasOwnProperty(i) || !query.hasOwnProperty(data[i])) {
+                return false;
             }
         }
 
-        return true
+        return true;
     };
 
     /**
@@ -2277,7 +2353,7 @@
      * @param value
      */
     HashCpQuery.is = function (name, value) {
-        return isString(name) && HashCpQuery.get(name) === value
+        return isString(name) && HashCpQuery.get(name) === value;
     };
 
     /**
@@ -2294,7 +2370,7 @@
         data = toObjQue(data, value);
 
         if (!data || !isObj(data)) {
-            return cp
+            return cp;
         }
 
         setEvHash({
@@ -2303,7 +2379,7 @@
             }
         });
 
-        return cp
+        return cp;
     };
 
     /**
@@ -2320,16 +2396,17 @@
         data = toObjQue(data, value);
 
         if (!data || !isObj(data) || !cp.have()) {
-            return cp
+            return cp;
         }
 
         data = objFilter(data, function (d) {
-            var n = d[0],
-                v = d[1];
-            return v !== undefined && cp.have(n)
+            var name    = d[0];
+            var value   = d[1];
+
+            return value !== undefined && cp.have(name);
         });
 
-        return isEmpty(data) ? cp : cp.set(data)
+        return isEmpty(data) ? cp : cp.set(data);
     };
 
     /**
@@ -2343,29 +2420,30 @@
         var cp = HashCpQuery;
 
         name = toArray(name);
+
         if (isEmpty(name)) {
-            return cp
+            return cp;
         }
 
-        var que     = cp.get(),
-            entry   = que;
+        var query   = cp.get();
+        var entry   = query;
 
-        if (isEmpty(que)) {
-            return cp
+        if (isEmpty(query)) {
+            return cp;
         }
 
         entry = objFilter(entry, function (ref) {
-            var k = ref[0];
+            var key = ref[0];
             ref[1];
 
-            return !name.includes(k)
+            return !name.includes(key);
         });
 
-        if (que !== entry) {
+        if (query !== entry) {
             cp.define(entry);
         }
 
-        return cp
+        return cp;
     };
 
     /**
@@ -2377,7 +2455,7 @@
         var cp = HashCpQueryStr;
 
         if (!isString(string)) {
-            return cp
+            return cp;
         }
 
         setEvHash({
@@ -2386,7 +2464,7 @@
             }
         });
 
-        return cp
+        return cp;
     };
 
     /**
@@ -2394,7 +2472,7 @@
      * @returns HashCpQueryStr
      */
     HashCpQueryStr.get = function () {
-        return getHashQuery(getWinHash())
+        return getHashQuery(getWinHash());
     };
 
     /**
@@ -2406,25 +2484,26 @@
         if ( data === void 0 ) data = '';
 
         data = toArray(data);
+
         if (!isArr(data)) {
-            return false
+            return false;
         }
 
-        var qs = HashCpQueryStr.get();
+        var queryStr = HashCpQueryStr.get();
 
         if (isEmpty(data)) {
-            return !isEmpty(qs)
+            return !isEmpty(queryStr);
         }
 
         for (var i in data) {
-            if (!data.hasOwnProperty(i)) { continue }
+            if (!data.hasOwnProperty(i)) { continue; }
 
-            if (!qs.includes(data[i])) {
-                return false
+            if (!queryStr.includes(data[i])) {
+                return false;
             }
         }
 
-        return true
+        return true;
     };
 
     /**
@@ -2433,7 +2512,7 @@
      * @param data
      */
     HashCpQueryStr.is = function (data) {
-        return isString(data) && HashCpQueryStr.get() === data
+        return isString(data) && HashCpQueryStr.get() === data;
     };
 
     /**
@@ -2446,23 +2525,23 @@
         var cp = HashCpQueryStr;
 
         if (!isString(to) || (!isString(from) && !isRegExp(from))) {
-            return cp
+            return cp;
         }
 
-        var wh      = getWinHash(),
-            query   = getHashQuery(wh);
+        var hash        = getWinHash();
+        var hashQuery   = getHashQuery(hash);
 
-        if (isEmpty(query)) {
-            return cp
+        if (isEmpty(hashQuery)) {
+            return cp;
         }
 
         setEvHash({
             string: {
-                query: query.replace(from, to)
+                query: hashQuery.replace(from, to)
             }
         });
 
-        return cp
+        return cp;
     };
 
     /**
@@ -2476,29 +2555,30 @@
         var cp = HashCpQueryStr;
 
         values = toArray(values);
+
         if (isEmpty(values)) {
-            return cp
+            return cp;
         }
 
-        var wh      = getWinHash(),
-            qs      = getHashQuery(wh),
-            entry   = qs;
+        var hash        = getWinHash();
+        var hashQuery   = getHashQuery(hash);
+        var entry       = hashQuery;
 
-        if (isEmpty(qs)) {
-            return cp
+        if (isEmpty(hashQuery)) {
+            return cp;
         }
 
-        values.forEach(function (v) {
-            if (isString(v)) {
-                if (entry.includes(v)) {
-                    entry = replaceAll(entry, v, '');
+        values.forEach(function (value) {
+            if (isString(value)) {
+                if (entry.includes(value)) {
+                    entry = replaceAll(entry, value, '');
                 }
-            } else if (isRegExp(v)) {
-                entry = entry.replace(v, '');
+            } else if (isRegExp(value)) {
+                entry = entry.replace(value, '');
             }
         });
 
-        if (entry !== qs) {
+        if (entry !== hashQuery) {
             setEvHash({
                 string: {
                     query: entry
@@ -2506,7 +2586,7 @@
             });
         }
 
-        return cp
+        return cp;
     };
 
     /**
@@ -2524,53 +2604,53 @@
         var cp = HashCpQueryStr;
 
         if (!isString(value) || isEmpty(value)) {
-            return cp
+            return cp;
         }
 
-        var wh      = getWinHash(),
-            v       = getHashQuery(wh),
-            entry   = '';
+        var hash        = getWinHash();
+        var hashQuery   = getHashQuery(hash);
+        var entry       = '';
 
         // parse position options
         if (isString(options)) {
             options = {position: options};
         }
 
-        var position = options.position || 'after',
-            multiple = getBool(options.multiple || false);
+        var position = options.position || 'after';
+        var multiple = getBool(options.multiple || false);
 
         if (isEmpty(position) || !isString(position)) {
             position = 'after';
         }
 
-        var pos = parseKv(position, false);
+        var posParse = parseKv(position, false);
 
-        if ('after' in pos) {
-            var a_pos = pos.after;
+        if ('after' in posParse) {
+            var posAfter = posParse.after;
 
-            if (isEmpty(a_pos)) {
-                entry = v + value;
+            if (isEmpty(posAfter)) {
+                entry = hashQuery + value;
             } else {
                 if (multiple) {
-                    entry = replaceAll(v, a_pos, a_pos + value);
+                    entry = replaceAll(hashQuery, posAfter, posAfter + value);
                 } else {
-                    entry = v.replace(a_pos, a_pos + value);
+                    entry = hashQuery.replace(posAfter, posAfter + value);
                 }
             }
-        } else if ('before' in pos) {
-            var b_pos = pos.before;
+        } else if ('before' in posParse) {
+            var posBefore = posParse.before;
 
-            if (isEmpty(b_pos)) {
-                entry = value + v;
+            if (isEmpty(posBefore)) {
+                entry = value + hashQuery;
             } else {
                 if (multiple) {
-                    entry = replaceAll(v, b_pos, value + b_pos);
+                    entry = replaceAll(hashQuery, posBefore, value + posBefore);
                 } else {
-                    entry = v.replace(b_pos, value + b_pos);
+                    entry = hashQuery.replace(posBefore, value + posBefore);
                 }
             }
-        } else if ('index' in pos) {
-            entry = insertStr(v, value, pos.index);
+        } else if ('index' in posParse) {
+            entry = insertStr(hashQuery, value, posParse.index);
         }
 
         if (!isEmpty(entry)) {
@@ -2581,23 +2661,34 @@
             });
         }
 
-        return cp
+        return cp;
     };
 
     /**
      * Hash query string components.
+     *
      * @type {HashCpQueryStr}
      */
     HashCpQuery.str = HashCpQueryStr;
 
-    HashComponent.query = HashCpQuery;
-    HashComponent.q     = HashCpQuery;
+    /**
+     * Query components
+     *
+     * @type {HashCpQuery}
+     */
+    HashComponent.query = HashComponent.q = HashCpQuery;
 
     var core = {
         components: HashComponent,
         config: HashConfig
     };
 
+    /**
+     * Define Hash constant to use as main access
+     * to all helpers and components.
+     *
+     * @type {object}
+     */
     var Hash = Object.assign({
         config: core.config.instance,
         h: h
