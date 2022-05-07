@@ -37,7 +37,7 @@ HashComponent.event = HashComponent.on = (listener, callback = empty_func) => {
         if (!fetch.includes(i)) {
             fetch.push(i);
         }
-    })
+    });
 
     fetch.forEach(name => {
         switch (name) {
