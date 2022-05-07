@@ -1,13 +1,15 @@
-// main rollup build config
-import commonjs from '@rollup/plugin-commonjs'
-import {nodeResolve} from '@rollup/plugin-node-resolve'
-import buble from '@rollup/plugin-buble'
-import whiteSpace from 'rollup-plugin-flow-no-whitespace'
-import {terser} from 'rollup-plugin-terser'
-import info from './src/info'
+import commonjs from '@rollup/plugin-commonjs';
+import {nodeResolve} from '@rollup/plugin-node-resolve';
+import buble from '@rollup/plugin-buble';
+import whiteSpace from 'rollup-plugin-flow-no-whitespace';
+import {terser} from 'rollup-plugin-terser';
+import info from './src/info';
 
-// description of library
-function getBanner(format) {
+/**
+ * @param {string} format   format name
+ * @returns {string}
+ */
+const getBanner = (format) => {
     return `/**
  * HashJs javascript library v${info.version}
  * Copyright (c) ${new Date().getFullYear()} irmmr
@@ -15,21 +17,22 @@ function getBanner(format) {
  *
  * (${format})
  * https://github.com/irmmr/hash.js
- */\n`
+ */\n`;
 }
 
 // trs comments
-const trs = terser({
+const fileTerser = terser({
     output: {
         comments: function (node, comment) {
-            let text = comment.value,
-                type = comment.type
+            let text = comment.value;
+            let type = comment.type;
+
             if (type === "comment2") {
                 return /HashJs javascript library/i.test(text);
             }
         },
     },
-})
+});
 
 export default {
     input: 'src/hash.js',
@@ -57,7 +60,7 @@ export default {
             name: 'Hash',
             env: 'production',
             sourceMap: true,
-            plugins: [trs],
+            plugins: [fileTerser],
             banner: getBanner('umd - main')
         },
         {
