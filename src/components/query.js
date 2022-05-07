@@ -18,4 +18,4 @@ import "./query/str.js";
  *
  * @type {HashCpQuery}
  */
-HashComponent.q = HashComponent.query = HashCpQuery;
+HashComponent.query = HashComponent.q = HashCpQuery;
