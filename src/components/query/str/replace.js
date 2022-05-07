@@ -1,5 +1,5 @@
-import {HashCpQueryStr} from "../../holder.js"
-import {getHashQuery, getWinHash, isEmpty, isRegExp, isString, setEvHash} from "../../../helpers.js"
+import {HashCpQueryStr} from "../../holder.js";
+import {getHashQuery, getWinHash, isEmpty, isRegExp, isString, setEvHash} from "../../../helpers.js";
 
 /**
  * replace hash query string.
@@ -8,24 +8,24 @@ import {getHashQuery, getWinHash, isEmpty, isRegExp, isString, setEvHash} from "
  * @returns HashCpQueryStr
  */
 HashCpQueryStr.replace = (from, to) => {
-    let cp = HashCpQueryStr
+    let cp = HashCpQueryStr;
 
     if (!isString(to) || (!isString(from) && !isRegExp(from))) {
-        return cp
+        return cp;
     }
 
-    let wh      = getWinHash(),
-        query   = getHashQuery(wh)
+    let hash        = getWinHash();
+    let hashQuery   = getHashQuery(hash);
 
-    if (isEmpty(query)) {
-        return cp
+    if (isEmpty(hashQuery)) {
+        return cp;
     }
 
     setEvHash({
         string: {
-            query: query.replace(from, to)
+            query: hashQuery.replace(from, to)
         }
-    })
+    });
 
-    return cp
+    return cp;
 }

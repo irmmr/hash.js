@@ -1,14 +1,17 @@
-import HashConfig from "./config.js"
-import HashComponent from "./component.js"
+import HashConfig from "./config.js";
+import HashComponent from "./component.js";
 
-import "./components/direct.js"
+// deprecated components
+import "./components/direct.js";
 
-import "./components/main.js"
-import "./components/event.js"
-import "./components/info.js"
+// main components
+import "./components/main.js";
+import "./components/event.js";
+import "./components/info.js";
 
-import "./components/value.js"
-import "./components/query.js"
+// value and query components
+import "./components/value.js";
+import "./components/query.js";
 
 export default {
     components: HashComponent,

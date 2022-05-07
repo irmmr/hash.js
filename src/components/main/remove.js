@@ -1,5 +1,5 @@
-import HashComponent from "../../component.js"
-import {getWinHash, isEmpty, isRegExp, isString, replaceAll, setWinHash, toArray} from "../../helpers.js"
+import HashComponent from "../../component.js";
+import {getWinHash, isEmpty, isRegExp, isString, replaceAll, setWinHash, toArray} from "../../helpers.js";
 
 /**
  * remove a string from location hash.
@@ -7,33 +7,34 @@ import {getWinHash, isEmpty, isRegExp, isString, replaceAll, setWinHash, toArray
  * @returns HashComponent
  */
 HashComponent.remove = (values = []) => {
-    let cp = HashComponent
+    let cp = HashComponent;
 
-    values = toArray(values)
+    values = toArray(values);
+
     if (isEmpty(values)) {
-        return cp
+        return cp;
     }
 
-    let wh      = getWinHash(),
-        entry   = wh
+    let hash      = getWinHash();
+    let entry     = hash;
 
-    if (isEmpty(wh)) {
-        return cp
+    if (isEmpty(hash)) {
+        return cp;
     }
 
-    values.forEach(v => {
-        if (isString(v)) {
-            if (entry.includes(v)) {
-                entry = replaceAll(entry, v, '')
+    values.forEach(val => {
+        if (isString(val)) {
+            if (entry.includes(val)) {
+                entry = replaceAll(entry, val, '');
             }
-        } else if (isRegExp(v)) {
-            entry = entry.replace(v, '')
+        } else if (isRegExp(val)) {
+            entry = entry.replace(val, '');
         }
-    })
+    });
 
-    if (entry !== wh) {
-        setWinHash(entry)
+    if (entry !== hash) {
+        setWinHash(entry);
     }
 
-    return cp
+    return cp;
 }

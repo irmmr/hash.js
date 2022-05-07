@@ -1,5 +1,5 @@
-import {HashCpQuery} from "../holder.js"
-import {isString} from "../../helpers.js"
+import {HashCpQuery} from "../holder.js";
+import {isString} from "../../helpers.js";
 
 /**
  * checking for query in location hash.
@@ -8,5 +8,5 @@ import {isString} from "../../helpers.js"
  * @param value
  */
 HashCpQuery.is = (name, value) => {
-    return isString(name) && HashCpQuery.get(name) === value
+    return isString(name) && HashCpQuery.get(name) === value;
 }

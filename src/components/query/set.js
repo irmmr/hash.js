@@ -1,5 +1,5 @@
-import {HashCpQuery} from "../holder.js"
-import {isObj, setEvHash, toObjQue} from "../../helpers.js"
+import {HashCpQuery} from "../holder.js";
+import {isObj, setEvHash, toObjQue} from "../../helpers.js";
 
 /**
  * set query.
@@ -8,19 +8,19 @@ import {isObj, setEvHash, toObjQue} from "../../helpers.js"
  * @returns {HashCpQuery}
  */
 HashCpQuery.set = (data, value = null) => {
-    let cp = HashCpQuery
+    let cp = HashCpQuery;
 
-    data = toObjQue(data, value)
+    data = toObjQue(data, value);
 
     if (!data || !isObj(data)) {
-        return cp
+        return cp;
     }
 
     setEvHash({
         query: {
             entry: data
         }
-    })
+    });
 
-    return cp
+    return cp;
 }

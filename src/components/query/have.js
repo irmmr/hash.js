@@ -1,5 +1,5 @@
-import {HashCpQuery} from "../holder.js"
-import {isArr, isEmpty, toArray} from "../../helpers.js"
+import {HashCpQuery} from "../holder.js";
+import {isArr, isEmpty, toArray} from "../../helpers.js";
 
 /**
  * check for location hash query.
@@ -7,22 +7,23 @@ import {isArr, isEmpty, toArray} from "../../helpers.js"
  * @returns boolean
  */
 HashCpQuery.have = (data = '') => {
-    data = toArray(data)
+    data = toArray(data);
+
     if (!isArr(data)) {
-        return false
+        return false;
     }
 
-    let q  = HashCpQuery.get()
+    let query  = HashCpQuery.get();
 
     if (isEmpty(data)) {
-        return !isEmpty(q)
+        return !isEmpty(query);
     }
 
     for (let i in data) {
-        if (!data.hasOwnProperty(i) || !q.hasOwnProperty(data[i])) {
-            return false
+        if (!data.hasOwnProperty(i) || !query.hasOwnProperty(data[i])) {
+            return false;
         }
     }
 
-    return true
+    return true;
 }

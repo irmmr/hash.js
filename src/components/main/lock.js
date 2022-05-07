@@ -1,15 +1,18 @@
-import HashComponent from "../../component.js"
-import {getBool, getWindow, getWinHash, isObj, setWinHash} from "../../helpers.js"
+import HashComponent from "../../component.js";
+import {getBool, getWindow, getWinHash, isObj, setWinHash} from "../../helpers.js";
 
-let locked     = false,
-    force_lock = false
+// defined as 2 global variable in this section
+// to save "locked" and "force_lock" status
+let locked     = false;
+let force_lock = false;
 
 /**
  * check if hash is locked.
+ *
  * @returns boolean
  */
 HashComponent.isLocked = () => {
-    return locked
+    return locked;
 }
 
 /**
@@ -18,37 +21,38 @@ HashComponent.isLocked = () => {
  */
 HashComponent.unlock = () => {
     if (locked && !force_lock) {
-        locked = false
+        locked = false;
     }
 
-    return HashComponent
+    return HashComponent;
 }
 
 /**
- * lock the page hash.
+ * Lock the page hash.
+ *
  * @param {object} options
  * @returns HashComponent
  */
 HashComponent.lock = (options = {}) => {
-    let cp = HashComponent
+    let cp = HashComponent;
 
     if (locked || !isObj(options)) {
-        return cp
+        return cp;
     }
 
-    force_lock   = getBool(options.force || false)
-    const wh     = getWinHash(),
-          wn     = getWindow()
+    force_lock      = getBool(options.force || false);
+    const hash      = getWinHash();
+    const win       = getWindow();
 
-    if (typeof wn.onhashchange !== 'undefined') {
-        wn.onhashchange = () => {
+    if (typeof win.onhashchange !== 'undefined') {
+        win.onhashchange = () => {
             if (locked) {
-                setWinHash(wh)
+                setWinHash(hash);
             }
         }
 
-        locked = true
+        locked = true;
     }
 
-    return cp
+    return cp;
 }

@@ -1,5 +1,5 @@
-import HashComponent from "../../component.js"
-import {isString, setWinHash} from "../../helpers.js"
+import HashComponent from "../../component.js";
+import {isString, setWinHash} from "../../helpers.js";
 
 /**
  * set the page hash.
@@ -7,13 +7,13 @@ import {isString, setWinHash} from "../../helpers.js"
  * @returns HashComponent
  */
 HashComponent.set = (value = '') => {
-    let cp = HashComponent
+    let cp = HashComponent;
 
     if (!isString(value)) {
-        return cp
+        return cp;
     }
 
-    setWinHash(value)
+    setWinHash(value);
 
-    return cp
+    return cp;
 }

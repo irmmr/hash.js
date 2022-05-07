@@ -1,10 +1,10 @@
-import {HashCpValue} from "../holder.js"
-import {getHashValue, getWinHash} from "../../helpers.js"
+import {HashCpValue} from "../holder.js";
+import {getHashValue, getWinHash} from "../../helpers.js";
 
 /**
  * get value.
  * @returns HashCpValue
  */
 HashCpValue.get = () => {
-    return getHashValue(getWinHash())
+    return getHashValue(getWinHash());
 }

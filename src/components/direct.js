@@ -1,3 +1,5 @@
+// All direct components are deprecated!!
+
 import HashComponent from "../component.js"
 import {
     createObjVal,

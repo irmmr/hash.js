@@ -1,24 +1,25 @@
-import {HashCpQuery} from "../holder.js"
-import {getHashValue, getWinHash, isEmpty, setWinHash} from "../../helpers.js"
+import {HashCpQuery} from "../holder.js";
+import {getHashValue, getWinHash, isEmpty, setWinHash} from "../../helpers.js";
 
 /**
  * clear query from hash.
  * @returns HashCpQuery
  */
 HashCpQuery.clear = () => {
-    let cp = HashCpQuery,
-        wh = getWinHash(),
-        wv = getHashValue(wh)
+    let cp = HashCpQuery;
+
+    let hash        = getWinHash();
+    let hashValue   = getHashValue(hash);
 
     if (!cp.have()) {
-        return cp
+        return cp;
     }
 
-    if (!isEmpty(wv)) {
-        setWinHash(wv)
+    if (!isEmpty(hashValue)) {
+        setWinHash(hashValue);
     } else {
-        setWinHash('')
+        setWinHash('');
     }
 
-    return cp
+    return cp;
 }

@@ -1,5 +1,5 @@
-import {HashCpValue} from "../holder.js"
-import {getHashValue, getWinHash, isEmpty, isRegExp, isString, replaceAll, setEvHash, toArray} from "../../helpers.js"
+import {HashCpValue} from "../holder.js";
+import {getHashValue, getWinHash, isEmpty, isRegExp, isString, replaceAll, setEvHash, toArray} from "../../helpers.js";
 
 /**
  * remove some parts of value as string.
@@ -7,36 +7,37 @@ import {getHashValue, getWinHash, isEmpty, isRegExp, isString, replaceAll, setEv
  * @returns HashCpValue
  */
 HashCpValue.remove = (values = []) => {
-    let cp = HashCpValue
+    let cp = HashCpValue;
 
-    values = toArray(values)
+    values = toArray(values);
+
     if (isEmpty(values)) {
-        return cp
+        return cp;
     }
 
-    let wh      = getWinHash(),
-        wv      = getHashValue(wh),
-        entry   = wv
+    let hash        = getWinHash();
+    let hashValue   = getHashValue(hash);
+    let entry       = hashValue;
 
-    if (isEmpty(wv)) {
-        return cp
+    if (isEmpty(hashValue)) {
+        return cp;
     }
 
-    values.forEach(v => {
-        if (isString(v)) {
-            if (entry.includes(v)) {
-                entry = replaceAll(entry, v, '')
+    values.forEach(value => {
+        if (isString(value)) {
+            if (entry.includes(value)) {
+                entry = replaceAll(entry, value, '');
             }
-        } else if (isRegExp(v)) {
-            entry = entry.replace(v, '')
+        } else if (isRegExp(value)) {
+            entry = entry.replace(value, '');
         }
-    })
+    });
 
-    if (entry !== wv) {
+    if (entry !== hashValue) {
         setEvHash({
             value: entry
-        })
+        });
     }
 
-    return cp
+    return cp;
 }

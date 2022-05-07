@@ -1,5 +1,5 @@
-import {HashCpQuery} from "../holder.js"
-import {isEmpty, isObj, objFilter, setEvHash, toObjQue} from "../../helpers.js"
+import {HashCpQuery} from "../holder.js";
+import {isEmpty, isObj, objFilter, setEvHash, toObjQue} from "../../helpers.js";
 
 /**
  * add query.
@@ -8,30 +8,31 @@ import {isEmpty, isObj, objFilter, setEvHash, toObjQue} from "../../helpers.js"
  * @returns HashCpQuery
  */
 HashCpQuery.add = (data, value = null) => {
-    let cp  = HashCpQuery
+    let cp  = HashCpQuery;
 
-    data = toObjQue(data, value)
+    data = toObjQue(data, value);
+
     if (!data || !isObj(data)) {
-        return cp
+        return cp;
     }
 
-    let que = cp.get()
+    let query = cp.get();
 
-    if (!isEmpty(que)) {
-        data = objFilter(data, ([n, v]) => {
-            return !que.hasOwnProperty(n)
-        })
+    if (!isEmpty(query)) {
+        data = objFilter(data, ([name, value]) => {
+            return !query.hasOwnProperty(name);
+        });
     }
 
     if (isEmpty(data)) {
-        return cp
+        return cp;
     }
 
     setEvHash({
         query: {
-            entry: Object.assign(que, data)
+            entry: Object.assign(query, data)
         }
-    })
+    });
 
-    return cp
+    return cp;
 }

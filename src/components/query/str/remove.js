@@ -1,4 +1,4 @@
-import {HashCpQueryStr} from "../../holder.js"
+import {HashCpQueryStr} from "../../holder.js";
 import {
     getHashQuery,
     getWinHash,
@@ -8,7 +8,7 @@ import {
     replaceAll,
     setEvHash,
     toArray
-} from "../../../helpers.js"
+} from "../../../helpers.js";
 
 /**
  * remove some parts of query as string.
@@ -16,38 +16,39 @@ import {
  * @returns HashCpQueryStr
  */
 HashCpQueryStr.remove = (values = []) => {
-    let cp = HashCpQueryStr
+    let cp = HashCpQueryStr;
 
-    values = toArray(values)
+    values = toArray(values);
+
     if (isEmpty(values)) {
-        return cp
+        return cp;
     }
 
-    let wh      = getWinHash(),
-        qs      = getHashQuery(wh),
-        entry   = qs
+    let hash        = getWinHash();
+    let hashQuery   = getHashQuery(hash);
+    let entry       = hashQuery;
 
-    if (isEmpty(qs)) {
-        return cp
+    if (isEmpty(hashQuery)) {
+        return cp;
     }
 
-    values.forEach(v => {
-        if (isString(v)) {
-            if (entry.includes(v)) {
-                entry = replaceAll(entry, v, '')
+    values.forEach(value => {
+        if (isString(value)) {
+            if (entry.includes(value)) {
+                entry = replaceAll(entry, value, '');
             }
-        } else if (isRegExp(v)) {
-            entry = entry.replace(v, '')
+        } else if (isRegExp(value)) {
+            entry = entry.replace(value, '');
         }
-    })
+    });
 
-    if (entry !== qs) {
+    if (entry !== hashQuery) {
         setEvHash({
             string: {
                 query: entry
             }
-        })
+        });
     }
 
-    return cp
+    return cp;
 }
