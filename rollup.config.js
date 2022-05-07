@@ -11,12 +11,11 @@ import info from './src/info';
  */
 const getBanner = (format) => {
     return `/**
- * HashJs javascript library v${info.version}
- * Copyright (c) ${new Date().getFullYear()} irmmr
+ * HashJs v${info.version}
+ * Copyright (c) ${new Date().getFullYear()} Irmmr
  * MIT License
  *
- * (${format})
- * https://github.com/irmmr/hash.js
+ * https://github.com/irmmr/hash.js [${format}]
  */\n`;
 }
 
