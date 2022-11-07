@@ -1,4 +1,3 @@
-lab
 .idea
 .DS_Store
 node_modules
@@ -9,3 +8,5 @@ dist/*.gz
 package-lock.json
 todo.md
 todo
+.vs
+lab
