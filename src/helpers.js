@@ -801,3 +801,54 @@ export function getUrlHash(url) {
 export function isRegExp(data) {
     return data instanceof RegExp;
 }
+
+/**
+ * Trigger the event for hash-events.
+ * 
+ * @param {string}  name
+ * @param {any}     target
+ */
+export function triggerEvent(event, target = null) {
+    target = target || getWindow();
+    target.dispatchEvent(event);
+}
+
+/**
+ * Trigger a custom event.
+ * 
+ * @param {string}  name
+ * @param {object}  options
+ * @param {any}     target
+ */
+export function triCustomEvent(name, options = {}, target = null) {
+    triggerEvent(new CustomEvent(name, options), target);
+}
+
+/**
+ * Trigger an event.
+ * 
+ * @param {string}  name
+ * @param {object}  options
+ * @param {any}     target
+ */
+export function triEvent(name, options = {}, target = null) {
+    triggerEvent(new Event(name, options), target);
+}
+
+/**
+ * Create random string as id.
+ * 
+ * @param   {int}   length  length of string
+ * @returns string
+ */
+export function makeRandStr(length) {
+    let result           = '';
+    let characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let charactersLength = characters.length;
+
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
+}
