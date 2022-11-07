@@ -1,10 +1,19 @@
 import HashComponent from "../../component.js";
-import {getBool, getWindow, getWinHash, isObj, setWinHash} from "../../helpers.js";
+import {err, getBool, getWindow, getWinHash, isObj, setWinHash} from "../../helpers.js";
+import message from '../../message';
+import HashStore from "../../store.js";
+import HashTrigger from "../../trigger.js";
 
-// defined as 2 global variable in this section
-// to save "locked" and "force_lock" status
-let locked     = false;
-let force_lock = false;
+/**
+ * this function should set locked
+ * version of hash every time after
+ * locking by checking lock status.
+ */
+const hashLockEvent = () => {
+    if (HashStore.lock.status === true) {
+        setWinHash(HashStore.lock.value);
+    }
+}
 
 /**
  * check if hash is locked.
@@ -12,7 +21,7 @@ let force_lock = false;
  * @returns boolean
  */
 HashComponent.isLocked = () => {
-    return locked;
+    return HashStore.lock.status;
 }
 
 /**
@@ -20,11 +29,35 @@ HashComponent.isLocked = () => {
  * @returns HashComponent
  */
 HashComponent.unlock = () => {
-    if (locked && !force_lock) {
-        locked = false;
+    const cp   = HashComponent;
+    const win  = getWindow();
+    const data = HashStore.lock;
+
+    if (data.status && !data.force) {
+        HashStore.lock.status = false;
+
+        // trigger -> when hash unlocked
+        HashTrigger.run('unlocked', {
+            lockedAt: data.time,
+            at: Date.now(),
+            value: data.value,
+            force: data.force
+        });
+
+        HashStore.lock.time = null;
+        HashStore.lock.value = null;
+
+        // check for event listener support
+        if (typeof win.addEventListener === 'undefined') {
+            err(message.event_und);
+            return cp;
+        }
+
+        // remove event listener
+        win.removeEventListener('hashchange', hashLockEvent);
     }
 
-    return HashComponent;
+    return cp;
 }
 
 /**
@@ -36,23 +69,35 @@ HashComponent.unlock = () => {
 HashComponent.lock = (options = {}) => {
     let cp = HashComponent;
 
-    if (locked || !isObj(options)) {
+    if (HashStore.lock.status || !isObj(options)) {
         return cp;
     }
 
-    force_lock      = getBool(options.force || false);
+    const force     = getBool(options.force || false);
     const hash      = getWinHash();
     const win       = getWindow();
 
-    if (typeof win.onhashchange !== 'undefined') {
-        win.onhashchange = () => {
-            if (locked) {
-                setWinHash(hash);
-            }
-        }
-
-        locked = true;
+    // check for event listener support
+    if (typeof win.addEventListener === 'undefined') {
+        err(message.event_und);
+        return cp;
     }
+
+    // update store data
+    HashStore.lock.time     = Date.now();
+    HashStore.lock.status   = true;
+    HashStore.lock.value    = hash;
+    HashStore.lock.force    = force;
+
+    // add event listener
+    win.addEventListener('hashchange', hashLockEvent);
+
+    // trigger -> dispatch all locked events
+    HashTrigger.run('locked', {
+        at: HashStore.lock.time,
+        value: hash,
+        force: force
+    });
 
     return cp;
 }
