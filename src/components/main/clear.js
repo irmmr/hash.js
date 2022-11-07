@@ -1,5 +1,5 @@
 import HashComponent from "../../component.js";
-import {getHref, setWinHash, splitOnce} from "../../helpers.js";
+import {getHref, setWinHash, splitOnce, triggerEvent} from "../../helpers.js";
 
 /**
  * clear the page hash.
@@ -8,10 +8,14 @@ import {getHref, setWinHash, splitOnce} from "../../helpers.js";
  * @returns HashComponent
  */
 HashComponent.clear = (push_state = true) => {
-    let cp = HashComponent;
+    let cp      = HashComponent;
 
     if (push_state === true) {
-        history.pushState(null, null, splitOnce(getHref(), '#')[0]);
+        let href      = getHref();
+        let hashEmpty = splitOnce(href, '#')[0];
+
+        history.pushState(null, null, hashEmpty);
+        triggerEvent(new HashChangeEvent('hashchange', { oldURL: href, newURL: hashEmpty }));
     } else {
         if (cp.have()) {
             setWinHash('');
