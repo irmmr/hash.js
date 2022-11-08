@@ -1,13 +1,37 @@
+import webpack from 'webpack';
+import TerserPlugin from 'terser-webpack-plugin';
 import * as path from 'path';
 import {fileURLToPath} from 'url';
 import info from './src/info.js';
+
+/**
+ * @param {string} format   format name
+ * @returns {string}
+ */
+const getBanner = () => {
+  return `HashJs v${info.version}
+Copyright (c) ${new Date().getFullYear()} Irmmr
+MIT License
+
+https://github.com/irmmr/hash.js`;
+}
 
 const modulename = info.module;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname  = path.dirname(__filename);
 
+const banner = new webpack.BannerPlugin({
+  banner: getBanner()
+});
+
 const config = {
   entry: path.resolve(__dirname, "src/hash.js"),
+  optimization: {
+    minimize: true,
+    minimizer: [new TerserPlugin({
+      extractComments: false
+    })]
+  },
   module: {
     rules: [
       {
@@ -16,7 +40,8 @@ const config = {
         use: "babel-loader",
       },
     ],
-  }
+  },
+  plugins: [banner]
 }
 
 export default function buildData(env) {
