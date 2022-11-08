@@ -6,6 +6,18 @@ import { makeRandStr } from "./helpers.js";
  */
 class HashTrigger {
     /**
+     * listeners to store all handlers
+     * and functions.
+     */
+    static listeners = [];
+    
+    /**
+     * list of packages that run and started
+     * by trigger.
+     */
+    static runList = [];
+    
+    /**
      * [run]
      * check if listener is in run list
      * @param {string} name     package name 
@@ -171,20 +183,5 @@ class HashTrigger {
         }
     }
 }
-
-// [ES5] cause of ES5 class structures and rollup
-// problem about it!
-
-/**
- * listeners to store all handlers
- * and functions.
- */
-HashTrigger.listeners = [];
-
-/**
- * list of packages that run and started
- * by trigger.
- */
- HashTrigger.runList = [];
 
 export default HashTrigger;
