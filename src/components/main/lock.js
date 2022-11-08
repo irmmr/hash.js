@@ -1,6 +1,6 @@
 import HashComponent from "../../component.js";
 import {err, getBool, getWindow, getWinHash, isObj, setWinHash} from "../../helpers.js";
-import message from '../../message';
+import message from '../../message.js';
 import HashStore from "../../store.js";
 import HashTrigger from "../../trigger.js";
 
