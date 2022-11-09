@@ -2,6 +2,7 @@ import core from "./core.js";
 import * as h from "./helpers.js";
 import HashStore from "./store.js";
 import HashTrigger from "./trigger.js";
+import { changeDispatch } from "./events.js";
 
 /**
  * Define Hash constant to use as main access
@@ -51,5 +52,16 @@ HashStore.readyDate = Date.now();
 HashTrigger.run('ready', {
     time: HashStore.readyDate
 });
+
+/**
+ * Dispatch events
+ * try to add other events using hashchange
+ * and make a multiple event handler using window.addEventListener
+ */
+const win = h.getWindow();
+
+if (typeof win.addEventListener !== 'undefined') {
+    win.addEventListener('hashchange', changeDispatch, false);
+}
 
 export default Hash;
