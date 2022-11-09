@@ -498,6 +498,21 @@ export function err(messages, force_log = false) {
 }
 
 /**
+ * the default warning handle.
+ * @param messages    The message of warn.
+ * @param force_log   The force logger.
+ */
+export function warn(messages, force_log = false) {
+    messages = toArray(messages);
+
+    let message = messages.join(', ');
+
+    if (force_log || conf.get('log') === true) {
+        console.warn(`(${info.name}) ${message}`);
+    }
+}
+
+/**
  * filter all queries.
  * @param queries
  * @returns {{}|[string, any][]}
