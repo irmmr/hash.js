@@ -37,7 +37,7 @@ HashComponent.unlock = () => {
         HashStore.lock.status = false;
 
         // trigger -> when hash unlocked
-        HashTrigger.run('unlocked', {
+        HashTrigger.run('unlock', {
             lockedAt: data.time,
             at: Date.now(),
             value: data.value,
@@ -93,7 +93,7 @@ HashComponent.lock = (options = {}) => {
     win.addEventListener('hashchange', hashLockEvent);
 
     // trigger -> dispatch all locked events
-    HashTrigger.run('locked', {
+    HashTrigger.run('lock', {
         at: HashStore.lock.time,
         value: hash,
         force: force
