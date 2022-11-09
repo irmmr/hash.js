@@ -56,11 +56,11 @@ class HashTrigger {
      * [pack]
      * get pack listeners
      * @param {string} name handler name 
-     * @returns array handlers callbacks
+     * @returns object handlers callbacks
      */
     static get(name) {
         return HashTrigger.has(name) ?
-            HashTrigger.#listeners[name] : [];
+            HashTrigger.#listeners[name] : {};
     }
 
     /**
@@ -81,7 +81,7 @@ class HashTrigger {
      */
     static add(name) {
         if (!HashTrigger.has(name)) {
-            HashTrigger.#listeners[name] = [];
+            HashTrigger.#listeners[name] = {};
         }
     }
 
@@ -92,8 +92,8 @@ class HashTrigger {
      * @return boolean yes or no
      */
     static has(name) {
-        return typeof HashTrigger.#listeners.hasOwnProperty(name) &&
-            Array.isArray(HashTrigger.#listeners[name]);
+        return HashTrigger.#listeners.hasOwnProperty(name) &&
+            typeof HashTrigger.#listeners[name] === 'object';
     }
 
     /**
@@ -102,7 +102,7 @@ class HashTrigger {
      * @param {string} name hanlder name
      * @return boolean yes or no
      */
-     static hasListener(name, id) {
+    static hasListener(name, id) {
         return HashTrigger.has(name) && HashTrigger.get(name).hasOwnProperty(id);
     }
 
