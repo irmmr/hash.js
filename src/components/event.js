@@ -1,7 +1,7 @@
 import { empty_func } from "../vars.js";
 import message from "../message.js";
 import HashComponent from "../component.js";
-import { err, getUrlHash, getWindow, isEmpty, isFunc, isString, lunchFunc, replaceAll } from "../helpers.js";
+import { err, getUrlHash, getWindow, isEmpty, isFunc, isString, lunchFunc, replaceAll, warn } from "../helpers.js";
 import HashTrigger from "../trigger.js";
 import HashStore from "../store.js";
 
@@ -48,16 +48,6 @@ HashComponent.event = HashComponent.on = (listener, callback = empty_func) => {
 
     fetch.forEach(name => {
         switch (name) {
-            case 'hash.change':
-                win.addEventListener('hashchange', e => {
-                    let to = getUrlHash(e.newURL || '');
-                    let from = getUrlHash(e.oldURL || '');
-
-                    lunchFunc(callback, e, { from, to });
-                });
-
-                break;
-
             case 'hash.ready':
                 HashTrigger.addListener('ready', callback, HashStore.ready, {
                     date: HashStore.readyDate
@@ -65,18 +55,25 @@ HashComponent.event = HashComponent.on = (listener, callback = empty_func) => {
 
                 break;
 
-            case 'hash.locked':
-                HashTrigger.addListener('locked', callback, HashComponent.isLocked());
+            case 'hash.lock':
+                const data = HashStore.lock;
+
+                HashTrigger.addListener('lock', callback, HashComponent.isLocked(), {
+                    at: data.time,
+                    value: data.value,
+                    force: data.force
+                });
 
                 break;
 
-            case 'hash.unlocked':
-                HashTrigger.addListener('unlocked', callback, false);
+            case 'hash.unlock':
+                HashTrigger.addListener('unlock', callback, false);
 
                 break;
 
             default:
-                win.addEventListener(name, callback);
+                const packName = name.replace('hash.', '').trim();
+                HashTrigger.addListener(packName, callback);
 
                 break;
         }
