@@ -9,13 +9,13 @@ class HashTrigger {
      * listeners to store all handlers
      * and functions.
      */
-    static #listeners = [];
+    static #listeners = {};
     
     /**
      * list of packages that run and started
      * by trigger.
      */
-    static #runList = [];
+    static #runList = {};
     
     /**
      * [run]
