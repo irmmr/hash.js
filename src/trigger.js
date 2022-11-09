@@ -175,7 +175,7 @@ class HashTrigger {
         // get every listener from pack
         for (let id in HashTrigger.get(name)) {
             if (!duplicate && HashTrigger.itsRun(name, id)) {
-                return;
+                continue;
             }
 
             // run this listener
