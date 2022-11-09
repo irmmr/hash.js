@@ -9,13 +9,13 @@ class HashTrigger {
      * listeners to store all handlers
      * and functions.
      */
-    static listeners = [];
+    static #listeners = [];
     
     /**
      * list of packages that run and started
      * by trigger.
      */
-    static runList = [];
+    static #runList = [];
     
     /**
      * [run]
@@ -25,7 +25,7 @@ class HashTrigger {
      * @returns boolean
      */
     static itsRun(name, id) {
-        const list = HashTrigger.runList;
+        const list = HashTrigger.#runList;
         return list.hasOwnProperty(name) && list[name].includes(id);
     }
 
@@ -36,19 +36,19 @@ class HashTrigger {
      * @param {string} id       id of listener
      */
     static addRun(name, id) {
-        let list = HashTrigger.runList;
+        let list = HashTrigger.#runList;
 
         // create run-list:pack if does not exists
         if (!list.hasOwnProperty(name)) {
-            HashTrigger.runList[name] = [];
+            HashTrigger.#runList[name] = [];
 
             // update list after push data
-            list = HashTrigger.runList;
+            list = HashTrigger.#runList;
         }
 
         // add into runList
         if (!list[name].includes(id)) {
-            HashTrigger.runList[name].push(id);
+            HashTrigger.#runList[name].push(id);
         }
     }
 
@@ -60,7 +60,7 @@ class HashTrigger {
      */
     static get(name) {
         return HashTrigger.has(name) ?
-            HashTrigger.listeners[name] : [];
+            HashTrigger.#listeners[name] : [];
     }
 
     /**
@@ -71,7 +71,7 @@ class HashTrigger {
      */
      static getListener(name, id) {
         return HashTrigger.hasListener(name, id) ?
-            HashTrigger.listeners[name][id] : null;
+            HashTrigger.#listeners[name][id] : null;
     }
 
     /**
@@ -81,7 +81,7 @@ class HashTrigger {
      */
     static add(name) {
         if (!HashTrigger.has(name)) {
-            HashTrigger.listeners[name] = [];
+            HashTrigger.#listeners[name] = [];
         }
     }
 
@@ -92,8 +92,8 @@ class HashTrigger {
      * @return boolean yes or no
      */
     static has(name) {
-        return typeof HashTrigger.listeners.hasOwnProperty(name) &&
-            Array.isArray(HashTrigger.listeners[name]);
+        return typeof HashTrigger.#listeners.hasOwnProperty(name) &&
+            Array.isArray(HashTrigger.#listeners[name]);
     }
 
     /**
@@ -121,7 +121,7 @@ class HashTrigger {
         const id = makeRandStr(16) + Date.now();
 
         // push listener details in pack
-        HashTrigger.listeners[name][id] = {
+        HashTrigger.#listeners[name][id] = {
             time: Date.now(),
             callback
         }
