@@ -10,7 +10,7 @@ const DIR   = process.cwd()
 
 // main arguments data
 const args  = process.argv
-let h_file  = './dist/hash.js'
+let h_file  = './dist/hash.min.js'
 
 // create a http server
 const createServer = () => {
@@ -75,7 +75,7 @@ const createServer = () => {
 
 // check for hash.js-dev file test
 if (args.includes('--dev')) {
-    h_file = './lab/hash.js'
+    h_file = './lab/hash.min.js'
 
     ch_process.exec('npm run dev-test', (error, stdout, stderr) => {
         if (error) {
