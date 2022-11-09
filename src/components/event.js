@@ -32,7 +32,7 @@ HashComponent.event = HashComponent.on = (listener, callback = empty_func) => {
     }
 
     let events = listeners.split(' ').filter(e => !isEmpty(e));
-    let fetch = []
+    let fetch = [];
 
     // add hash prefix for every listener.
     events = events.map(event => {
@@ -50,7 +50,7 @@ HashComponent.event = HashComponent.on = (listener, callback = empty_func) => {
         switch (name) {
             case 'hash.ready':
                 HashTrigger.addListener('ready', callback, HashStore.ready, {
-                    date: HashStore.readyDate
+                    time: HashStore.readyDate
                 });
 
                 break;
