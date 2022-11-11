@@ -28,7 +28,9 @@ class HashConfig {
             // query symbols
             andSymbol: and_symbol,
             equSymbol: equ_symbol,
-            queSymbol: que_symbol
+            queSymbol: que_symbol,
+            // parse query value or just return string?
+            parseQueryValue: true
         }
     }
 
