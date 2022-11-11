@@ -152,8 +152,15 @@ class HashTrigger {
         // get listener from pack
         const listener = HashTrigger.getListener(name, id);
 
+        // add running data to detail -> info
+        const info = {
+            time: Date.now(),
+            event: name,
+            id
+        }
+
         // call the callback with data
-        listener.callback.call(null, detail);
+        listener.callback.call(null, detail, info);
         
         // log into runList
         if (log) {
@@ -181,6 +188,33 @@ class HashTrigger {
             // run this listener
             HashTrigger.runListener(name, id, detail);
         }
+    }
+
+    /**
+     * [pack]
+     * remove handler list
+     * @param {string} name of pack
+     */
+    static remove(name) {
+        if (!HashTrigger.has(name)) {
+            return;
+        }
+
+        delete HashTrigger.#listeners[name];
+    }
+
+    /**
+     * [listener]
+     * remove listener
+     * @param {string}  name    The name of pack
+     * @param {string}  id      The id of listener in pack
+     */
+    static removeListener(name, id) {
+        if (!HashTrigger.hasListener(name, id)) {
+            return;
+        }
+
+        delete HashTrigger.#listeners[name][id];
     }
 }
 
