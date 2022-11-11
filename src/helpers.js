@@ -113,7 +113,7 @@ export function isNum(h) {
  * @returns
  */
 export function isNumeric(h) {
-    return isDef(h) && !isNaN(Number(h));
+    return !isEmpty(h) && !isNaN(Number(h));
 }
 
 /**
@@ -220,8 +220,9 @@ export function getQuery(q) {
         return {};
     }
 
-    let equalSymbol = conf.get('equSymbol', equ_symbol);
-    let andSymbol   = conf.get('andSymbol', and_symbol);
+    const parseValue  = conf.get('parseQueryValue', true);
+    const equalSymbol = conf.get('equSymbol', equ_symbol);
+    const andSymbol   = conf.get('andSymbol', and_symbol);
 
     let queryParse  = q.split(andSymbol);
     let output      = {};
@@ -245,6 +246,17 @@ export function getQuery(q) {
             try {
                 value = decodeURIComponent(value);
             } catch (e) {}
+
+            // parse query value to other data types
+            if (parseValue && !isEmpty(value)) {
+                if (isNumeric(value)) {
+                    value = parseInt(value);
+                } else if (value === 'true') {
+                    value = true;
+                } else if (value === 'false') {
+                    value = false;
+                }
+            }
 
             output[name] = value;
         } else {
@@ -448,7 +460,7 @@ export function createObjVal(names, value) {
  * @returns {*|boolean}
  */
 export function isQueParOk(n) {
-    return isString(n) || isNull(n) || n === undefined || isNum(n);
+    return isString(n) || isNull(n) || n === undefined || isNum(n) || isBool(n);
 }
 
 /**
