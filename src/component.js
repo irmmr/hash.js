@@ -1,1 +1,1 @@
-export default class HashComponent {};
+export default class HashComponent {}
