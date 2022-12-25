@@ -2,7 +2,7 @@ import HashComponent from "../../component.js";
 import {err, getBool, getWindow, getWinHash, isObj, setWinHash} from "../../helpers.js";
 import message from '../../message.js';
 import HashStore from "../../store.js";
-import HashTrigger from "../../trigger.js";
+import HashTrigger from "../../event/trigger.js";
 
 /**
  * this function should set locked

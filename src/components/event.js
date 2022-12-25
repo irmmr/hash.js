@@ -2,7 +2,7 @@ import { empty_func } from "../vars.js";
 import message from "../message.js";
 import HashComponent from "../component.js";
 import { err, getWindow, isEmpty, isFunc, isString, replaceAll } from "../helpers.js";
-import HashTrigger from "../trigger.js";
+import HashTrigger from "../event/trigger.js";
 import HashStore from "../store.js";
 
 /**
