@@ -1,45 +1,25 @@
-import core from "./core.js";
-import * as h from "./helpers.js";
+import HashContainer from "./container.js";
+import * as helpers from "./helpers.js";
 import HashStore from "./store.js";
-import HashTrigger from "./trigger.js";
-import { changeDispatch } from "./events.js";
+import { changeDispatch } from "./event/init.js";
+import HashTrigger from "./event/trigger.js";
 
 /**
- * Define Hash constant to use as main access
- * to all helpers and components.
- *
- * @type {object}
+ * Define and add all main components to
+ * HashComponent to create main parts.
  */
-const Hash = Object.assign({
-    // configs class for manage by user
-    config: core.config.instance,
 
-    // all helpers for using by user
-    h,
+// deprecated components
+import "./components/direct.js";
 
-    // api list of system classes to use by user
-    api: {
-        trigger: HashTrigger,
-        store: HashStore
-    },
+// main components
+import "./components/main.js";
+import "./components/event.js";
+import "./components/info.js";
 
-    /**
-     * ready status
-     * @returns boolean
-     */
-    isReady: () => {
-        return HashStore.ready;
-    },
-
-    /**
-     * ready on-line usage
-     * Hash.ready()?.set('its-ready!')
-     * @returns null|HashComponent
-     */
-    ready: () => {
-        return HashStore.ready ? core.components : null;
-    }
-}, core.components);
+// value and query components
+import "./components/value.js";
+import "./components/query.js";
 
 /**
  * Ready event!
@@ -49,19 +29,18 @@ const Hash = Object.assign({
 HashStore.ready = true;
 HashStore.readyDate = Date.now();
 
-HashTrigger.run('ready', {
-    time: HashStore.readyDate
-});
+// run ready trigger
+HashTrigger.run('ready', { time: HashStore.readyDate });
 
 /**
  * Dispatch events
  * try to add other events using hashchange
  * and make a multiple event handler using window.addEventListener
  */
-const win = h.getWindow();
+const win = helpers.getWindow();
 
 if (typeof win.addEventListener !== 'undefined') {
     win.addEventListener('hashchange', changeDispatch, false);
 }
 
-export default Hash;
+export default HashContainer;
