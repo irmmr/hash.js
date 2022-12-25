@@ -121,6 +121,7 @@
                 assert.strictEqual(helper.isNumeric('string c!'), false);
                 assert.strictEqual(helper.isNumeric({a: 7}), false);
                 assert.strictEqual(helper.isNumeric([1, 9, 'c']), false);
+                assert.strictEqual(helper.isNumeric(''), false);
             });
         });
 
@@ -276,33 +277,56 @@
 
         // #helper getQuery
         describe('getQuery', function () {
-            it('isQuery should returns queries as key-value', function () {
+            it('getQuery should returns queries as key-value', function () {
                 assert.deepEqual(helper.getQuery('data&js'), {data: null, js: null});
-                assert.deepEqual(helper.getQuery('page=1&vendor=hl-p'), {page: '1', vendor: 'hl-p'});
+                assert.deepEqual(helper.getQuery('page=1&vendor=hl-p'), {page: 1, vendor: 'hl-p'});
             });
 
-            it('isQuery should distinguish between blank and null data', function () {
+            it('getQuery should distinguish between blank and null data', function () {
                 assert.deepEqual(helper.getQuery('a=&b'), {a: '', b: null});
             });
 
-            it('isQuery should returns values with `decodeURIComponent`', function () {
+            it('getQuery should returns values with `decodeURIComponent`', function () {
                 assert.deepEqual(helper.getQuery('w=why%20%3F'), {w: 'why ?'});
             });
 
-            it('isQuery should returns empty object for non-query or non-string data', function () {
+            it('getQuery should returns empty object for non-query or non-string data', function () {
                 assert.deepEqual(helper.getQuery(''), {});
                 assert.deepEqual(helper.getQuery({}), {});
                 assert.deepEqual(helper.getQuery([1, 4]), {});
+            });
+
+            it('getQuery should be able to use `parseQueryValue` option', function () {
+                assert.deepEqual(helper.getQuery('a=str&b=true&c=false&d=12&c=14g&d=019'), {
+                    a: 'str',
+                    b: true,
+                    c: false,
+                    d: 12,
+                    c: '14g',
+                    d: 19
+                });
+
+                Hash.config({ parseQueryValue: false });
+
+                assert.deepEqual(helper.getQuery('a=true&page=984&hey=ifv dsf'), {
+                    a: 'true',
+                    page: '984',
+                    hey: 'ifv dsf'
+                });
+
+                Hash.config({ parseQueryValue: true });
             });
         });
 
         // #helper isQueParOk
         describe('isQueParOk', function () {
-            it('isQueParOk should returns `true` for strings, null values, undefined, numbers', function () {
+            it('isQueParOk should returns `true` for strings, null values, undefined, numbers, boolean', function () {
                 assert.strictEqual(helper.isQueParOk('Hello'), true);
                 assert.strictEqual(helper.isQueParOk(583), true);
                 assert.strictEqual(helper.isQueParOk(null), true);
                 assert.strictEqual(helper.isQueParOk(undefined), true);
+                assert.strictEqual(helper.isQueParOk(true), true);
+                assert.strictEqual(helper.isQueParOk(false), true);
             });
 
             it('isQueParOk should returns `false` for other values', function () {
@@ -310,7 +334,6 @@
                 assert.strictEqual(helper.isQueParOk({a: '4gv'}), false);
                 assert.strictEqual(helper.isQueParOk(/o/i), false);
                 assert.strictEqual(helper.isQueParOk(function () {}), false);
-                assert.strictEqual(helper.isQueParOk(true), false);
             });
         });
 
@@ -919,6 +942,17 @@
                 assert.strictEqual(helper.isRegExp([1]), false);
                 assert.strictEqual(helper.isRegExp({a: 2}), false);
                 assert.strictEqual(helper.isRegExp('Hello'), false);
+            });
+        });
+
+        // #helper makeRandStr
+        describe('makeRandStr', function () {
+            it('makeRandStr should returns a right created string with true length', function () {
+                const a = helper.makeRandStr(3);
+                assert.strictEqual(a.length, 3);
+
+                const b = helper.makeRandStr(20);
+                assert.strictEqual(b.length, 20);
             });
         });
 
