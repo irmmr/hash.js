@@ -1,13 +1,56 @@
-import {empty_object, and_symbol, equ_symbol, que_symbol} from "./vars.js";
+import { empty_object, and_symbol, equ_symbol, que_symbol } from "./vars.js";
 
 /**
  * HashConfig class.
+ * manage all config actions for Hash
  */
-class HashConfig {
+export default class HashConfig {
     /**
      * define all default config data
      */
     static #configs = HashConfig.defaults();
+
+    /**
+     * check for data type, if it is readl Object {}
+     * @access private
+     * @param {any} data 
+     * @returns boolean
+     */
+    static #isObj(data) {
+        return data !== null && typeof data === 'object' && data.constructor === Object;
+    }
+
+    /**
+     * deep merge objects over and over
+     * @access private
+     * @param {object} target 
+     * @param  {...object} sources 
+     * @returns object
+     */
+    static #deepMerge(target, ...sources) {
+        if (!sources.length) {
+            return target;
+        }
+
+        const cp     = HashConfig;
+        const source = sources.shift();
+      
+        if (cp.#isObj(target) && cp.#isObj(source)) {
+            for (const key in source) {
+                if (cp.#isObj(source[key])) {
+                    if (!target[key]) {
+                        Object.assign(target, { [key]: {} });
+                    }
+
+                    cp.#deepMerge(target[key], source[key]);
+                } else {
+                    Object.assign(target, { [key]: source[key] });
+                }
+            }
+        }
+      
+        return cp.#deepMerge(target, ...sources);
+    }
 
     /**
      * Get all default configs
@@ -25,10 +68,15 @@ class HashConfig {
             window: null,
             // log enable/disable
             log: true,
-            // query symbols
-            andSymbol: and_symbol,
-            equSymbol: equ_symbol,
-            queSymbol: que_symbol,
+            //andSymbol: and_symbol,
+            //equSymbol: equ_symbol,
+            //queSymbol: que_symbol,
+            // query symbols 1.7.5<
+            querySymbols: {
+                and: and_symbol,
+                equ: equ_symbol,
+                que: que_symbol
+            },
             // parse query value or just return string?
             parseQueryValue: true
         }
@@ -91,54 +139,75 @@ class HashConfig {
             return;
         }
 
-        let configs = HashConfig.#configs;
-        HashConfig.define(Object.assign({}, configs, options));
+        const configs = HashConfig.#configs;
+        const merged  = HashConfig.#deepMerge({}, configs, options);
+
+        HashConfig.define(merged);
     }
 
     /**
      * Get config
-     *
-     * @param   {string}    name
-     * @param   {*}         def
-     * @returns {string|Readonly<{}>|*}
+     * @param   {array|string}    keys
+     * @param   {any}             def
+     * @returns {any}
      */
-    static get(name = null, def = '') {
+    static get(keys = null, def = '') {
         let configs = HashConfig.#configs;
 
-        if (null == name) {
+        if (null == keys || '' == keys) {
             return configs;
         }
 
-        let exp = name.toString().trim().split('.');
-        let i;
+        // convert keys to array
+        if (typeof keys === 'string') {
+            keys = [keys];
+        }
 
-        if (exp.length === 1) {
-            if (HashConfig.has(name)) {
-                return configs[name];
-            }
-        } else {
-            let val     = configs;
-            let find    = false;
+        // check if names were listed
+        if (!Array.isArray(keys)) {
+            return def;
+        }
 
-            for (i in exp) {
-                if (!exp.hasOwnProperty(i)) continue;
-
-                if (typeof val[exp[i]] !== 'undefined') {
-                    find    = true;
-                    val     = val[exp[i]];
-                } else {
-                    find    = false;
-                    break;
+        for (const name of keys) {
+            const exp = name.toString().trim().split('.');
+            const len = exp.length;
+    
+            if (len === 1) {
+                if (HashConfig.has(name)) {
+                    return configs[name];
                 }
-            }
-
-            if (find) {
-                return val;
+            } else {
+                let value = configs;
+                let found = false;
+    
+                for (const i in exp) {
+                    if (!exp.hasOwnProperty(i)) continue;
+    
+                    if (typeof value[exp[i]] !== 'undefined') {
+                        found = true;
+                        value = value[exp[i]];
+                    } else {
+                        found = false;
+                        break;
+                    }
+                }
+    
+                if (found) {
+                    return value;
+                }
             }
         }
 
         return def;
     }
-}
 
-export default HashConfig
+    /**
+     * Get config as priority
+     * @param {any} def 
+     * @param  {...string} keys 
+     * @returns {any}
+     */
+    static getPri(def, ...keys) {
+        return HashConfig.get(keys, def);
+    }
+}
