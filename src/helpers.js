@@ -84,15 +84,14 @@ export function replaceAll(h, a, b) {
 
 /**
  * run a callback using argument is safe mode.
- * @param {function}  func Function name
+ * @param {function}    func    Function name
+ * @param {*}           th      Function this argument
+ * @param {*}           args    Function other arguments
  * @returns
  */
-export function lunchFunc(func) {
-    let args = Array.prototype.slice.call(arguments).slice(1);
-
+export function lunchFunc(func, th, ...args) {
     if (isFunc(func)) {
-        let th = {func, args};
-        return args.length !== 0 ? func.call(th, args) : func.call(th);
+        return func.call(th, ...args);
     }
 
     return null;
@@ -221,8 +220,8 @@ export function getQuery(q) {
     }
 
     const parseValue  = conf.get('parseQueryValue', true);
-    const equalSymbol = conf.get('equSymbol', equ_symbol);
-    const andSymbol   = conf.get('andSymbol', and_symbol);
+    const equalSymbol = conf.getPri(equ_symbol, 'equSymbol', 'querySymbols.equ');
+    const andSymbol   = conf.getPri(and_symbol, 'andSymbol', 'querySymbols.and');
 
     let queryParse  = q.split(andSymbol);
     let output      = {};
@@ -281,8 +280,8 @@ export function toQuery(q, encode_uri = false) {
     }
 
     let collector     = [];
-    let equSymbol     = conf.get('equSymbol', equ_symbol);
-    let andSymbol     = conf.get('andSymbol', and_symbol);
+    let equSymbol     = conf.getPri(equ_symbol, 'equSymbol', 'querySymbols.equ');
+    let andSymbol     = conf.getPri(and_symbol, 'andSymbol', 'querySymbols.and');
 
     objForeach(q, ([name, value]) => {
         if (value === undefined) {
@@ -326,7 +325,7 @@ export function isTrueHash(q) {
         return false;
     }
 
-    let queSymbol = conf.get('queSymbol', que_symbol);
+    const queSymbol = conf.getPri(que_symbol, 'queSymbol', 'querySymbols.que');
 
     if (q.includes(queSymbol)) {
         let queryParse  = splitOnce(q, queSymbol);
@@ -354,7 +353,7 @@ export function getTrueHash(q) {
         return empty;
     }
 
-    let queSymbol = conf.get('queSymbol', que_symbol);
+    let queSymbol = conf.getPri(que_symbol, 'queSymbol', 'querySymbols.que');
 
     if (q.includes(queSymbol)) {
         return splitOnce(q, queSymbol);
@@ -383,17 +382,17 @@ export function getWinHash() {
     }
 
     // convert to string
-    hash = getString(hash);
+    hash = decodeURIComponent(getString(hash));
 
     // apply filters
     let hashFilter = conf.get('getHashFilter');
 
     if (isFunc(hashFilter)) {
-        hash = lunchFunc(hashFilter, hash);
+        hash = lunchFunc(hashFilter, null, hash);
     }
 
     // convert again to string
-    hash = getString(hash);
+    hash = decodeURIComponent(getString(hash));
 
     return hash.startsWith('#') ? hash.slice(1) : hash;
 }
@@ -408,13 +407,13 @@ export function setWinHash(q) {
     let win         = getWindow();
 
     if (isFunc(setFilter)) {
-        q = lunchFunc(setFilter, q);
+        q = lunchFunc(setFilter, null, q);
     }
 
     q = getString(q);
 
     if (isFunc(setHash)) {
-        lunchFunc(setHash, q);
+        lunchFunc(setHash, null, q);
     } else {
         try {
             win.location.hash = q;
@@ -586,7 +585,7 @@ export function setEvHash(options = {}) {
     let hashQuery   = getQuery(parse[1]);
 
     // get query symbol with configs
-    let queSymbol = conf.get('queSymbol', que_symbol);
+    let queSymbol = conf.getPri(que_symbol, 'queSymbol', 'querySymbols.que');
 
     // checking for appending "value"
     // if it's defined replace it and else use old value
@@ -613,6 +612,7 @@ export function setEvHash(options = {}) {
             entry   = filterQueEntry(entry);
 
             if (type === 'merge' && !isEmpty(entry)) {
+                console.info(parse[1], hashQuery);
                 query = Object.assign(hashQuery, entry);
             } else if (type === 'define') {
                 query = entry;
