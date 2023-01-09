@@ -612,7 +612,6 @@ export function setEvHash(options = {}) {
             entry   = filterQueEntry(entry);
 
             if (type === 'merge' && !isEmpty(entry)) {
-                console.info(parse[1], hashQuery);
                 query = Object.assign(hashQuery, entry);
             } else if (type === 'define') {
                 query = entry;
@@ -831,7 +830,7 @@ export function isRegExp(data) {
 
 /**
  * Trigger the event for hash-events.
- * 
+ *
  * @param {string}  name
  * @param {any}     target
  */
@@ -842,7 +841,7 @@ export function triggerEvent(event, target = null) {
 
 /**
  * Trigger a custom event.
- * 
+ *
  * @param {string}  name
  * @param {object}  options
  * @param {any}     target
@@ -853,7 +852,7 @@ export function triCustomEvent(name, options = {}, target = null) {
 
 /**
  * Trigger an event.
- * 
+ *
  * @param {string}  name
  * @param {object}  options
  * @param {any}     target
@@ -864,7 +863,7 @@ export function triEvent(name, options = {}, target = null) {
 
 /**
  * Create random string as id.
- * 
+ *
  * @param   {int}   length  length of string
  * @returns string
  */
