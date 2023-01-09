@@ -367,6 +367,12 @@ export function getTrueHash(q) {
  * @returns
  */
 export function getWinHash() {
+    // decode uri component
+    // for fix "Uncaught URIError: malformed URI sequence" error with "%"
+    const _decodeData = (hash) => {
+        return decodeURIComponent( encodeURIComponent( unescape(hash) ) );
+    }
+
     let hash        = '';
     let win         = getWindow();
     let getHash     = conf.get('getHashCallback');
@@ -382,7 +388,7 @@ export function getWinHash() {
     }
 
     // convert to string
-    hash = decodeURIComponent(getString(hash));
+    hash = _decodeData(getString(hash));
 
     // apply filters
     let hashFilter = conf.get('getHashFilter');
@@ -392,7 +398,7 @@ export function getWinHash() {
     }
 
     // convert again to string
-    hash = decodeURIComponent(getString(hash));
+    hash = _decodeData(getString(hash));
 
     return hash.startsWith('#') ? hash.slice(1) : hash;
 }
