@@ -307,7 +307,7 @@ Set a custom window that **Hash** can use it for everything like `addEventListen
 ```javascript
 // don't do this, it's an example
 Hash.config({
-  window: () => window.opener,
+  window: window.opener,
 });
 ```
 
