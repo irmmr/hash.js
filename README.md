@@ -62,11 +62,12 @@ The components of this library are divided into 3 main sections, which include *
 import Hash from "@irmmr/hash.js";
 
 // use Hash.js information
+// Object { version: "1.7.5", name: "HashJs", module: "Hash" }
 Hash.info();
 
 // use Hash.js event
-Hash.on(listener, () => {
-  // ...
+Hash.on(listener, (e, i) => {
+  //...
 });
 ```
 
@@ -74,9 +75,11 @@ Hash.on(listener, () => {
 
 ```javascript
 // set example
+// => #string-for-me
 Hash.set("string-for-me");
 
 // replace example
+// => #stringforme
 Hash.replace(/-/g, "");
 ```
 
@@ -134,9 +137,13 @@ Hash.config({
   // should errors be logged in console or not?
   log: true,
   // query symbols
-  andSymbol: "&",
-  equSymbol: "=",
-  queSymbol: "?",
+  querySymbols: {
+    and: "&",
+    equ: "=",
+    que: "?",
+  },
+  // parse query value or just return string?
+  parseQueryValue: true,
 });
 ```
 
@@ -173,9 +180,14 @@ Hash.config({
   window: window,
   // false if you do not want the errors to cause errors in the script in any way.
   log: false,
-  andSymbol: "*", // default: &
-  equSymbol: "-", // default: =
-  queSymbol: "|", // default: ?
+  querySymbols: {
+    and: "+",
+    equ: ">",
+    que: "$",
+  },
+  // only return query values as string
+  // v?page=1 => Object { page: '1' }
+  parseQueryValue: false,
 });
 ```
 
@@ -200,4 +212,30 @@ Hash.q.set("page", 1); // page's hash => '#hey-value?page=1'
 
 // set 'e' query                (query string component)
 Hash.q.str.set("ev=12"); // page's hash => '#hey-value?ev=12'
+```
+
+### One-line usage
+
+```javascript
+Hash.set("/message?page=1&content=hey")
+  .v.add("-page") // #/message-page?page=1&content=hey
+  .q.update("page", 2) // #/message-page?page=2&content=hey
+  .str.add("-b", "after:content") // #/message-page?page=2&content-b=hey
+  .m.clear(); // none
+```
+
+#### ready() on-line usage
+
+```javascript
+// #data-type?name=J
+Hash.ready()?.set("data-type").q.set("name", "J");
+```
+
+#### Check if it's ready
+
+```javascript
+if (Hash.isReady()) {
+  const time = Hash.api.store.readyDate;
+  console.info(`it's ready from ${time}`);
+}
 ```
