@@ -1,3 +1,5 @@
+import { changeDispatch } from "./event/init.js";
+import { getWindow, isEqual } from "./helpers.js";
 import { empty_object, and_symbol, equ_symbol, que_symbol } from "./vars.js";
 
 /**
@@ -13,7 +15,7 @@ export default class HashConfig {
     /**
      * check for data type, if it is readl Object {}
      * @access private
-     * @param {any} data 
+     * @param {any} data
      * @returns boolean
      */
     static #isObj(data) {
@@ -23,8 +25,8 @@ export default class HashConfig {
     /**
      * deep merge objects over and over
      * @access private
-     * @param {object} target 
-     * @param  {...object} sources 
+     * @param {object} target
+     * @param  {...object} sources
      * @returns object
      */
     static #deepMerge(target, ...sources) {
@@ -34,7 +36,7 @@ export default class HashConfig {
 
         const cp     = HashConfig;
         const source = sources.shift();
-      
+
         if (cp.#isObj(target) && cp.#isObj(source)) {
             for (const key in source) {
                 if (cp.#isObj(source[key])) {
@@ -48,8 +50,52 @@ export default class HashConfig {
                 }
             }
         }
-      
+
         return cp.#deepMerge(target, ...sources);
+    }
+
+    /**
+     * trigger every change in configs to replace values
+     * and data in other parts of lib.
+     * @param {string} key      The config key
+     * @param {*} old_value     The key old value
+     * @param {*} new_value     The key new value to set
+     */
+    static #keyChanged(key, old_value, new_value) {
+        if (key === 'window') {
+            const win = getWindow();
+
+            // remove listener from old window
+            if (typeof win.removeEventListener !== 'undefined') {
+                win.removeEventListener('hashchange', changeDispatch, false);
+            }
+
+            // create listener for new window
+            if (typeof new_value !== 'undefined' && typeof new_value.addEventListener !== 'undefined') {
+                new_value.addEventListener('hashchange', changeDispatch, false);
+            }
+        }
+    }
+
+    /**
+     * Trigger and report every change in configs.
+     * @param {object} a    old config
+     * @param {object} b    new config
+     */
+    static #triggerChange(a, b) {
+        const defaults = HashConfig.defaults();
+
+        for (const i in defaults) {
+            if (!defaults.hasOwnProperty(i)) continue;
+
+            // get old and new value
+            const ov = a[i] || undefined;
+            const nv = b[i] || undefined;
+
+            if (!isEqual(ov, nv)) {
+                HashConfig.#keyChanged(i, ov, nv);
+            }
+        }
     }
 
     /**
@@ -127,6 +173,7 @@ export default class HashConfig {
             return;
         }
 
+        HashConfig.#triggerChange(HashConfig.#configs, options);
         HashConfig.#configs = options;
     }
 
@@ -171,7 +218,7 @@ export default class HashConfig {
         for (const name of keys) {
             const exp = name.toString().trim().split('.');
             const len = exp.length;
-    
+
             if (len === 1) {
                 if (HashConfig.has(name)) {
                     return configs[name];
@@ -179,10 +226,10 @@ export default class HashConfig {
             } else {
                 let value = configs;
                 let found = false;
-    
+
                 for (const i in exp) {
                     if (!exp.hasOwnProperty(i)) continue;
-    
+
                     if (typeof value[exp[i]] !== 'undefined') {
                         found = true;
                         value = value[exp[i]];
@@ -191,7 +238,7 @@ export default class HashConfig {
                         break;
                     }
                 }
-    
+
                 if (found) {
                     return value;
                 }
@@ -203,8 +250,8 @@ export default class HashConfig {
 
     /**
      * Get config as priority
-     * @param {any} def 
-     * @param  {...string} keys 
+     * @param {any} def
+     * @param  {...string} keys
      * @returns {any}
      */
     static getPri(def, ...keys) {
