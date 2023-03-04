@@ -1,5 +1,5 @@
 import { changeDispatch } from "./event/init.js";
-import { getWindow, isEqual } from "./helpers.js";
+import { getWindow, getDefWindow, isEqual } from "./helpers.js";
 import { empty_object, and_symbol, equ_symbol, que_symbol } from "./vars.js";
 
 /**
@@ -63,16 +63,18 @@ export default class HashConfig {
      */
     static #keyChanged(key, old_value, new_value) {
         if (key === 'window') {
-            const win = getWindow();
+            // check if new value is default
+            const old_win = old_value === null ? getWindow() : old_win;
+            const new_win = new_value === null ? getDefWindow() : new_value;
 
             // remove listener from old window
-            if (typeof win.removeEventListener !== 'undefined') {
-                win.removeEventListener('hashchange', changeDispatch, false);
+            if (typeof old_win !== 'undefined' && typeof old_win.removeEventListener !== 'undefined') {
+                old_win.removeEventListener('hashchange', changeDispatch, false);
             }
 
             // create listener for new window
-            if (typeof new_value !== 'undefined' && typeof new_value.addEventListener !== 'undefined') {
-                new_value.addEventListener('hashchange', changeDispatch, false);
+            if (typeof new_win !== 'undefined' && typeof new_win.addEventListener !== 'undefined') {
+                new_win.addEventListener('hashchange', changeDispatch, false);
             }
         }
     }
@@ -89,8 +91,8 @@ export default class HashConfig {
             if (!defaults.hasOwnProperty(i)) continue;
 
             // get old and new value
-            const ov = a[i] || undefined;
-            const nv = b[i] || undefined;
+            const ov = a[i];
+            const nv = b[i];
 
             if (!isEqual(ov, nv)) {
                 HashConfig.#keyChanged(i, ov, nv);
