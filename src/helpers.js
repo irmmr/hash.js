@@ -884,3 +884,22 @@ export function makeRandStr(length) {
 
     return result;
 }
+
+/**
+ * Check for equal values.
+ *
+ * @param {*} a
+ * @param {*} b
+ * @returns boolean
+ */
+export function isEqual(a, b) {
+    const at = typeof a;
+    const bt = typeof b;
+
+    if ((at === 'object' && bt === 'object') ||
+        (Array.isArray(a) && Array.isArray(b))) {
+        return JSON.stringify(a) === JSON.stringify(b);
+    }
+
+    return a === b;
+}
