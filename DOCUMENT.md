@@ -62,145 +62,21 @@ Hash.q.str.set("hey=nope");
 
 Older components that were available in older versions are now deprecated.
 
+> Do not use these components!
+
 [view doc ->](doc/DIRECT.md)
 
 ## Event/On
 
 This function are for adding listeners to the page hash.
 
-### .on(string listeners, function callback)
-
-**listeners** (`string`) -> The listeners name.
-
-**callback** (`callable`) -> The listener callback.
-
-> Listener names can be separated by `,` or `space`.
-
 ```javascript
-Hash.on("ready", (data, info) => {
-  // data for each listener is diffrent
-  // Object { time: 1668165923573 }
-  // time => the ready time
-  console.log(data);
-
-  // event info that managed in trigger
-  // Object { time: ...049540, event: "ready", id: "FOVfCHNtDLShQvDE...9540" }
-  console.log(info);
+Hash.on("change", (e) => {
+  console.log(`Hash changed from ${e.from} to ${e.to}`);
 });
 ```
 
-#### Event data
-
-Data includes an object that returns the output data of the executed event.
-
-#### Event information
-
-The event information includes the function that you have passed and while storing the basic event information, it gives you information about the time and type of the event, as well as access to manage the function. This one returns a [HashTriggerListener](./src/event/triggerListener.js).
-
-> `id` => An event ID constructed with a random string to identify this event.
-
-> `time` => The event time when this event created by user.
-
-> `event` => The event name for your usage :)
-
-> `remove()` => To remove event listener
-
-> `get()` => To get this event listener from trigger
-
-#### Listeners:
-
-##### `lock`
-
-when hash locked.
-
-> Object { at: ...6981, value: "my-ytfgui", force: false }
-
-##### `unlock`
-
-when hash unlocked.
-
-> Object { lockedAt: 1668165016981, at: 1668165090530, value: "my-ytfgui", force: false }
-
-##### `ready`
-
-when Hash was ready.
-
-> Object { time: 1668165016519 }
-
-##### `change`
-
-when page hash was changed.
-
-> Object { from: "first", to: "after" }
-
-##### `set`
-
-when page hash was set.
-
-> Object { value: "after" }
-
-##### `clear`
-
-when page was cleared.
-
-> Object { from: "after" }
-
-##### `set.value`
-
-when page value was set.
-
-> Object { value: "str" }
-
-##### `set.query`
-
-when page query was set.
-
-> Object { value: Object { a: "b", c: "d" }
-> valueStr: "a=b&c=d" }
-
-##### `change.value`
-
-when page value was changed.
-
-> Object { from: "str", to: "str2" }
-
-##### `change.query`
-
-when page query was changed.
-
-> Object { from: Object { a: "b", c: "d" }, to: Object { a: "b", c: 10 }, str: Object { from: "a=b&c=d", to: "a=b&c=10" } }
-
-##### `clear.value`
-
-when page value was cleared.
-
-> Object { from: "str" }
-
-##### `clear.query`
-
-when page query was cleared.
-
-> Object { from: Object { a: "b" }, fromStr: "a=b" }
-
-```javascript
-Hash.event("change", (e, i) => {
-  console.log(`changed from ${e.from} to ${e.to}`);
-});
-
-Hash.on("clear", (e, i) => {
-  console.log(`hash cleared from ${e.from}`);
-});
-
-let page = 1;
-Hash.on("set.query", (e) => {
-  const p = e.value.page || 1;
-
-  if (p !== page) {
-    page = p;
-    console.info(`new page -> ${page}`);
-  }
-});
-```
+[read more about Events](doc/EVENT.md)
 
 ## info
 
@@ -250,145 +126,35 @@ You can customize the main logical parts and define your own methods and change 
 
 > see [config.js](/src/config.js)
 
-! Changing any configuration can change the entire behavior of the library, manipulating setters and getters can screw things up if not done right. It doesn't mean that you can't change the settings, but I just want to tell you, you have to do it carefully.
-
-### getHashCallback
-
-You can change getter and define your own.
-
-> default: () => window.location.hash
-
 ```javascript
 Hash.config({
-  getHashCallback: () => {
-    // This doesn't work for multiple "#"
-    return document.URL.split("#")[1];
-  },
-});
-```
-
-### setHashCallback
-
-You can change setter and define your own.
-
-> default: (d) => window.location.hash = d
-
-```javascript
-Hash.config({
-  setHashCallback: (d) => {
-    // Shows only as a alert
-    alert(`setting on ${d}`);
-  },
-});
-```
-
-### setHashFilter
-
-You can set a filter for setter.
-
-```javascript
-Hash.config({
-  setHashFilter: (d) => "/" + d,
-});
-
-// #/hello?str=ha
-Hash.set("hello").q.set("str", "ha");
-```
-
-### getHashFilter
-
-You can set a filter for getter.
-
-```javascript
-Hash.config({
-  getHashFilter: (d) => d.replace("hello", ""),
-});
-
-// /?str=ha
-console.log(Hash.get());
-```
-
-### getHrefCallback
-
-Set a custom callback to get location href.
-
-> default: () => window.location.href
-
-```javascript
-Hash.config({
-  getHrefCallback: () => document.URL,
-});
-```
-
-### window `*`
-
-Set a custom window that **Hash** can use it for everything like `addEventListener` or get hash and set it using `window.location`.
-
-> default: window
-
-```javascript
-// don't do this, it's an example
-Hash.config({
-  window: window.opener,
-});
-```
-
-### log
-
-Log anything in console?
-
-> default: true
-
-```javascript
-Hash.config({
-  log: false,
-});
-```
-
-### querySymbols
-
-Define custom query builder symbols.
-
-- and [default: `&`]
-- equ [default: `=`]
-- que [default: `?`]
-
-```javascript
-Hash.config({
+  // get page hash by collecting custom data
+  getHashCallback: null,
+  // set page hash by custom action
+  setHashCallback: null,
+  // get page hash using filter
+  getHashFilter: null,
+  // set page hash by a filter
+  setHashFilter: null,
+  // get location href using custom callback
+  getHrefCallback: null,
+  // the 'window' main object for using in library
+  // if it is null, the original 'window' is inserted
+  window: null,
+  // should errors be logged in console or not?
+  log: true,
+  // query symbols
   querySymbols: {
-    and: "+",
-    equ: ">",
-    que: "$",
+    and: "&",
+    equ: "=",
+    que: "?",
   },
-});
-
-// Default => #?page=1&order=ASC
-// Custom => #$page>1+order>ASC
-Hash.q.set({
-  page: 1,
-  order: "ASC",
+  // parse query value or just return string?
+  parseQueryValue: true,
 });
 ```
 
-### parseQueryValue
-
-Define that **Hash** must change query values with types or only return them as **string**.
-
-> default: true
-
-```javascript
-// Hash is => #?page=1&status=true&order=ASC
-
-// Returns => Object { page: 1, status: true, order: "ASC" }
-Hash.q.get();
-
-Hash.config({
-  parseQueryValue: false,
-});
-
-// Returns => Object { page: "1", status: "true", order: "ASC" }
-Hash.q.get();
-```
+[read more about Config](doc/CONFIG.md)
 
 ## Api
 
