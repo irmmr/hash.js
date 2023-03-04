@@ -22,13 +22,13 @@ npm install @irmmr/hash.js
 Or use the built-in version of this library separately.
 
 ```html
-<script src="path/to/dist/hash.js"></script>
+<script src="path/to/dist/hash.min.js"></script>
 ```
 
 You can also use with: `jsdelivr`:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@irmmr/hash.js@1.7.5"></script>
+<script src="https://cdn.jsdelivr.net/npm/@irmmr/hash.js"></script>
 ```
 
 # Document
@@ -115,82 +115,6 @@ Hash.q.str.add("q=v", "after:g");
 console.log(Hash.q.str.get());
 ```
 
-# Config
-
-Configures are for changing a series of library functions and values so that you have more access
-
-```javascript
-Hash.config({
-  // get page hash by collecting custom data
-  getHashCallback: null,
-  // set page hash by custom action
-  setHashCallback: null,
-  // get page hash using filter
-  getHashFilter: null,
-  // set page hash by a filter
-  setHashFilter: null,
-  // get location href using custom callback
-  getHrefCallback: null,
-  // the 'window' main object for using in library
-  // if it is null, the original 'window' is inserted
-  window: null,
-  // should errors be logged in console or not?
-  log: true,
-  // query symbols
-  querySymbols: {
-    and: "&",
-    equ: "=",
-    que: "?",
-  },
-  // parse query value or just return string?
-  parseQueryValue: true,
-});
-```
-
-**hey :** If you use `null` for each case, the default value and function will be specified. Use this method to reset all settings:
-
-```javascript
-Hash.config().reset();
-```
-
-**notice :** These values and functions are for your testing and understanding only and you do not need to use them at all. These apply only when you want to customize the received functions and so on.
-
-```javascript
-Hash.config({
-  getHashCallback: () => {
-    // default -> window.location.hash
-    return document.URL.split("#")[1];
-  },
-  setHashCallback: (data) => {
-    // default -> window.location.hash = data
-    window.location.href = document.URL.split("#")[0] + "#" + data;
-  },
-  getHashFilter: (hash) => {
-    return hash + ":)";
-  },
-  setHashFilter: (data) => {
-    return data.replace("#", "");
-  },
-  getHrefCallback: () => {
-    // default -> window.location.href
-    return document.URL;
-  },
-  // if 'window' is not entered properly, everything will go wrong.
-  // if the value is null, it changes to "window".
-  window: window,
-  // false if you do not want the errors to cause errors in the script in any way.
-  log: false,
-  querySymbols: {
-    and: "+",
-    equ: ">",
-    que: "$",
-  },
-  // only return query values as string
-  // v?page=1 => Object { page: '1' }
-  parseQueryValue: false,
-});
-```
-
 # How to use?
 
 These include a few simple examples.
@@ -214,28 +138,9 @@ Hash.q.set("page", 1); // page's hash => '#hey-value?page=1'
 Hash.q.str.set("ev=12"); // page's hash => '#hey-value?ev=12'
 ```
 
-### One-line usage
-
-```javascript
-Hash.set("/message?page=1&content=hey")
-  .v.add("-page") // #/message-page?page=1&content=hey
-  .q.update("page", 2) // #/message-page?page=2&content=hey
-  .str.add("-b", "after:content") // #/message-page?page=2&content-b=hey
-  .m.clear(); // none
-```
-
-#### ready() on-line usage
+**ready() one-line usage**
 
 ```javascript
 // #data-type?name=J
 Hash.ready()?.set("data-type").q.set("name", "J");
-```
-
-#### Check if it's ready
-
-```javascript
-if (Hash.isReady()) {
-  const time = Hash.api.store.readyDate;
-  console.info(`it's ready from ${time}`);
-}
 ```

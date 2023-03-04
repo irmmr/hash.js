@@ -4,6 +4,32 @@ All features and origin of hash can be changed with configs. Of course, this can
 
 ! Changing any configuration can change the entire behavior of the library, manipulating setters and getters can screw things up if not done right. It doesn't mean that you can't change the settings, but I just want to tell you, you have to do it carefully.
 
+#### Default configs
+
+```javascript
+Hash.config().defaults();
+```
+
+```json
+{
+  "getHashCallback": null,
+  "setHashCallback": null,
+  "getHashFilter": null,
+  "setHashFilter": null,
+  "getHrefCallback": null,
+  "window": null,
+  "log": true,
+  "querySymbols": {
+    "and": "&",
+    "equ": "=",
+    "que": "?"
+  },
+  "parseQueryValue": true
+}
+```
+
+Null value in functions and window is considered the same as the default value.
+
 ### getHashCallback
 
 You can change getter and define your own.
@@ -140,6 +166,14 @@ Hash.config({
 
 // Returns => Object { page: "1", status: "true", order: "ASC" }
 Hash.q.get();
+```
+
+## Reset to default
+
+If you use `null` for each case, the default value and function will be specified. Use this method to reset all settings:
+
+```javascript
+Hash.config().reset();
 ```
 
 ## Change window

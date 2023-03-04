@@ -233,3 +233,29 @@ he.isEmpty("H"); // returns -> false
 he.objSize({ p: 1, a: "d" }); // returns -> 2
 he.makeRandStr(10); // returns -> Oj7NNLxREZ
 ```
+
+## One-line usage
+
+This library is designed for single line use and you can easily use it in single line. In addition, you can connect to the list of other components by using the desired methods of each category.
+
+- `v` or `value` (value components)
+- `q` or `query` (query components)
+- `m` or `main` (main components)
+
+```javascript
+Hash.set("Hello-Babe").replace("Hello", "Hey");
+```
+
+The one-line rule is available for all components except for checkers.
+
+```javascript
+Hash.set("/message?page=1&content=hey")
+  // #/message-page?page=1&content=hey
+  .v.add("-page")
+  // #/message-page?page=2&content=hey
+  .q.update("page", 2)
+  // #/message-page?page=2&content-b=hey
+  .str.add("-b", "after:content")
+  // none
+  .m.clear();
+```
