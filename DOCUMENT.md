@@ -2,7 +2,7 @@
 
 The document includes all the functions that you can use with this package.
 
-## Main components
+## Main components (`value?query`)
 
 The main components that controls hole hash value and query as string and relates to other parts of the hash.
 
@@ -10,31 +10,53 @@ The main components that controls hole hash value and query as string and relate
 Hash.NAME
 ```
 
-[view ->](doc/MAIN.md)
+```javascript
+Hash.set("Hello");
+```
 
-## Value components
+[view document ->](doc/MAIN.md)
 
-The document will be completed soon.
+## Value components (`value`?query)
+
+These components are only for managing values and have nothing to do with other parts.
 
 ```
 Hash.v.NAME or Hash.value.NAME
 ```
 
-## Query components
+```javascript
+Hash.v.set("Hello-Value");
+```
 
-The document will be completed soon.
+[view document ->](doc/VALUE.md)
+
+## Query components (value?`query`)
+
+These components are only for managing queries and have nothing to do with other parts.
 
 ```
 Hash.q.NAME or Hash.query.NAME
 ```
 
-## Query string components
+```javascript
+Hash.q.set("say", "Hello");
+```
 
-The document will be completed soon.
+[view document ->](doc/QUERY.md)
+
+## Query string components (value?`query`)
+
+These components are only for managing queries as string and have nothing to do with other parts.
 
 ```
 Hash.q.str.NAME or Hash.query.str.NAME
 ```
+
+```javascript
+Hash.q.str.set("hey=nope");
+```
+
+[view document ->](doc/QUERY_STR.md)
 
 ## Direct/old components
 

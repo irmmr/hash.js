@@ -83,7 +83,7 @@ Hash.add("simple", "after:Hello");
 Hash.add("simple", "after:-");
 
 // Hash value is => #Hello-World
-// After => #HRIGHTello-World
+// After => #HBigello-World
 Hash.add("Big", "index:1");
 
 // Hash value is => #Hello-World
