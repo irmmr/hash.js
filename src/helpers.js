@@ -892,10 +892,7 @@ export function makeRandStr(length) {
  * @returns boolean
  */
 export function isEqual(a, b) {
-    const at = typeof a;
-    const bt = typeof b;
-
-    if ((at === 'object' && bt === 'object') ||
+    if ((isObj(a) && isObj(b)) ||
         (Array.isArray(a) && Array.isArray(b))) {
         return JSON.stringify(a) === JSON.stringify(b);
     }
