@@ -2,6 +2,40 @@
 
 All components related to hash management as string.
 
+## .set()
+
+Set new hash as string.
+
+### .set(value)
+
+**value** (`string`) Value of hash
+
+**returns** `Hash`
+
+```javascript
+// Hash is => #Hello-World
+// After => #Hello
+Hash.set("Hello");
+
+// Hash is => NONE
+// After => #Hello-Babe?type=1
+Hash.set("Hello-Babe?type=1");
+```
+
+## .get()
+
+Get all hash as string.
+
+### .get()
+
+**returns** `string`
+
+```javascript
+// Hash is => #Hello-World
+// Returns => "Hello-World"
+Hash.get();
+```
+
 ## .add()
 
 Add value to hash.
@@ -33,12 +67,31 @@ Add value to hash.
 
 ```javascript
 // Hash value is => #Hello-World
+// After => #simpleHello-World
+Hash.add("simple", "before");
+
+// Hash value is => #Hello-World
+// After => #Hello-Worldsimple
+Hash.add("simple", "after");
+
+// Hash value is => #Hello-World
 // After => #Hellosimple-World
 Hash.add("simple", "after:Hello");
 
 // Hash value is => #Hello-World
-// After => #Hellosimple-World
+// After => #Hello-simpleWorld
 Hash.add("simple", "after:-");
+
+// Hash value is => #Hello-World
+// After => #HRIGHTello-World
+Hash.add("Big", "index:1");
+
+// Hash value is => #Hello-World
+// After => #HelloBig-WoBigrld
+Hash.add("Big", {
+  position: "after:o",
+  multiple: true,
+});
 ```
 
 ## .clear()
@@ -61,20 +114,6 @@ Hash.clear();
 Hash.clear(false);
 ```
 
-## .get()
-
-Get all hash as string.
-
-### .get()
-
-**returns** `string`
-
-```javascript
-// Hash is => #Hello-World
-// Returns => "Hello-World"
-Hash.get();
-```
-
 ## .have()
 
 Check hash exists.
@@ -89,6 +128,12 @@ Check if any hash exists.
 
 **data** (`string`) Any word or string to check
 
+### .have(data)
+
+Check if any hash exists (multiple).
+
+**data** (`array`)\<`string`\> Words to check
+
 **returns** `boolean`
 
 ```javascript
@@ -99,6 +144,14 @@ Hash.have();
 // Hash is => #Hello-World
 // Returns => true
 Hash.have("World");
+
+// Hash is => #Hello-World
+// Returns => false
+Hash.have("Pro");
+
+// Hash is => #Hello-World
+// Returns => true
+Hash.have(["Hello", "o", "Wo"]);
 ```
 
 ## .is()
