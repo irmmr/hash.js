@@ -496,7 +496,7 @@ export function getHref() {
  * @returns {Window|string|*}
  */
 export function getWindow() {
-    return conf.get('window') || window;
+    return conf.get('window') || getDefWindow();
 }
 
 /**
@@ -886,8 +886,7 @@ export function makeRandStr(length) {
 }
 
 /**
- * Check for equal values.
- *
+ * check for equal values.
  * @param {*} a
  * @param {*} b
  * @returns boolean
@@ -902,4 +901,12 @@ export function isEqual(a, b) {
     }
 
     return a === b;
+}
+
+/**
+ * get default window.
+ * @returns {Window}
+ */
+export function getDefWindow() {
+    return window;
 }
