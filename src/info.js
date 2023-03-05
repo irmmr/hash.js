@@ -2,5 +2,5 @@
 export default {
     name: 'HashJs',
     module: 'Hash',
-    version : '1.7.5'
+    version : '1.7.6'
 }
