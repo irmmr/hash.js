@@ -10,7 +10,7 @@ const DIR   = process.cwd()
 
 // main arguments data
 const args  = process.argv
-let h_file  = './dist/hash.min.js'
+let h_file  = './dist/hash.min.js?refID=' + Date.now()
 
 // create a http server
 const createServer = () => {
