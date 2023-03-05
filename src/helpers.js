@@ -387,6 +387,14 @@ export function getWinHash() {
         }
     }
 
+    // check if hash is empty
+    if (isEmpty(hash)) {
+        return hash;
+    }
+
+    // remove "#" if exists
+    hash = hash.startsWith('#') ? hash.slice(1) : hash;
+
     // convert to string
     hash = _decodeData(getString(hash));
 
@@ -400,7 +408,10 @@ export function getWinHash() {
     // convert again to string
     hash = _decodeData(getString(hash));
 
-    return hash.startsWith('#') ? hash.slice(1) : hash;
+    // utf8 decode
+    hash = decodeURIComponent(escape(hash));
+
+    return hash;
 }
 
 /**
