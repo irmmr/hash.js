@@ -198,7 +198,7 @@
                 sh('Hello babe-OPT');
                 assert.strictEqual(Hash.is('Op'), false);
                 assert.strictEqual(Hash.is(), false);
-                assert.strictEqual(Hash.is('Hello%20babe-OPT'), true);
+                assert.strictEqual(Hash.is('Hello babe-OPT'), true);
 
                 ch();
                 assert.strictEqual(Hash.is(''), true);

@@ -218,24 +218,23 @@
         // #helper lunchFunc
         describe('lunchFunc', function () {
             it('lunchFunc should run a functions with arguments', function () {
-                let f = function ([a, b]) {
+                let f = function (a, b) {
                     return a * b;
                 };
 
-                let u = function ([a]) {
+                let u = function (a) {
                     return a;
                 };
 
-                let i = function () {
-                    return typeof this.func === 'function' &&
-                        this.args[0] === 'ar';
+                let s = function (a) {
+                    return this === 99 && a === 'ar';
                 };
 
-                assert.strictEqual(helper.lunchFunc(f, 2, 5), 10);
-                assert.strictEqual(helper.lunchFunc(f, 0, 8), 0);
-                assert.strictEqual(helper.lunchFunc(f, 63, 78), 78 * 63);
-                assert.strictEqual(helper.lunchFunc(u, 'hello'), 'hello');
-                assert.strictEqual(helper.lunchFunc(i, 'ar'), true);
+                assert.strictEqual(helper.lunchFunc(f, null, 2, 5), 10);
+                assert.strictEqual(helper.lunchFunc(f, null, 0, 8), 0);
+                assert.strictEqual(helper.lunchFunc(f, null, 63, 78), 78 * 63);
+                assert.strictEqual(helper.lunchFunc(u, null, 'hello'), 'hello');
+                assert.strictEqual(helper.lunchFunc(s, 99, 'ar'), true);
             });
         });
 
@@ -578,8 +577,8 @@
 
             it('config: getWinHash should returns window hash by using `getHashFilter`', function () {
                 Hash.config({
-                    getHashFilter: function ([d]) {
-                        return d.replace(/%20/g, '');
+                    getHashFilter: function (d) {
+                        return d.replace(/ /g, '');
                     }
                 });
 
@@ -622,7 +621,7 @@
 
             it('config: setWinHash should set window hash by custom `setHashCallback` correctly', function () {
                 Hash.config({
-                    setHashCallback: function ([v]) {
+                    setHashCallback: function (v) {
                         window.location.hash = v.substr(0, 8);
                     }
                 });
@@ -643,7 +642,7 @@
 
             it('config: setWinHash should returns window hash by using `setHashFilter`', function () {
                 Hash.config({
-                    setHashFilter: function ([d]) {
+                    setHashFilter: function (d) {
                         return escape(d);
                     }
                 });
@@ -953,6 +952,27 @@
 
                 const b = helper.makeRandStr(20);
                 assert.strictEqual(b.length, 20);
+            });
+        });
+
+        // #helper isEqual
+        describe('isEqual', function () {
+            it('isEqual should check equality in correct way', function () {
+                assert.strictEqual(helper.isEqual(1, 1), true);
+                assert.strictEqual(helper.isEqual("Hello", "Hello"), true);
+                assert.strictEqual(helper.isEqual({a: 1}, {a: 1}), true);
+                assert.strictEqual(helper.isEqual([1, 2, "ABC"], [1, 2, "ABC"]), true);
+
+                assert.strictEqual(helper.isEqual([1, 2, "ABC"], [1, 2, "ABC", true]), false);
+                assert.strictEqual(helper.isEqual(9, 8), false);
+                assert.strictEqual(helper.isEqual(null, undefined), false);
+            });
+        });
+
+        // #helper getDefWindow
+        describe('getDefWindow', function () {
+            it('getDefWindow should allways return "window"', function () {
+                assert.strictEqual(helper.getDefWindow(), window);
             });
         });
 

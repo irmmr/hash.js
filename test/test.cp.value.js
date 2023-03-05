@@ -193,7 +193,7 @@
                 sh('Hello babe-OPT?page=12');
                 assert.strictEqual(Hash.v.is('Op'), false);
                 assert.strictEqual(Hash.v.is(), false);
-                assert.strictEqual(Hash.v.is('Hello%20babe-OPT'), true);
+                assert.strictEqual(Hash.v.is('Hello babe-OPT'), true);
 
                 sh('val?que');
                 assert.strictEqual(Hash.v.is('val'), true);

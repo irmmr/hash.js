@@ -69,18 +69,46 @@
                 assert.deepEqual(Hash.q.get(), {});
 
                 sh('test-str884g?page=1');
-                assert.deepEqual(Hash.q.get(), {page: '1'});
+                assert.deepEqual(Hash.q.get(), {page: 1});
 
-                sh('test-g?page&med=hello-man');
-                assert.deepEqual(Hash.q.get(), {page:null, med:'hello-man'});
+                sh('test-g?page&med=hello-man&ok=false');
+                assert.deepEqual(Hash.q.get(), {page:null, med:'hello-man', ok:false});
 
                 assert.deepEqual(Hash.q.get('page'), null);
                 assert.deepEqual(Hash.q.get('med'), 'hello-man');
                 assert.deepEqual(Hash.q.get('mec'), undefined);
+                assert.deepEqual(Hash.q.get('ok'), false);
 
-                sh('test?page&med=hello-man&q&a=b');
+                sh('test?page&med=hello-man&q&a=b&def=9048832&pop=true');
                 assert.deepEqual(Hash.q.get(['a', 'q']), {a: 'b', q: null});
                 assert.deepEqual(Hash.q.get(['page', 'cq']), {page: null, cq: undefined});
+                assert.deepEqual(Hash.q.get(['def', 'pop']), {def: 9048832, pop: true});
+
+                ch();
+            });
+
+            it('get should work correctly with `parseQueryValue` option', function () {
+                sh('te?page=1&is_change=false&name=ho&me&_df=Hey man how are you?');
+                assert.deepEqual(Hash.q.get(), {
+                    page: 1,
+                    is_change: false,
+                    name: 'ho',
+                    me: null,
+                    _df: 'Hey man how are you?'
+                });
+
+                Hash.config({ parseQueryValue: false });
+
+                sh('te?page=1&is_change=false&name=ho&me&_df=Hey man how are you?');
+                assert.deepEqual(Hash.q.get(), {
+                    page: '1',
+                    is_change: 'false',
+                    name: 'ho',
+                    me: null,
+                    _df: 'Hey man how are you?'
+                });
+
+                Hash.config({ parseQueryValue: true });
 
                 ch();
             });
@@ -121,13 +149,14 @@
         describe('is', function () {
             window.Mocha_delay(window.Mocha_sec);
             it('is should returns `true|false` for check url hash query data', function () {
-                sh('Hellobabe-OPT?page=12&order=desc&hc');
+                sh('Hellobabe-OPT?page=12&order=desc&hc&place=false');
                 assert.strictEqual(Hash.q.is('order', 'desc'), true);
                 assert.strictEqual(Hash.q.is(), false);
                 assert.strictEqual(Hash.q.is('hc', null), true);
                 assert.strictEqual(Hash.q.is('hcv', undefined), true);
                 assert.strictEqual(Hash.q.is('page', undefined), false);
-                assert.strictEqual(Hash.q.is('page', '12'), true);
+                assert.strictEqual(Hash.q.is('page', 12), true);
+                assert.strictEqual(Hash.q.is('place', false), true);
 
                 ch();
             });
