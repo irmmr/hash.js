@@ -3,7 +3,7 @@
   "version": "1.7.5",
   "description": "A simple and flexible JavaScript library that manages \"window.location.hash\". With the ability to support queries. (#value?query)",
   "main": "src/hash.js",
-  "jsdelivr": "dist/hash.js",
+  "jsdelivr": "dist/hash.min.js",
   "type": "module",
   "devDependencies": {
     "@babel/cli": "^7.19.3",
