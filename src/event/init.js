@@ -2,25 +2,9 @@ import { getHashQuery, getHashValue, getQuery, getUrlHash } from "../helpers.js"
 import HashTrigger from "./trigger.js";
 
 /**
- * Export each event name to
- * use for identify events.
- */
-export const EVENTS = [
-    'set',
-    'set.value',
-    'set.query',
-    'change',
-    'change.value',
-    'change.query',
-    'clear',
-    'clear.value',
-    'clear.query',
-];
-
-/**
  * Dispatch checker for hashchange event
  * in window that manages other events.
- * @param {event} the window event 
+ * @param {event} the window event
  */
 export function changeDispatch(e) {
     // collect hash from uri and use trigger
