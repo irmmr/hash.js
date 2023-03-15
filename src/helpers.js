@@ -272,7 +272,7 @@ export function getQuery(q) {
  * @param {boolean} encode_uri  Encode uri component status
  * @returns
  */
-export function toQuery(q, encode_uri = false) {
+export function toQuery(q, encode_uri = true) {
     q = filterQueEntry(q);
 
     if (isEmpty(q)) {
@@ -369,14 +369,29 @@ export function getTrueHash(q) {
 export function getWinHash() {
     // decode uri component
     // for fix "Uncaught URIError: malformed URI sequence" error with "%"
-    const _decodeData = (hash) => {
-        return decodeURIComponent( encodeURIComponent( unescape(hash) ) );
+    const _decodeData = (data) => {
+        return decodeURIComponent( encodeURIComponent( unescape(data) ) );
     }
 
-    let hash        = '';
-    let win         = getWindow();
-    let getHash     = conf.get('getHashCallback');
+    // utf8 decode
+    // After the original "_decodeData" the data will not be readable and
+    // will need another utf8 decoding as a final step.
+    const _decodeUtf8 = (data) => {
+        return decodeURIComponent(escape(data));
+    }
 
+    // get some basic and window settings
+    // we need getCallback to get hash and
+    // query symbol to assemble hash with value, query
+    const win         = getWindow();
+    const getHash     = conf.get('getHashCallback');
+    const queSymbol   = conf.getPri(que_symbol, 'queSymbol', 'querySymbols.que');
+
+    // hash, store hash value and update it!
+    let hash;
+
+    // if defined in the configuration, get the hash from setCallback
+    // or try to get it from location hash
     if (isFunc(getHash)) {
         hash = lunchFunc(getHash);
     } else {
@@ -387,31 +402,30 @@ export function getWinHash() {
         }
     }
 
-    // check if hash is empty
+    // check if the hash is empty
     if (isEmpty(hash)) {
         return hash;
     }
 
-    // remove "#" if exists
+    // remove "#" from start
     hash = hash.startsWith('#') ? hash.slice(1) : hash;
 
-    // convert to string
-    hash = _decodeData(getString(hash));
-
-    // apply filters
-    let hashFilter = conf.get('getHashFilter');
-
+    // apply filters, filter to manipulate the hash
+    const hashFilter = conf.get('getHashFilter');
     if (isFunc(hashFilter)) {
         hash = lunchFunc(hashFilter, null, hash);
     }
 
-    // convert again to string
-    hash = _decodeData(getString(hash));
+    // parse hash into value and query
+    const parsed    = getTrueHash(getString(hash));
+    let value       = _decodeData(getString(parsed[0]));
+    let query       = getString(parsed[1]);
 
-    // utf8 decode
-    hash = decodeURIComponent(escape(hash));
+    // utf8 decode (only for value)
+    value = _decodeUtf8(value);
 
-    return hash;
+    // combine params with values to build hash
+    return isEmpty(query) ? value : value + queSymbol + query;
 }
 
 /**
