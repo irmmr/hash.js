@@ -364,21 +364,15 @@ export function getTrueHash(q) {
 
 /**
  * get the value of window hash.
+ * @param {object} options  hash getter options
+ *  - decodeValue -> decodeURIComponent act for value
  * @returns
  */
-export function getWinHash() {
-    // decode uri component
-    // for fix "Uncaught URIError: malformed URI sequence" error with "%"
-    const _decodeData = (data) => {
-        return decodeURIComponent( encodeURIComponent( unescape(data) ) );
-    }
-
-    // utf8 decode
-    // After the original "_decodeData" the data will not be readable and
-    // will need another utf8 decoding as a final step.
-    const _decodeUtf8 = (data) => {
-        return decodeURIComponent(escape(data));
-    }
+export function getWinHash(options = {
+    decodeValue: false
+}) {
+    // read all options of getter
+    const decodeVal = Boolean(options.decodeValue || false);
 
     // get some basic and window settings
     // we need getCallback to get hash and
@@ -418,14 +412,22 @@ export function getWinHash() {
 
     // parse hash into value and query
     const parsed    = getTrueHash(getString(hash));
-    let value       = _decodeData(getString(parsed[0]));
+    let value       = getString(parsed[0]);
     let query       = getString(parsed[1]);
 
+    // this has two consequences
+    // only value or value + query
+    if (isEmpty(query)) {
+        return decodeData(value);
+    }
+
     // utf8 decode (only for value)
-    value = _decodeUtf8(value);
+    if (decodeVal) {
+        value = decodeData(value);
+    }
 
     // combine params with values to build hash
-    return isEmpty(query) ? value : value + queSymbol + query;
+    return value + queSymbol + query;
 }
 
 /**
@@ -578,7 +580,7 @@ export function filterQueEntry(queries) {
  * @returns {*}
  */
 export function getHashValue(wh) {
-    return getTrueHash(wh)[0];
+    return decodeData( getTrueHash(wh)[0] );
 }
 
 /**
@@ -931,4 +933,36 @@ export function isEqual(a, b) {
  */
 export function getDefWindow() {
     return window;
+}
+
+/**
+ * decode uri component
+ * for fix "Uncaught URIError: malformed URI sequence" error with "%"
+ * @param {string} data
+ * @return {string}
+ */
+export function decodeURI(data) {
+    return decodeURIComponent( encodeURIComponent( unescape(data) ) );
+}
+
+/**
+ * utf8 decode
+ * After the original "_decodeData" the data will not be readable and
+ * will need another utf8 decoding as a final step.
+ * @param {string} data
+ * @returns {string}
+ */
+export function decodeUTF8(data) {
+    return decodeURIComponent( escape(data) );
+}
+
+/**
+ * decode uri + utf8
+ * a secure way to decode uri component to prevent error
+ * malformed URI sequence after decoding.
+ * @param {string} data
+ * @returns {string}
+ */
+export function decodeData(data) {
+    return decodeUTF8( decodeURI(data) );
 }
