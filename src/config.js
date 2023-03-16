@@ -101,6 +101,21 @@ export default class HashConfig {
     }
 
     /**
+     * Try to cast data type using main data types
+     * of js such as Array, Object, String.
+     * @param {any}         data
+     * @param {function}    type
+     * @returns
+     */
+    static #castType(data, type = null) {
+        if (typeof type !== 'function') {
+            return data;
+        }
+
+        return type.call(null, data);
+    }
+
+    /**
      * Get all default configs
      *
      * @returns {object}
@@ -196,11 +211,13 @@ export default class HashConfig {
 
     /**
      * Get config
-     * @param   {array|string}    keys
-     * @param   {any}             def
+     * - The default value will not be casted
+     * @param   {array|string}  keys
+     * @param   {any}           def
+     * @param   {function}      cast
      * @returns {any}
      */
-    static get(keys = null, def = '') {
+    static get(keys = null, def = '', cast = null) {
         let configs = HashConfig.#configs;
 
         if (null == keys || '' == keys) {
@@ -223,7 +240,7 @@ export default class HashConfig {
 
             if (len === 1) {
                 if (HashConfig.has(name)) {
-                    return configs[name];
+                    return HashConfig.#castType(configs[name], cast);
                 }
             } else {
                 let value = configs;
@@ -242,7 +259,7 @@ export default class HashConfig {
                 }
 
                 if (found) {
-                    return value;
+                    return HashConfig.#castType(value, cast);;
                 }
             }
         }
