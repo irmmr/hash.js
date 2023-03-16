@@ -73,22 +73,22 @@
             });
 
             it('add should be able to can add string on before a string', function () {
-                sh('hi-how-are-you-?');
+                sh('hi-how-are-you');
 
                 Hash.add('I', 'before:you');
-                assert.strictEqual(gh(), 'hi-how-are-Iyou-?');
+                assert.strictEqual(gh(), 'hi-how-are-Iyou');
 
                 Hash.add('-p', 'before:-how');
-                assert.strictEqual(gh(), 'hi-p-how-are-Iyou-?');
+                assert.strictEqual(gh(), 'hi-p-how-are-Iyou');
 
                 Hash.add('O', 'before:o');
-                assert.strictEqual(gh(), 'hi-p-hOow-are-Iyou-?');
+                assert.strictEqual(gh(), 'hi-p-hOow-are-Iyou');
 
                 Hash.add('$', {
                     position: 'before:o',
                     multiple: true
                 });
-                assert.strictEqual(gh(), 'hi-p-hO$ow-are-Iy$ou-?');
+                assert.strictEqual(gh(), 'hi-p-hO$ow-are-Iy$ou');
 
                 ch();
             });

@@ -75,15 +75,15 @@ const createServer = () => {
 
 // check for hash.js-dev file test
 if (args.includes('--dev')) {
-    h_file = './lab/hash.min.js'
+    h_file = './lab/hash.js'
 
-    ch_process.exec('npm run dev-test', (error, stdout, stderr) => {
+    ch_process.exec('npm run lab', (error, stdout, stderr) => {
         if (error) {
-            console.log('rollup process error', error.message)
+            console.log('webpack process error', error.message)
             return
         }
 
-        console.log('rollup process', stdout, stderr)
+        console.log('webpack process', stdout, stderr)
         createServer()
     })
 } else {

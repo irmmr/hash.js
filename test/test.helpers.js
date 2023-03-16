@@ -422,12 +422,14 @@
                 assert.strictEqual(helper.toQuery({
                     aa: 'page',
                     bg: '#ccc'
-                }), 'aa:page&bg:#ccc');
+                }), "aa:page&bg:%23ccc");
 
                 Hash.config().reset();
             });
 
             it('config: toQuery should build queries with custom `and` symbol (def: &)', function () {
+                Hash.config().reset();
+
                 Hash.config({
                     andSymbol: '(AND)'
                 });
@@ -578,7 +580,7 @@
             it('config: getWinHash should returns window hash by using `getHashFilter`', function () {
                 Hash.config({
                     getHashFilter: function (d) {
-                        return d.replace(/ /g, '');
+                        return d.replace(/%20/g, '');
                     }
                 });
 
@@ -604,6 +606,8 @@
             ch();
 
             it('setWinHash should set window hash correctly', function () {
+                ch();
+
                 assert.strictEqual(helper.getWinHash(), '');
 
                 helper.setWinHash('test-string');
